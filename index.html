@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>T4BF MPX Documentation</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+</head>
+<body>
+    <!-- Navigation Sidebar -->
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <h1>T4BF MPX</h1>
+            <p class="subtitle">Documentation</p>
+        </div>
+
+        <div class="nav-section">
+            <h3>User's Manual</h3>
+            <ul>
+                <li><a href="#user-intro">Introduction</a></li>
+                <li><a href="#user-getting-started">Getting Started</a></li>
+                <li><a href="#user-commands">Command Reference</a></li>
+                <li><a href="#user-quick-ref">Quick Reference</a></li>
+            </ul>
+        </div>
+
+        <div class="nav-section">
+            <h3>Programmer's Manual</h3>
+            <ul>
+                <li><a href="#prog-overview">Overview</a></li>
+                <li><a href="#prog-types">Data Types</a></li>
+                <li><a href="#prog-functions">Function Reference</a></li>
+                <li><a href="#prog-modules">Modules</a></li>
+            </ul>
+        </div>
+
+        <div class="nav-section">
+            <h3>Contributions</h3>
+            <ul>
+                <li><a href="#contrib-overview">Overview</a></li>
+                <li><a href="#contrib-members">Team Members</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="content">
+        <!-- USER'S MANUAL-->
+        <section id="users-manual" class="manual-section">
+            <h1 class="section-title">User's Manual</h1>
+
+            <article id="user-intro">
+                <h2>Introduction</h2>
+                <p>
+                    Welcome to the T4BF MPX Operating System. This manual provides comprehensive
+                    documentation for all available commands and system functionality.
+                </p>
+                <p>
+                    MPX (Multiprogramming Executive) is a simple operating system designed for
+                    educational purposes. This documentation will guide you through all available
+                    commands and their usage.
+                </p>
+            </article>
+
+            <article id="user-getting-started">
+                <h2>Getting Started</h2>
+                <p>After booting MPX, you will be presented with a command prompt. From here, you can enter any of the commands documented below.</p>
+
+                <h3>Basic Usage</h3>
+                <p>Type a command and press Enter to execute it. Commands are case-insensitive.</p>
+
+                <pre><code class="language-bash">MPX> help
+MPX> version
+MPX> shutdown</code></pre>
+            </article>
+
+            <article id="user-commands">
+                <h2>Command Reference</h2>
+
+                <!-- TEMPLATE FOR COMMANDS - copy and modify for each command -->
+                <div class="command-entry">
+                    <h3 class="command-name">help</h3>
+                    <div class="command-details">
+                        <p class="command-syntax"><strong>Syntax:</strong> <code>help [command]</code></p>
+                        <p class="command-desc"><strong>Description:</strong> Displays help information for available commands. When called without arguments, lists all commands. When called with a command name, displays detailed help for that specific command.</p>
+
+                        <div class="command-params">
+                            <strong>Parameters:</strong>
+                            <table>
+                                <tr>
+                                    <th>Parameter</th>
+                                    <th>Required</th>
+                                    <th>Description</th>
+                                </tr>
+                                <tr>
+                                    <td><code>command</code></td>
+                                    <td>No</td>
+                                    <td>The name of the command to get help for</td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div class="command-examples">
+                            <strong>Examples:</strong>
+                            <pre><code class="language-bash"># List all available commands
+MPX> help
+
+# Get help for a specific command
+MPX> help shutdown</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="command-entry">
+                    <h3 class="command-name">version</h3>
+                    <div class="command-details">
+                        <p class="command-syntax"><strong>Syntax:</strong> <code>version</code></p>
+                        <p class="command-desc"><strong>Description:</strong> Displays the current version of MPX and compilation information.</p>
+
+                        <div class="command-examples">
+                            <strong>Examples:</strong>
+                            <pre><code class="language-bash">MPX> version
+MPX Version 1.0 - T4BF</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="command-entry">
+                    <h3 class="command-name">shutdown</h3>
+                    <div class="command-details">
+                        <p class="command-syntax"><strong>Syntax:</strong> <code>shutdown</code></p>
+                        <p class="command-desc"><strong>Description:</strong> Safely shuts down the MPX system. Prompts for confirmation before proceeding.</p>
+
+                        <div class="command-examples">
+                            <strong>Examples:</strong>
+                            <pre><code class="language-bash">MPX> shutdown
+Are you sure you want to shutdown? (y/n): y
+Shutting down...</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- need to add more commands here -->
+                <div class="placeholder-note">
+                    <p><em>each command should include:</em></p>
+                    <ul>
+                        <li>Command name</li>
+                        <li>Syntax</li>
+                        <li>Description</li>
+                        <li>Parameters (if any)</li>
+                        <li>Examples</li>
+                    </ul>
+                </div>
+
+            </article>
+
+            <article id="user-quick-ref">
+                <h2>Quick Reference</h2>
+                <table class="quick-ref-table">
+                    <thead>
+                        <tr>
+                            <th>Command</th>
+                            <th>Description</th>
+                            <th>Syntax</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>help</code></td>
+                            <td>Display help information</td>
+                            <td><code>help [command]</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>version</code></td>
+                            <td>Display version information</td>
+                            <td><code>version</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>shutdown</code></td>
+                            <td>Shutdown the system</td>
+                            <td><code>shutdown</code></td>
+                        </tr>
+                        <!-- need to add more commands -->
+                    </tbody>
+                </table>
+            </article>
+        </section>
+
+        <!-- PROGRAMMER'S MANUAL  -->
+        <section id="programmers-manual" class="manual-section">
+            <h1 class="section-title">Programmer's Manual</h1>
+
+            <article id="prog-overview">
+                <h2>Overview</h2>
+                <p>
+                    This section documents all functions, data types, and structures available
+                    in the T4BF MPX system. Use this reference to extend and modify the system.
+                </p>
+
+                <h3>Module Organization</h3>
+                <ul>
+                    <li><strong>memory.h</strong> - Memory management functions</li>
+                    <li><strong>processes.h</strong> - Process management and PCB operations</li>
+                    <li><strong>string.h</strong> - String manipulation utilities</li>
+                    <li><strong>stdlib.h</strong> - Standard library functions</li>
+                    <li><strong>ctype.h</strong> - Character type functions</li>
+                    <li><strong>sys_req.h</strong> - System request interface</li>
+                </ul>
+            </article>
+
+            <article id="prog-types">
+                <h2>Data Types</h2>
+
+                <!-- TEMPLATE FOR DATA TYPES-->
+                <div class="type-entry">
+                    <h3 class="type-name">struct pcb</h3>
+                    <p class="type-desc"><strong>Purpose:</strong> Process Control Block - Contains all information about a process needed by the operating system.</p>
+
+                    <div class="type-definition">
+                        <strong>Definition:</strong>
+                        <pre><code class="language-c">struct pcb {
+    char name[16];          // Process name (unique identifier)
+    int class;              // Process class (system or user)
+    int priority;           // Scheduling priority (0-9)
+    int state;              // Current state (ready, running, blocked)
+    void *stack_base;       // Base address of process stack
+    void *stack_top;        // Current top of stack
+    struct pcb *next;       // Pointer to next PCB in queue
+    struct pcb *prev;       // Pointer to previous PCB in queue
+};</code></pre>
+                    </div>
+
+                    <div class="type-members">
+                        <strong>Members:</strong>
+                        <table>
+                            <tr>
+                                <th>Member</th>
+                                <th>Type</th>
+                                <th>Description</th>
+                            </tr>
+                            <tr>
+                                <td><code>name</code></td>
+                                <td><code>char[16]</code></td>
+                                <td>Unique identifier for the process (max 15 characters + null terminator)</td>
+                            </tr>
+                            <tr>
+                                <td><code>class</code></td>
+                                <td><code>int</code></td>
+                                <td>Process class: 0 = system process, 1 = user process</td>
+                            </tr>
+                            <tr>
+                                <td><code>priority</code></td>
+                                <td><code>int</code></td>
+                                <td>Scheduling priority: 0 (highest) to 9 (lowest)</td>
+                            </tr>
+                            <tr>
+                                <td><code>state</code></td>
+                                <td><code>int</code></td>
+                                <td>Current process state</td>
+                            </tr>
+                            <tr>
+                                <td><code>stack_base</code></td>
+                                <td><code>void*</code></td>
+                                <td>Base address of allocated stack memory</td>
+                            </tr>
+                            <tr>
+                                <td><code>stack_top</code></td>
+                                <td><code>void*</code></td>
+                                <td>Current stack pointer position</td>
+                            </tr>
+                            <tr>
+                                <td><code>next</code></td>
+                                <td><code>struct pcb*</code></td>
+                                <td>Next PCB in the queue (linked list)</td>
+                            </tr>
+                            <tr>
+                                <td><code>prev</code></td>
+                                <td><code>struct pcb*</code></td>
+                                <td>Previous PCB in the queue (linked list)</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- TEMPLATE FOR ENUMS -->
+                <div class="type-entry">
+                    <h3 class="type-name">enum process_state</h3>
+                    <p class="type-desc"><strong>Purpose:</strong> Defines the possible states a process can be in.</p>
+
+                    <div class="type-definition">
+                        <strong>Definition:</strong>
+                        <pre><code class="language-c">enum process_state {
+    READY,      // Process is ready to execute
+    RUNNING,    // Process is currently executing
+    BLOCKED,    // Process is waiting for an event
+    SUSPENDED   // Process has been suspended
+};</code></pre>
+                    </div>
+
+                    <div class="type-values">
+                        <strong>Values:</strong>
+                        <table>
+                            <tr>
+                                <th>Value</th>
+                                <th>Description</th>
+                            </tr>
+                            <tr>
+                                <td><code>READY</code></td>
+                                <td>Process is in the ready queue, waiting to be scheduled</td>
+                            </tr>
+                            <tr>
+                                <td><code>RUNNING</code></td>
+                                <td>Process is currently being executed by the CPU</td>
+                            </tr>
+                            <tr>
+                                <td><code>BLOCKED</code></td>
+                                <td>Process is waiting for I/O or another event</td>
+                            </tr>
+                            <tr>
+                                <td><code>SUSPENDED</code></td>
+                                <td>Process has been manually suspended by user or system</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!--Need to add mroe data types -->
+                <div class="placeholder-note">
+                    <p><em>Add additional structs and enums following the templates above.</em></p>
+                </div>
+            </article>
+
+            <article id="prog-functions">
+                <h2>Function Reference</h2>
+
+                <!--tEMPLATE FOR FUNCTIONS -->
+                <div class="function-entry">
+                    <h3 class="function-name">pcb_alloc</h3>
+                    <div class="function-details">
+                        <p class="function-proto"><strong>Prototype:</strong></p>
+                        <pre><code class="language-c">struct pcb *pcb_alloc(void);</code></pre>
+
+                        <p class="function-desc"><strong>Description:</strong> Allocates memory for a new Process Control Block and initializes all fields to default values.</p>
+
+                        <div class="function-params">
+                            <strong>Parameters:</strong>
+                            <p>None</p>
+                        </div>
+
+                        <div class="function-return">
+                            <strong>Return Value:</strong>
+                            <table>
+                                <tr>
+                                    <th>Value</th>
+                                    <th>Description</th>
+                                </tr>
+                                <tr>
+                                    <td><code>struct pcb*</code></td>
+                                    <td>Pointer to newly allocated PCB on success</td>
+                                </tr>
+                                <tr>
+                                    <td><code>NULL</code></td>
+                                    <td>Memory allocation failed</td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div class="function-example">
+                            <strong>Example:</strong>
+                            <pre><code class="language-c">struct pcb *new_process = pcb_alloc();
+if (new_process == NULL) {
+    // Handle allocation failure
+    return -1;
+}
+// Use the new PCB...</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="function-entry">
+                    <h3 class="function-name">pcb_free</h3>
+                    <div class="function-details">
+                        <p class="function-proto"><strong>Prototype:</strong></p>
+                        <pre><code class="language-c">int pcb_free(struct pcb *pcb);</code></pre>
+
+                        <p class="function-desc"><strong>Description:</strong> Frees the memory allocated for a PCB and its associated stack. The PCB must not be in any queue when freed.</p>
+
+                        <div class="function-params">
+                            <strong>Parameters:</strong>
+                            <table>
+                                <tr>
+                                    <th>Parameter</th>
+                                    <th>Type</th>
+                                    <th>Description</th>
+                                </tr>
+                                <tr>
+                                    <td><code>pcb</code></td>
+                                    <td><code>struct pcb*</code></td>
+                                    <td>Pointer to the PCB to free. Must not be NULL.</td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div class="function-return">
+                            <strong>Return Value:</strong>
+                            <table>
+                                <tr>
+                                    <th>Value</th>
+                                    <th>Description</th>
+                                </tr>
+                                <tr>
+                                    <td><code>0</code></td>
+                                    <td>Success</td>
+                                </tr>
+                                <tr>
+                                    <td><code>-1</code></td>
+                                    <td>Invalid parameter (NULL pointer)</td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div class="function-example">
+                            <strong>Example:</strong>
+                            <pre><code class="language-c">struct pcb *process = find_pcb("myprocess");
+if (process != NULL) {
+    pcb_remove(process);  // Remove from queue first
+    pcb_free(process);    // Then free memory
+}</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- need to add more functions -->
+                <div class="placeholder-note">
+                    <p><em>Add additional functions following the template above. Each function should include:</em></p>
+                    <ul>
+                        <li>Function prototype</li>
+                        <li>Description of what it does</li>
+                        <li>Parameters with types and valid values</li>
+                        <li>Return values and their meanings</li>
+                        <li>Usage example</li>
+                    </ul>
+                </div>
+            </article>
+
+            <article id="prog-modules">
+                <h2>Modules</h2>
+
+                <div class="module-entry">
+                    <h3>memory.h</h3>
+                    <p>Memory management functions for dynamic allocation.</p>
+                    <ul class="function-list">
+                        <li><code>kmalloc()</code> - Allocate kernel memory</li>
+                        <li><code>kfree()</code> - Free kernel memory</li>
+                        <!-- Add more functions -->
+                    </ul>
+                </div>
+
+                <div class="module-entry">
+                    <h3>processes.h</h3>
+                    <p>Process management and PCB operations.</p>
+                    <ul class="function-list">
+                        <li><a href="#pcb_alloc"><code>pcb_alloc()</code></a> - Allocate a new PCB</li>
+                        <li><a href="#pcb_free"><code>pcb_free()</code></a> - Free a PCB</li>
+                        <!-- add more -->
+                    </ul>
+                </div>
+
+                <div class="module-entry">
+                    <h3>string.h</h3>
+                    <p>String manipulation utilities.</p>
+                    <ul class="function-list">
+                        <li><code>strlen()</code> - Get string length</li>
+                        <li><code>strcmp()</code> - Compare strings</li>
+                        <li><code>strcpy()</code> - Copy strings</li>
+                        <!-- add more  -->
+                    </ul>
+                </div>
+            </article>
+        </section>
+
+        <!--CONTRIBUTIONS -->
+        <section id="contributions" class="manual-section">
+            <h1 class="section-title">Contributions</h1>
+
+            <article id="contrib-overview">
+                <h2>Overview</h2>
+                <p>
+                    This section documents each team member's contributions to the T4BF MPX project
+                    throughout the semester. Contributions are documented at the function level.
+                </p>
+            </article>
+
+            <article id="contrib-members">
+                <h2>Team Members</h2>
+
+                <!--TEMPLATE FOR TEAM MEMBERS -->
+                <div class="contributor">
+                    <h3 class="contributor-name">Ethan Boyd</h3>
+                    <div class="contributions-list">
+                        <h4>Functions Implemented</h4>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Function</th>
+                                    <th>Module</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>function call</code></td>
+                                    <td>module</td>
+                                    <td>implementation</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h4>Other Contributions</h4>
+                        <ul>
+                            <li>Designed the documentation HTML.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="contributor">
+                    <h3 class="contributor-name">Benjamin Eft</h3>
+                    <div class="contributions-list">
+                        <h4>Functions Implemented</h4>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Function</th>
+                                    <th>Module</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>function call</code></td>
+                                    <td>module</td>
+                                    <td>implementation</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h4>Other Contributions</h4>
+                        <ul>
+                            <li>List other contributions here</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="contributor">
+                    <h3 class="contributor-name">Shannon Seiler</h3>
+                    <div class="contributions-list">
+                        <h4>Functions Implemented</h4>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Function</th>
+                                    <th>Module</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>function call</code></td>
+                                    <td>module</td>
+                                    <td>implementation</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h4>Other Contributions</h4>
+                        <ul>
+                            <li>List other contributions here</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="contributor">
+                    <h3 class="contributor-name">Matt Welch</h3>
+                    <div class="contributions-list">
+                        <h4>Functions Implemented</h4>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Function</th>
+                                    <th>Module</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>function call</code></td>
+                                    <td>module</td>
+                                    <td>implementation</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h4>Other Contributions</h4>
+                        <ul>
+                            <li>List other contributions here</li>
+                        </ul>
+                    </div>
+                </div>
+
+            </article>
+        </section>
+
+        <footer>
+            <p>T4BF MPX Documentation</p>
+        </footer>
+    </main>
+
+    <!--prism.js for syntax highlighting (we can change this later if needed)-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+
+    <!-- smooth scrolling and active nav highlighting -->
+    <script>
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
