@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Documentation - T4BF MPX</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    <style>
+        .editor-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .editor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .editor-header h1 {
+            margin: 0;
+        }
+
+        .editor-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            font-size: 1em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-save {
+            background-color: #38a169;
+            color: white;
+        }
+
+        .btn-save:hover {
+            background-color: #2f855a;
+        }
+
+        .btn-save:disabled {
+            background-color: #9ae6b4;
+            cursor: not-allowed;
+        }
+
+        .btn-cancel {
+            background-color: #e53e3e;
+            color: white;
+        }
+
+        .btn-cancel:hover {
+            background-color: #c53030;
+        }
+
+        .btn-logout {
+            background-color: #718096;
+            color: white;
+        }
+
+        .btn-logout:hover {
+            background-color: #4a5568;
+        }
+
+        .status-bar {
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .status-success {
+            background-color: #c6f6d5;
+            color: #22543d;
+            display: block;
+        }
+
+        .status-error {
+            background-color: #fed7d7;
+            color: #742a2a;
+            display: block;
+        }
+
+        .status-loading {
+            background-color: #bee3f8;
+            color: #2a4365;
+            display: block;
+        }
+
+        /* Token Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-hidden {
+            display: none;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .modal-content h2 {
+            margin-top: 0;
+        }
+
+        .modal-content p {
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .modal-content input {
+            width: 100%;
+            padding: 10px;
+            font-size: 1em;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+        }
+
+        .modal-content .btn {
+            width: 100%;
+        }
+
+        .token-help {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 10px;
+        }
+
+        .token-help a {
+            color: #2c5282;
+        }
+
+        .editor-wrapper {
+            min-height: 500px;
+        }
+
+        .loading-spinner {
+            text-align: center;
+            padding: 50px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <!-- Token Input Modal -->
+    <div id="tokenModal" class="modal-overlay">
+        <div class="modal-content">
+            <h2>GitHub Authentication</h2>
+            <p>Enter your GitHub Personal Access Token to edit the documentation. The token needs <code>repo</code> scope to commit changes.</p>
+            <input type="password" id="tokenInput" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
+            <button class="btn btn-save" onclick="saveToken()">Continue</button>
+            <p class="token-help">
+                <a href="https://github.com/settings/tokens/new?description=T4BF%20Doc%20Editor&scopes=repo" target="_blank">Create a new token</a>
+                - Select "repo" scope when creating.
+            </p>
+        </div>
+    </div>
+
+    <div class="editor-container">
+        <div class="editor-header">
+            <h1>Edit Documentation</h1>
+            <div class="editor-actions">
+                <button class="btn btn-save" id="saveBtn" onclick="saveDocumentation()" disabled>Save Changes</button>
+                <a href="documentation.html" class="btn btn-cancel">Cancel</a>
+                <button class="btn btn-logout" onclick="logout()">Logout</button>
+            </div>
+        </div>
+
+        <div id="statusBar" class="status-bar"></div>
+
+        <div class="editor-wrapper">
+            <div id="loadingIndicator" class="loading-spinner">Loading documentation...</div>
+            <textarea id="editor"></textarea>
+        </div>
+    </div>
+
+    <script src="editor.js"></script>
+</body>
+</html>
