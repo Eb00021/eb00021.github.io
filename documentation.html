@@ -8,843 +8,753 @@
 </head>
 <body>
     <!-- Main Content -->
-    <main>
-        <!-- USER'S MANUAL-->
-        <section id="users-manual" class="manual-section">
-            <h1 class="section-title">User's Manual</h1>
-
-            <article id="user-intro">
-                <h2>Introduction</h2>
-                <p>
-                    Welcome to the T4BF MPX Operating System. This manual provides comprehensive
-                    documentation for all available commands and system functionality.
-                </p>
-                <p>
-                    MPX (Multiprogramming Executive) is a simple operating system designed for
-                    educational purposes. This documentation will guide you through all available
-                    commands and their usage.
-                </p>
-            </article>
-
-            <article id="user-getting-started">
-                <h2>Getting Started</h2>
-                <p>After booting MPX, you will be presented with a command prompt. From here, you can enter any of the commands documented below.</p>
-
-                <h3>Basic Usage</h3>
-                <p>Type a command and press Enter to execute it. Commands are case-insensitive.</p>
-
-                <pre><code class="language-bash">MPX> help
-MPX> version
-MPX> shutdown</code></pre>
-            </article>
-
-            <article id="user-commands">
-                <h2>Command Reference</h2>
-
-                <!-- TEMPLATE FOR COMMANDS - copy and modify for each command -->
-                <div class="command-entry">
-                    <h3 class="command-name">help</h3>
-                    <div class="command-details">
-                        <p class="command-syntax"><strong>Syntax:</strong> <code>help [command]</code></p>
-                        <p class="command-desc"><strong>Description:</strong> Displays help information for available commands. When called without arguments, lists all commands. When called with a command name, displays detailed help for that specific command.</p>
-
-                        <div class="command-params">
-                            <strong>Parameters:</strong>
-                            <table>
-                                <tr>
-                                    <th>Parameter</th>
-                                    <th>Required</th>
-                                    <th>Description</th>
-                                </tr>
-                                <tr>
-                                    <td><code>command</code></td>
-                                    <td>No</td>
-                                    <td>The name of the command to get help for</td>
-                                </tr>
-                            </table>
-                        </div>
-
-                        <div class="command-examples">
-                            <strong>Examples:</strong>
-                            <pre><code class="language-bash"># List all available commands
-MPX> help
+    <main><!-- USER'S MANUAL-->
+<section id="users-manual" class="manual-section">
+<h1 class="section-title">User's Manual</h1>
+<article id="user-intro">
+<h2>Introduction</h2>
+<p>Welcome to the T4BF MPX Operating System. This manual provides comprehensive documentation for all available commands and system functionality.</p>
+<p>MPX (Multiprogramming Executive) is a simple operating system designed for educational purposes. This documentation will guide you through all available commands and their usage.</p>
+</article>
+<article id="user-getting-started">
+<h2>Getting Started</h2>
+<p>After booting MPX, you will be presented with a command prompt. From here, you can enter any of the commands documented below.</p>
+<h3>Basic Usage</h3>
+<p>Type a command and press Enter to execute it. Commands are case-insensitive.</p>
+<pre><code class="language-bash">MPX&gt; help
+MPX&gt; version
+MPX&gt; shutdown</code></pre>
+</article>
+<article id="user-commands">
+<h2>Command Reference</h2>
+<!-- TEMPLATE FOR COMMANDS - copy and modify for each command -->
+<div class="command-entry">
+<h3 class="command-name">help</h3>
+<div class="command-details">
+<p class="command-syntax"><strong>Syntax:</strong> <code>help [command]</code></p>
+<p class="command-desc"><strong>Description:</strong> Displays help information for available commands. When called without arguments, lists all commands. When called with a command name, displays detailed help for that specific command.</p>
+<div class="command-params"><strong>Parameters:</strong>
+<table>
+<tbody>
+<tr>
+<th>Parameter</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+<tr>
+<td><code>command</code></td>
+<td>No</td>
+<td>The name of the command to get help for</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="command-examples"><strong>Examples:</strong>
+<pre><code class="language-bash"># List all available commands
+MPX&gt; help
 
 # Get help for a specific command
-MPX> help shutdown</code></pre>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="command-entry">
-                    <h3 class="command-name">version</h3>
-                    <div class="command-details">
-                        <p class="command-syntax"><strong>Syntax:</strong> <code>version</code></p>
-                        <p class="command-desc"><strong>Description:</strong> Displays the current version of MPX and compilation information.</p>
-
-                        <div class="command-examples">
-                            <strong>Examples:</strong>
-                            <pre><code class="language-bash">MPX> version
+MPX&gt; help shutdown</code></pre>
+</div>
+</div>
+</div>
+<div class="command-entry">
+<h3 class="command-name">version</h3>
+<div class="command-details">
+<p class="command-syntax"><strong>Syntax:</strong> <code>version</code></p>
+<p class="command-desc"><strong>Description:</strong> Displays the current version of MPX and compilation information.</p>
+<div class="command-examples"><strong>Examples:</strong>
+<pre><code class="language-bash">MP&gt; version
 MPX Version 1.0 - T4BF</code></pre>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="command-entry">
-                    <h3 class="command-name">shutdown</h3>
-                    <div class="command-details">
-                        <p class="command-syntax"><strong>Syntax:</strong> <code>shutdown</code></p>
-                        <p class="command-desc"><strong>Description:</strong> Safely shuts down the MPX system. Prompts for confirmation before proceeding.</p>
-
-                        <div class="command-examples">
-                            <strong>Examples:</strong>
-                            <pre><code class="language-bash">MPX> shutdown
+</div>
+</div>
+</div>
+<div class="command-entry">
+<h3 class="command-name">shutdown</h3>
+<div class="command-details">
+<p class="command-syntax"><strong>Syntax:</strong> <code>shutdown</code></p>
+<p class="command-desc"><strong>Description:</strong> Safely shuts down the MPX system. Prompts for confirmation before proceeding.</p>
+<div class="command-examples"><strong>Examples:</strong>
+<pre><code class="language-bash">MPX&gt; shutdown
 Are you sure you want to shutdown? (y/n): y
 Shutting down...</code></pre>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="command-entry">
-                    <h3 class="command-name">getdate</h3>
-                    <div class="command-details">
-                        <p class="command-syntax"><strong>Syntax:</strong> <code>getdate</code></p>
-                        <p class="command-desc"><strong>Description:</strong> Reads the current date from the Real-Time Clock (RTC) and displays it in MM/DD/YYYY format.</p>
-
-                        <div class="command-examples">
-                            <strong>Examples:</strong>
-                            <pre><code class="language-bash">mpx> getdate
+</div>
+</div>
+</div>
+<div class="command-entry">
+<h3 class="command-name">getdate</h3>
+<div class="command-details">
+<p class="command-syntax"><strong>Syntax:</strong> <code>getdate</code></p>
+<p class="command-desc"><strong>Description:</strong> Reads the current date from the Real-Time Clock (RTC) and displays it in MM/DD/YYYY format.</p>
+<div class="command-examples"><strong>Examples:</strong>
+<pre><code class="language-bash">mpx&gt; getdate
 Current date: 01/26/2026</code></pre>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="command-entry">
-                    <h3 class="command-name">setdate</h3>
-                    <div class="command-details">
-                        <p class="command-syntax"><strong>Syntax:</strong> <code>setdate MM/DD/YYYY</code></p>
-                        <p class="command-desc"><strong>Description:</strong> Sets the system date in the RTC. The date must be in MM/DD/YYYY format.</p>
-
-                        <div class="command-params">
-                            <strong>Parameters:</strong>
-                            <table>
-                                <tr>
-                                    <th>Parameter</th>
-                                    <th>Required</th>
-                                    <th>Description</th>
-                                </tr>
-                                <tr>
-                                    <td><code>MM/DD/YYYY</code></td>
-                                    <td>Yes</td>
-                                    <td>Date to set. Month (1-12), Day (1-31), Year (1900-2099)</td>
-                                </tr>
-                            </table>
-                        </div>
-
-                        <div class="command-examples">
-                            <strong>Examples:</strong>
-                            <pre><code class="language-bash">mpx> setdate 01/26/2026
+</div>
+</div>
+</div>
+<div class="command-entry">
+<h3 class="command-name">setdate</h3>
+<div class="command-details">
+<p class="command-syntax"><strong>Syntax:</strong> <code>setdate MM/DD/YYYY</code></p>
+<p class="command-desc"><strong>Description:</strong> Sets the system date in the RTC. The date must be in MM/DD/YYYY format.</p>
+<div class="command-params"><strong>Parameters:</strong>
+<table>
+<tbody>
+<tr>
+<th>Parameter</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+<tr>
+<td><code>MM/DD/YYYY</code></td>
+<td>Yes</td>
+<td>Date to set. Month (1-12), Day (1-31), Year (1900-2099)</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="command-examples"><strong>Examples:</strong>
+<pre><code class="language-bash">mpx&gt; setdate 01/26/2026
 Date set successfully.</code></pre>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="command-entry">
-                    <h3 class="command-name">gettime</h3>
-                    <div class="command-details">
-                        <p class="command-syntax"><strong>Syntax:</strong> <code>gettime</code></p>
-                        <p class="command-desc"><strong>Description:</strong> Reads the current time from the RTC and displays it in HH:MM:SS format (24-hour).</p>
-
-                        <div class="command-examples">
-                            <strong>Examples:</strong>
-                            <pre><code class="language-bash">mpx> gettime
+</div>
+</div>
+</div>
+<div class="command-entry">
+<h3 class="command-name">gettime</h3>
+<div class="command-details">
+<p class="command-syntax"><strong>Syntax:</strong> <code>gettime</code></p>
+<p class="command-desc"><strong>Description:</strong> Reads the current time from the RTC and displays it in HH:MM:SS format (24-hour).</p>
+<div class="command-examples"><strong>Examples:</strong>
+<pre><code class="language-bash">mpx&gt; gettime
 Current time: 14:30:45</code></pre>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="command-entry">
-                    <h3 class="command-name">settime</h3>
-                    <div class="command-details">
-                        <p class="command-syntax"><strong>Syntax:</strong> <code>settime HH:MM:SS</code></p>
-                        <p class="command-desc"><strong>Description:</strong> Sets the system time in the RTC. Time must be in HH:MM:SS format (24-hour).</p>
-
-                        <div class="command-params">
-                            <strong>Parameters:</strong>
-                            <table>
-                                <tr>
-                                    <th>Parameter</th>
-                                    <th>Required</th>
-                                    <th>Description</th>
-                                </tr>
-                                <tr>
-                                    <td><code>HH:MM:SS</code></td>
-                                    <td>Yes</td>
-                                    <td>Time to set. Hours (0-23), Minutes (0-59), Seconds (0-59)</td>
-                                </tr>
-                            </table>
-                        </div>
-
-                        <div class="command-examples">
-                            <strong>Examples:</strong>
-                            <pre><code class="language-bash">mpx> settime 14:30:00
+</div>
+</div>
+</div>
+<div class="command-entry">
+<h3 class="command-name">settime</h3>
+<div class="command-details">
+<p class="command-syntax"><strong>Syntax:</strong> <code>settime HH:MM:SS</code></p>
+<p class="command-desc"><strong>Description:</strong> Sets the system time in the RTC. Time must be in HH:MM:SS format (24-hour).</p>
+<div class="command-params"><strong>Parameters:</strong>
+<table>
+<tbody>
+<tr>
+<th>Parameter</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+<tr>
+<td><code>HH:MM:SS</code></td>
+<td>Yes</td>
+<td>Time to set. Hours (0-23), Minutes (0-59), Seconds (0-59)</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="command-examples"><strong>Examples:</strong>
+<pre><code class="language-bash">mpx&gt; settime 14:30:00
 Time set successfully.</code></pre>
-                        </div>
-                    </div>
-                </div>
-
-            </article>
-
-            <article id="user-quick-ref">
-                <h2>Quick Reference</h2>
-                <table class="quick-ref-table">
-                    <thead>
-                        <tr>
-                            <th>Command</th>
-                            <th>Description</th>
-                            <th>Syntax</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><code>help</code></td>
-                            <td>Display help information</td>
-                            <td><code>help [command]</code></td>
-                        </tr>
-                        <tr>
-                            <td><code>version</code></td>
-                            <td>Display version information</td>
-                            <td><code>version</code></td>
-                        </tr>
-                        <tr>
-                            <td><code>shutdown</code></td>
-                            <td>Shutdown the system</td>
-                            <td><code>shutdown</code></td>
-                        </tr>
-                        <tr>
-                            <td><code>getdate</code></td>
-                            <td>Display current date</td>
-                            <td><code>getdate</code></td>
-                        </tr>
-                        <tr>
-                            <td><code>setdate</code></td>
-                            <td>Set the system date</td>
-                            <td><code>setdate MM/DD/YYYY</code></td>
-                        </tr>
-                        <tr>
-                            <td><code>gettime</code></td>
-                            <td>Display current time</td>
-                            <td><code>gettime</code></td>
-                        </tr>
-                        <tr>
-                            <td><code>settime</code></td>
-                            <td>Set the system time</td>
-                            <td><code>settime HH:MM:SS</code></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </article>
-        </section>
-
-        <!-- PROGRAMMER'S MANUAL  -->
-        <section id="programmers-manual" class="manual-section">
-            <h1 class="section-title">Programmer's Manual</h1>
-
-            <article id="prog-overview">
-                <h2>Overview</h2>
-                <p>
-                    This section documents all functions, data types, and structures available
-                    in the T4BF MPX system. Use this reference to extend and modify the system.
-                </p>
-
-                <h3>Module Organization</h3>
-                <ul>
-                    <li><strong>memory.h</strong> - Memory management functions</li>
-                    <li><strong>processes.h</strong> - Process management and PCB operations</li>
-                    <li><strong>string.h</strong> - String manipulation utilities</li>
-                    <li><strong>stdlib.h</strong> - Standard library functions</li>
-                    <li><strong>ctype.h</strong> - Character type functions</li>
-                    <li><strong>sys_req.h</strong> - System request interface</li>
-                </ul>
-            </article>
-
-            <article id="prog-types">
-                <h2>Data Types</h2>
-
-                <div class="type-entry">
-                    <h3 class="type-name">op_code</h3>
-                    <p class="type-desc"><strong>Purpose:</strong> Enum for system request operation codes.</p>
-
-                    <div class="type-definition">
-                        <strong>Definition:</strong>
-                        <pre><code class="language-c">typedef enum {
+</div>
+</div>
+</div>
+</article>
+<article id="user-quick-ref">
+<h2>Quick Reference</h2>
+<table class="quick-ref-table">
+<thead>
+<tr>
+<th>Command</th>
+<th>Description</th>
+<th>Syntax</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>help</code></td>
+<td>Display help information</td>
+<td><code>help [command]</code></td>
+</tr>
+<tr>
+<td><code>version</code></td>
+<td>Display version information</td>
+<td><code>version</code></td>
+</tr>
+<tr>
+<td><code>shutdown</code></td>
+<td>Shutdown the system</td>
+<td><code>shutdown</code></td>
+</tr>
+<tr>
+<td><code>getdate</code></td>
+<td>Display current date</td>
+<td><code>getdate</code></td>
+</tr>
+<tr>
+<td><code>setdate</code></td>
+<td>Set the system date</td>
+<td><code>setdate MM/DD/YYYY</code></td>
+</tr>
+<tr>
+<td><code>gettime</code></td>
+<td>Display current time</td>
+<td><code>gettime</code></td>
+</tr>
+<tr>
+<td><code>settime</code></td>
+<td>Set the system time</td>
+<td><code>settime HH:MM:SS</code></td>
+</tr>
+</tbody>
+</table>
+</article>
+</section>
+<!-- PROGRAMMER'S MANUAL  -->
+<section id="programmers-manual" class="manual-section">
+<h1 class="section-title">Programmer's Manual</h1>
+<article id="prog-overview">
+<h2>Overview</h2>
+<p>This section documents all functions, data types, and structures available in the T4BF MPX system. Use this reference to extend and modify the system.</p>
+<h3>Module Organization</h3>
+<ul>
+<li><strong>memory.h</strong> - Memory management functions</li>
+<li><strong>processes.h</strong> - Process management and PCB operations</li>
+<li><strong>string.h</strong> - String manipulation utilities</li>
+<li><strong>stdlib.h</strong> - Standard library functions</li>
+<li><strong>ctype.h</strong> - Character type functions</li>
+<li><strong>sys_req.h</strong> - System request interface</li>
+</ul>
+</article>
+<article id="prog-types">
+<h2>Data Types</h2>
+<div class="type-entry">
+<h3 class="type-name">op_code</h3>
+<p class="type-desc"><strong>Purpose:</strong> Enum for system request operation codes.</p>
+<div class="type-definition"><strong>Definition:</strong>
+<pre><code class="language-c">typedef enum {
     EXIT,   // Terminate the calling process
     IDLE,   // Suspend the calling process
     READ,   // Read from a device
     WRITE,  // Write to a device
 } op_code;</code></pre>
-                    </div>
-
-                    <div class="type-values">
-                        <strong>Values:</strong>
-                        <table>
-                            <tr>
-                                <th>Value</th>
-                                <th>Description</th>
-                            </tr>
-                            <tr>
-                                <td><code>EXIT</code></td>
-                                <td>Terminate the calling process (R3+)</td>
-                            </tr>
-                            <tr>
-                                <td><code>IDLE</code></td>
-                                <td>Suspend the calling process (R3+)</td>
-                            </tr>
-                            <tr>
-                                <td><code>READ</code></td>
-                                <td>Read data from a serial port</td>
-                            </tr>
-                            <tr>
-                                <td><code>WRITE</code></td>
-                                <td>Write data to a serial port</td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-
-                <div class="type-entry">
-                    <h3 class="type-name">device</h3>
-                    <p class="type-desc"><strong>Purpose:</strong> Device constants for serial port communication.</p>
-
-                    <div class="type-definition">
-                        <strong>Definition:</strong>
-                        <pre><code class="language-c">// Defined in mpx/device.h
+</div>
+<div class="type-values"><strong>Values:</strong>
+<table>
+<tbody>
+<tr>
+<th>Value</th>
+<th>Description</th>
+</tr>
+<tr>
+<td><code>EXIT</code></td>
+<td>Terminate the calling process (R3+)</td>
+</tr>
+<tr>
+<td><code>IDLE</code></td>
+<td>Suspend the calling process (R3+)</td>
+</tr>
+<tr>
+<td><code>READ</code></td>
+<td>Read data from a serial port</td>
+</tr>
+<tr>
+<td><code>WRITE</code></td>
+<td>Write data to a serial port</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="type-entry">
+<h3 class="type-name">device</h3>
+<p class="type-desc"><strong>Purpose:</strong> Device constants for serial port communication.</p>
+<div class="type-definition"><strong>Definition:</strong>
+<pre><code class="language-c">// Defined in mpx/device.h
 #define COM1 0x3F8
 #define COM2 0x2F8
 #define COM3 0x3E8
 #define COM4 0x2E8</code></pre>
-                    </div>
-                </div>
-
-            </article>
-
-            <article id="prog-functions">
-                <h2>Function Reference</h2>
-
-                <div class="function-entry">
-                    <h3 class="function-name">serial_init</h3>
-                    <div class="function-details">
-                        <p class="function-proto"><strong>Prototype:</strong></p>
-                        <pre><code class="language-c">int serial_init(device dev);</code></pre>
-
-                        <p class="function-desc"><strong>Description:</strong> Initializes a serial port for communication. Sets baud rate to 9600, 8 data bits, no parity, 1 stop bit.</p>
-
-                        <div class="function-params">
-                            <strong>Parameters:</strong>
-                            <table>
-                                <tr>
-                                    <th>Parameter</th>
-                                    <th>Type</th>
-                                    <th>Description</th>
-                                </tr>
-                                <tr>
-                                    <td><code>dev</code></td>
-                                    <td><code>device</code></td>
-                                    <td>Serial port to initialize (COM1, COM2, etc.)</td>
-                                </tr>
-                            </table>
-                        </div>
-
-                        <div class="function-return">
-                            <strong>Return Value:</strong>
-                            <table>
-                                <tr>
-                                    <th>Value</th>
-                                    <th>Description</th>
-                                </tr>
-                                <tr>
-                                    <td><code>0</code></td>
-                                    <td>Success</td>
-                                </tr>
-                                <tr>
-                                    <td><code>-1</code></td>
-                                    <td>Invalid device</td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="function-entry">
-                    <h3 class="function-name">serial_out</h3>
-                    <div class="function-details">
-                        <p class="function-proto"><strong>Prototype:</strong></p>
-                        <pre><code class="language-c">int serial_out(device dev, const char *buffer, size_t len);</code></pre>
-
-                        <p class="function-desc"><strong>Description:</strong> Writes data to a serial port.</p>
-
-                        <div class="function-params">
-                            <strong>Parameters:</strong>
-                            <table>
-                                <tr>
-                                    <th>Parameter</th>
-                                    <th>Type</th>
-                                    <th>Description</th>
-                                </tr>
-                                <tr>
-                                    <td><code>dev</code></td>
-                                    <td><code>device</code></td>
-                                    <td>Serial port to write to</td>
-                                </tr>
-                                <tr>
-                                    <td><code>buffer</code></td>
-                                    <td><code>const char*</code></td>
-                                    <td>Data to write</td>
-                                </tr>
-                                <tr>
-                                    <td><code>len</code></td>
-                                    <td><code>size_t</code></td>
-                                    <td>Number of bytes to write</td>
-                                </tr>
-                            </table>
-                        </div>
-
-                        <div class="function-return">
-                            <strong>Return Value:</strong>
-                            <table>
-                                <tr>
-                                    <th>Value</th>
-                                    <th>Description</th>
-                                </tr>
-                                <tr>
-                                    <td><code>len</code></td>
-                                    <td>Number of bytes written on success</td>
-                                </tr>
-                                <tr>
-                                    <td><code>-1</code></td>
-                                    <td>Invalid device or not initialized</td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="function-entry">
-                    <h3 class="function-name">serial_poll</h3>
-                    <div class="function-details">
-                        <p class="function-proto"><strong>Prototype:</strong></p>
-                        <pre><code class="language-c">int serial_poll(device dev, char *buffer, size_t len);</code></pre>
-
-                        <p class="function-desc"><strong>Description:</strong> Polls the serial port for input. Reads characters one at a time until Enter is pressed or buffer is full. Echoes input back and handles backspace.</p>
-
-                        <div class="function-params">
-                            <strong>Parameters:</strong>
-                            <table>
-                                <tr>
-                                    <th>Parameter</th>
-                                    <th>Type</th>
-                                    <th>Description</th>
-                                </tr>
-                                <tr>
-                                    <td><code>dev</code></td>
-                                    <td><code>device</code></td>
-                                    <td>Serial port to read from</td>
-                                </tr>
-                                <tr>
-                                    <td><code>buffer</code></td>
-                                    <td><code>char*</code></td>
-                                    <td>Buffer to store input</td>
-                                </tr>
-                                <tr>
-                                    <td><code>len</code></td>
-                                    <td><code>size_t</code></td>
-                                    <td>Size of the buffer</td>
-                                </tr>
-                            </table>
-                        </div>
-
-                        <div class="function-return">
-                            <strong>Return Value:</strong>
-                            <table>
-                                <tr>
-                                    <th>Value</th>
-                                    <th>Description</th>
-                                </tr>
-                                <tr>
-                                    <td><code>>= 0</code></td>
-                                    <td>Number of bytes read</td>
-                                </tr>
-                                <tr>
-                                    <td><code>-1</code></td>
-                                    <td>Invalid buffer or length</td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="function-entry">
-                    <h3 class="function-name">sys_req</h3>
-                    <div class="function-details">
-                        <p class="function-proto"><strong>Prototype:</strong></p>
-                        <pre><code class="language-c">int sys_req(op_code op, ...);</code></pre>
-
-                        <p class="function-desc"><strong>Description:</strong> System request function. The main interface between user space and kernel. For READ/WRITE, additional parameters are required.</p>
-
-                        <div class="function-params">
-                            <strong>Parameters (READ/WRITE):</strong>
-                            <table>
-                                <tr>
-                                    <th>Parameter</th>
-                                    <th>Type</th>
-                                    <th>Description</th>
-                                </tr>
-                                <tr>
-                                    <td><code>op</code></td>
-                                    <td><code>op_code</code></td>
-                                    <td>Operation: READ or WRITE</td>
-                                </tr>
-                                <tr>
-                                    <td><code>dev</code></td>
-                                    <td><code>device</code></td>
-                                    <td>Device to read from or write to</td>
-                                </tr>
-                                <tr>
-                                    <td><code>buf</code></td>
-                                    <td><code>char*</code></td>
-                                    <td>Buffer for data</td>
-                                </tr>
-                                <tr>
-                                    <td><code>len</code></td>
-                                    <td><code>size_t</code></td>
-                                    <td>Buffer size / bytes to write</td>
-                                </tr>
-                            </table>
-                        </div>
-
-                        <div class="function-return">
-                            <strong>Return Value:</strong>
-                            <table>
-                                <tr>
-                                    <th>Value</th>
-                                    <th>Description</th>
-                                </tr>
-                                <tr>
-                                    <td><code>>= 0</code></td>
-                                    <td>Number of bytes read/written</td>
-                                </tr>
-                                <tr>
-                                    <td><code>-1</code></td>
-                                    <td>Invalid operation</td>
-                                </tr>
-                                <tr>
-                                    <td><code>-2</code></td>
-                                    <td>Invalid buffer</td>
-                                </tr>
-                                <tr>
-                                    <td><code>-3</code></td>
-                                    <td>Invalid count</td>
-                                </tr>
-                            </table>
-                        </div>
-
-                        <div class="function-example">
-                            <strong>Example:</strong>
-                            <pre><code class="language-c">char buf[128];
+</div>
+</div>
+</article>
+<article id="prog-functions">
+<h2>Function Reference</h2>
+<div class="function-entry">
+<h3 class="function-name">serial_init</h3>
+<div class="function-details">
+<p class="function-proto"><strong>Prototype:</strong></p>
+<pre><code class="language-c">int serial_init(device dev);</code></pre>
+<p class="function-desc"><strong>Description:</strong> Initializes a serial port for communication. Sets baud rate to 9600, 8 data bits, no parity, 1 stop bit.</p>
+<div class="function-params"><strong>Parameters:</strong>
+<table>
+<tbody>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+<tr>
+<td><code>dev</code></td>
+<td><code>device</code></td>
+<td>Serial port to initialize (COM1, COM2, etc.)</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="function-return"><strong>Return Value:</strong>
+<table>
+<tbody>
+<tr>
+<th>Value</th>
+<th>Description</th>
+</tr>
+<tr>
+<td><code>0</code></td>
+<td>Success</td>
+</tr>
+<tr>
+<td><code>-1</code></td>
+<td>Invalid device</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="function-entry">
+<h3 class="function-name">serial_out</h3>
+<div class="function-details">
+<p class="function-proto"><strong>Prototype:</strong></p>
+<pre><code class="language-c">int serial_out(device dev, const char *buffer, size_t len);</code></pre>
+<p class="function-desc"><strong>Description:</strong> Writes data to a serial port.</p>
+<div class="function-params"><strong>Parameters:</strong>
+<table>
+<tbody>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+<tr>
+<td><code>dev</code></td>
+<td><code>device</code></td>
+<td>Serial port to write to</td>
+</tr>
+<tr>
+<td><code>buffer</code></td>
+<td><code>const char*</code></td>
+<td>Data to write</td>
+</tr>
+<tr>
+<td><code>len</code></td>
+<td><code>size_t</code></td>
+<td>Number of bytes to write</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="function-return"><strong>Return Value:</strong>
+<table>
+<tbody>
+<tr>
+<th>Value</th>
+<th>Description</th>
+</tr>
+<tr>
+<td><code>len</code></td>
+<td>Number of bytes written on success</td>
+</tr>
+<tr>
+<td><code>-1</code></td>
+<td>Invalid device or not initialized</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="function-entry">
+<h3 class="function-name">serial_poll</h3>
+<div class="function-details">
+<p class="function-proto"><strong>Prototype:</strong></p>
+<pre><code class="language-c">int serial_poll(device dev, char *buffer, size_t len);</code></pre>
+<p class="function-desc"><strong>Description:</strong> Polls the serial port for input. Reads characters one at a time until Enter is pressed or buffer is full. Echoes input back and handles backspace.</p>
+<div class="function-params"><strong>Parameters:</strong>
+<table>
+<tbody>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+<tr>
+<td><code>dev</code></td>
+<td><code>device</code></td>
+<td>Serial port to read from</td>
+</tr>
+<tr>
+<td><code>buffer</code></td>
+<td><code>char*</code></td>
+<td>Buffer to store input</td>
+</tr>
+<tr>
+<td><code>len</code></td>
+<td><code>size_t</code></td>
+<td>Size of the buffer</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="function-return"><strong>Return Value:</strong>
+<table>
+<tbody>
+<tr>
+<th>Value</th>
+<th>Description</th>
+</tr>
+<tr>
+<td><code>&gt;= 0</code></td>
+<td>Number of bytes read</td>
+</tr>
+<tr>
+<td><code>-1</code></td>
+<td>Invalid buffer or length</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="function-entry">
+<h3 class="function-name">sys_req</h3>
+<div class="function-details">
+<p class="function-proto"><strong>Prototype:</strong></p>
+<pre><code class="language-c">int sys_req(op_code op, ...);</code></pre>
+<p class="function-desc"><strong>Description:</strong> System request function. The main interface between user space and kernel. For READ/WRITE, additional parameters are required.</p>
+<div class="function-params"><strong>Parameters (READ/WRITE):</strong>
+<table>
+<tbody>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+<tr>
+<td><code>op</code></td>
+<td><code>op_code</code></td>
+<td>Operation: READ or WRITE</td>
+</tr>
+<tr>
+<td><code>dev</code></td>
+<td><code>device</code></td>
+<td>Device to read from or write to</td>
+</tr>
+<tr>
+<td><code>buf</code></td>
+<td><code>char*</code></td>
+<td>Buffer for data</td>
+</tr>
+<tr>
+<td><code>len</code></td>
+<td><code>size_t</code></td>
+<td>Buffer size / bytes to write</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="function-return"><strong>Return Value:</strong>
+<table>
+<tbody>
+<tr>
+<th>Value</th>
+<th>Description</th>
+</tr>
+<tr>
+<td><code>&gt;= 0</code></td>
+<td>Number of bytes read/written</td>
+</tr>
+<tr>
+<td><code>-1</code></td>
+<td>Invalid operation</td>
+</tr>
+<tr>
+<td><code>-2</code></td>
+<td>Invalid buffer</td>
+</tr>
+<tr>
+<td><code>-3</code></td>
+<td>Invalid count</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="function-example"><strong>Example:</strong>
+<pre><code class="language-c">char buf[128];
 // Read user input
 int n = sys_req(READ, COM1, buf, sizeof(buf));
 
 // Write output
 sys_req(WRITE, COM1, "Hello\r\n", 7);</code></pre>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="function-entry">
-                    <h3 class="function-name">sys_alloc_mem</h3>
-                    <div class="function-details">
-                        <p class="function-proto"><strong>Prototype:</strong></p>
-                        <pre><code class="language-c">void *sys_alloc_mem(size_t size);</code></pre>
-
-                        <p class="function-desc"><strong>Description:</strong> Allocates dynamic memory. This is the MPX equivalent of malloc().</p>
-
-                        <div class="function-params">
-                            <strong>Parameters:</strong>
-                            <table>
-                                <tr>
-                                    <th>Parameter</th>
-                                    <th>Type</th>
-                                    <th>Description</th>
-                                </tr>
-                                <tr>
-                                    <td><code>size</code></td>
-                                    <td><code>size_t</code></td>
-                                    <td>Number of bytes to allocate</td>
-                                </tr>
-                            </table>
-                        </div>
-
-                        <div class="function-return">
-                            <strong>Return Value:</strong>
-                            <table>
-                                <tr>
-                                    <th>Value</th>
-                                    <th>Description</th>
-                                </tr>
-                                <tr>
-                                    <td><code>void*</code></td>
-                                    <td>Pointer to allocated memory</td>
-                                </tr>
-                                <tr>
-                                    <td><code>NULL</code></td>
-                                    <td>Allocation failed</td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="function-entry">
-                    <h3 class="function-name">sys_free_mem</h3>
-                    <div class="function-details">
-                        <p class="function-proto"><strong>Prototype:</strong></p>
-                        <pre><code class="language-c">int sys_free_mem(void *ptr);</code></pre>
-
-                        <p class="function-desc"><strong>Description:</strong> Frees memory allocated by sys_alloc_mem().</p>
-
-                        <div class="function-params">
-                            <strong>Parameters:</strong>
-                            <table>
-                                <tr>
-                                    <th>Parameter</th>
-                                    <th>Type</th>
-                                    <th>Description</th>
-                                </tr>
-                                <tr>
-                                    <td><code>ptr</code></td>
-                                    <td><code>void*</code></td>
-                                    <td>Pointer to memory to free</td>
-                                </tr>
-                            </table>
-                        </div>
-
-                        <div class="function-return">
-                            <strong>Return Value:</strong>
-                            <table>
-                                <tr>
-                                    <th>Value</th>
-                                    <th>Description</th>
-                                </tr>
-                                <tr>
-                                    <td><code>0</code></td>
-                                    <td>Success</td>
-                                </tr>
-                                <tr>
-                                    <td><code>non-zero</code></td>
-                                    <td>Error</td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-            </article>
-
-            <article id="prog-modules">
-                <h2>Modules</h2>
-
-                <div class="module-entry">
-                    <h3>mpx/serial.h</h3>
-                    <p>Serial port communication functions.</p>
-                    <ul class="function-list">
-                        <li><code>serial_init()</code> - Initialize a serial port</li>
-                        <li><code>serial_out()</code> - Write to serial port</li>
-                        <li><code>serial_poll()</code> - Poll for serial input</li>
-                    </ul>
-                </div>
-
-                <div class="module-entry">
-                    <h3>sys_req.h</h3>
-                    <p>User-to-kernel interface.</p>
-                    <ul class="function-list">
-                        <li><code>sys_req()</code> - System request (READ/WRITE)</li>
-                    </ul>
-                </div>
-
-                <div class="module-entry">
-                    <h3>memory.h</h3>
-                    <p>Dynamic memory allocation.</p>
-                    <ul class="function-list">
-                        <li><code>sys_alloc_mem()</code> - Allocate memory</li>
-                        <li><code>sys_free_mem()</code> - Free memory</li>
-                    </ul>
-                </div>
-
-                <div class="module-entry">
-                    <h3>string.h</h3>
-                    <p>String functions (limited standard library).</p>
-                    <ul class="function-list">
-                        <li><code>strlen()</code> - Get string length</li>
-                        <li><code>strcmp()</code> - Compare strings</li>
-                        <li><code>memcpy()</code> - Copy memory</li>
-                        <li><code>memset()</code> - Fill memory</li>
-                        <li><code>strtok()</code> - Tokenize string</li>
-                    </ul>
-                </div>
-
-                <div class="module-entry">
-                    <h3>stdlib.h</h3>
-                    <p>Standard library functions.</p>
-                    <ul class="function-list">
-                        <li><code>atoi()</code> - String to integer</li>
-                    </ul>
-                </div>
-
-                <div class="module-entry">
-                    <h3>mpx/io.h</h3>
-                    <p>Low-level I/O macros.</p>
-                    <ul class="function-list">
-                        <li><code>inb()</code> - Read byte from I/O port</li>
-                        <li><code>outb()</code> - Write byte to I/O port</li>
-                    </ul>
-                </div>
-            </article>
-        </section>
-
-        <!--CONTRIBUTIONS -->
-        <section id="contributions" class="manual-section">
-            <h1 class="section-title">Contributions</h1>
-
-            <article id="contrib-overview">
-                <h2>Overview</h2>
-                <p>
-                    This section documents each team member's contributions to the T4BF MPX project
-                    throughout the semester. Contributions are documented at the function level.
-                </p>
-            </article>
-
-            <article id="contrib-members">
-                <h2>Team Members</h2>
-
-                <!--TEMPLATE FOR TEAM MEMBERS -->
-                <div class="contributor">
-                    <h3 class="contributor-name">Ethan Boyd</h3>
-                    <div class="contributions-list">
-                        <h4>Functions Implemented</h4>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Function</th>
-                                    <th>Module</th>
-                                    <th>Description</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><code>function call</code></td>
-                                    <td>module</td>
-                                    <td>implementation</td>
-                                </tr>
-                            </tbody>
-                        </table>
-
-                        <h4>Other Contributions</h4>
-                        <ul>
-                            <li>Designed the documentation HTML.</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="contributor">
-                    <h3 class="contributor-name">Benjamin Eft</h3>
-                    <div class="contributions-list">
-                        <h4>Functions Implemented</h4>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Function</th>
-                                    <th>Module</th>
-                                    <th>Description</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><code>function call</code></td>
-                                    <td>module</td>
-                                    <td>implementation</td>
-                                </tr>
-                            </tbody>
-                        </table>
-
-                        <h4>Other Contributions</h4>
-                        <ul>
-                            <li>List other contributions here</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="contributor">
-                    <h3 class="contributor-name">Shannon Seiler</h3>
-                    <div class="contributions-list">
-                        <h4>Functions Implemented</h4>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Function</th>
-                                    <th>Module</th>
-                                    <th>Description</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><code>function call</code></td>
-                                    <td>module</td>
-                                    <td>implementation</td>
-                                </tr>
-                            </tbody>
-                        </table>
-
-                        <h4>Other Contributions</h4>
-                        <ul>
-                            <li>List other contributions here</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="contributor">
-                    <h3 class="contributor-name">Matt Welch</h3>
-                    <div class="contributions-list">
-                        <h4>Functions Implemented</h4>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Function</th>
-                                    <th>Module</th>
-                                    <th>Description</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><code>function call</code></td>
-                                    <td>module</td>
-                                    <td>implementation</td>
-                                </tr>
-                            </tbody>
-                        </table>
-
-                        <h4>Other Contributions</h4>
-                        <ul>
-                            <li>List other contributions here</li>
-                        </ul>
-                    </div>
-                </div>
-
-            </article>
-        </section>
-
-        <footer>
-            <p>T4BF MPX Documentation</p>
-        </footer>
-    </main>
+</div>
+</div>
+</div>
+<div class="function-entry">
+<h3 class="function-name">sys_alloc_mem</h3>
+<div class="function-details">
+<p class="function-proto"><strong>Prototype:</strong></p>
+<pre><code class="language-c">void *sys_alloc_mem(size_t size);</code></pre>
+<p class="function-desc"><strong>Description:</strong> Allocates dynamic memory. This is the MPX equivalent of malloc().</p>
+<div class="function-params"><strong>Parameters:</strong>
+<table>
+<tbody>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+<tr>
+<td><code>size</code></td>
+<td><code>size_t</code></td>
+<td>Number of bytes to allocate</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="function-return"><strong>Return Value:</strong>
+<table>
+<tbody>
+<tr>
+<th>Value</th>
+<th>Description</th>
+</tr>
+<tr>
+<td><code>void*</code></td>
+<td>Pointer to allocated memory</td>
+</tr>
+<tr>
+<td><code>NULL</code></td>
+<td>Allocation failed</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="function-entry">
+<h3 class="function-name">sys_free_mem</h3>
+<div class="function-details">
+<p class="function-proto"><strong>Prototype:</strong></p>
+<pre><code class="language-c">int sys_free_mem(void *ptr);</code></pre>
+<p class="function-desc"><strong>Description:</strong> Frees memory allocated by sys_alloc_mem().</p>
+<div class="function-params"><strong>Parameters:</strong>
+<table>
+<tbody>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+<tr>
+<td><code>ptr</code></td>
+<td><code>void*</code></td>
+<td>Pointer to memory to free</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="function-return"><strong>Return Value:</strong>
+<table>
+<tbody>
+<tr>
+<th>Value</th>
+<th>Description</th>
+</tr>
+<tr>
+<td><code>0</code></td>
+<td>Success</td>
+</tr>
+<tr>
+<td><code>non-zero</code></td>
+<td>Error</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</article>
+<article id="prog-modules">
+<h2>Modules</h2>
+<div class="module-entry">
+<h3>mpx/serial.h</h3>
+<p>Serial port communication functions.</p>
+<ul class="function-list">
+<li><code>serial_init()</code> - Initialize a serial port</li>
+<li><code>serial_out()</code> - Write to serial port</li>
+<li><code>serial_poll()</code> - Poll for serial input</li>
+</ul>
+</div>
+<div class="module-entry">
+<h3>sys_req.h</h3>
+<p>User-to-kernel interface.</p>
+<ul class="function-list">
+<li><code>sys_req()</code> - System request (READ/WRITE)</li>
+</ul>
+</div>
+<div class="module-entry">
+<h3>memory.h</h3>
+<p>Dynamic memory allocation.</p>
+<ul class="function-list">
+<li><code>sys_alloc_mem()</code> - Allocate memory</li>
+<li><code>sys_free_mem()</code> - Free memory</li>
+</ul>
+</div>
+<div class="module-entry">
+<h3>string.h</h3>
+<p>String functions (limited standard library).</p>
+<ul class="function-list">
+<li><code>strlen()</code> - Get string length</li>
+<li><code>strcmp()</code> - Compare strings</li>
+<li><code>memcpy()</code> - Copy memory</li>
+<li><code>memset()</code> - Fill memory</li>
+<li><code>strtok()</code> - Tokenize string</li>
+</ul>
+</div>
+<div class="module-entry">
+<h3>stdlib.h</h3>
+<p>Standard library functions.</p>
+<ul class="function-list">
+<li><code>atoi()</code> - String to integer</li>
+</ul>
+</div>
+<div class="module-entry">
+<h3>mpx/io.h</h3>
+<p>Low-level I/O macros.</p>
+<ul class="function-list">
+<li><code>inb()</code> - Read byte from I/O port</li>
+<li><code>outb()</code> - Write byte to I/O port</li>
+</ul>
+</div>
+</article>
+</section>
+<!--CONTRIBUTIONS -->
+<section id="contributions" class="manual-section">
+<h1 class="section-title">Contributions</h1>
+<article id="contrib-overview">
+<h2>Overview</h2>
+<p>This section documents each team member's contributions to the T4BF MPX project throughout the semester. Contributions are documented at the function level.</p>
+</article>
+<article id="contrib-members">
+<h2>Team Members</h2>
+<!--TEMPLATE FOR TEAM MEMBERS -->
+<div class="contributor">
+<h3 class="contributor-name">Ethan Boyd</h3>
+<div class="contributions-list">
+<h4>Functions Implemented</h4>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Module</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>function call</code></td>
+<td>module</td>
+<td>implementation</td>
+</tr>
+</tbody>
+</table>
+<h4>Other Contributions</h4>
+<ul>
+<li>Designed the documentation HTML.</li>
+</ul>
+</div>
+</div>
+<div class="contributor">
+<h3 class="contributor-name">Benjamin Eft</h3>
+<div class="contributions-list">
+<h4>Functions Implemented</h4>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Module</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>function call</code></td>
+<td>module</td>
+<td>implementation</td>
+</tr>
+</tbody>
+</table>
+<h4>Other Contributions</h4>
+<ul>
+<li>List other contributions here</li>
+</ul>
+</div>
+</div>
+<div class="contributor">
+<h3 class="contributor-name">Shannon Seiler</h3>
+<div class="contributions-list">
+<h4>Functions Implemented</h4>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Module</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>function call</code></td>
+<td>module</td>
+<td>implementation</td>
+</tr>
+</tbody>
+</table>
+<h4>Other Contributions</h4>
+<ul>
+<li>List other contributions here</li>
+</ul>
+</div>
+</div>
+<div class="contributor">
+<h3 class="contributor-name">Matt Welch</h3>
+<div class="contributions-list">
+<h4>Functions Implemented</h4>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Module</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>function call</code></td>
+<td>module</td>
+<td>implementation</td>
+</tr>
+</tbody>
+</table>
+<h4>Other Contributions</h4>
+<ul>
+<li>List other contributions here</li>
+</ul>
+</div>
+</div>
+</article>
+</section>
+<footer>
+<p>T4BF MPX Documentation</p>
+</footer></main>
 
     <!--prism.js for syntax highlighting (we can change this later if needed)-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
