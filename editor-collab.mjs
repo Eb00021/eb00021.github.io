@@ -440,10 +440,7 @@ async function initEditor(ydoc, provider) {
                 fragment: fragment
             }),
             CollaborationCursor.configure({
-                provider: {
-                    doc: ydoc,
-                    awareness: provider.awareness
-                },
+                provider: provider,
                 user: {
                     name: currentUser.displayName || currentUser.email,
                     color: provider.userColor
