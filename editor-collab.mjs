@@ -76,11 +76,11 @@ function updateSaveIndicator(state) {
     }
 }
 
-// Google Sign In (redirect avoids COOP blocking popup window.close/window.closed)
+// Google Sign In (popup flow is more reliable than redirect)
 async function signInWithGoogle() {
     try {
         const provider = new firebase.auth.GoogleAuthProvider();
-        await firebase.auth().signInWithRedirect(provider);
+        await firebase.auth().signInWithPopup(provider);
     } catch (error) {
         console.error('Sign in error:', error);
         showStatus('Sign in failed: ' + error.message, 'error');
@@ -100,7 +100,7 @@ async function signOut() {
             editor.destroy();
         }
         await firebase.auth().signOut();
-        window.location.reload();
+        // No reload needed - onAuthStateChanged listener handles UI update
     } catch (error) {
         console.error('Sign out error:', error);
     }
@@ -678,26 +678,9 @@ function initAuthListener() {
     });
 }
 
-// Handle redirect result after Google sign-in (must run before onAuthStateChanged)
-async function handleRedirectResult() {
-    try {
-        const result = await firebase.auth().getRedirectResult();
-        if (result?.user) {
-            showStatus('Signed in as ' + result.user.email, 'success');
-        }
-        if (result?.error) {
-            showStatus('Sign in failed: ' + result.error.message, 'error');
-        }
-    } catch (error) {
-        console.error('Redirect result error:', error);
-        showStatus('Sign in failed: ' + error.message, 'error');
-    }
-}
-
 // Initialize on page load
-document.addEventListener('DOMContentLoaded', async () => {
+document.addEventListener('DOMContentLoaded', () => {
     initFirebase();
-    await handleRedirectResult();
     initAuthListener();
 });
 
