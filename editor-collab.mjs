@@ -11,8 +11,8 @@ import TableCell from 'https://esm.sh/@tiptap/extension-table-cell@2.1.13';
 import TableHeader from 'https://esm.sh/@tiptap/extension-table-header@2.1.13';
 import Link from 'https://esm.sh/@tiptap/extension-link@2.1.13';
 import Underline from 'https://esm.sh/@tiptap/extension-underline@2.1.13';
-import * as Y from 'https://esm.sh/yjs@13.6.8';
-import { Awareness } from 'https://esm.sh/y-protocols@1.0.6/awareness';
+import * as Y from 'yjs';
+import { Awareness } from 'y-protocols/awareness';
 
 // Editor state
 let editor = null;
@@ -74,11 +74,11 @@ function updateSaveIndicator(state) {
     }
 }
 
-// Google Sign In
+// Google Sign In (redirect avoids COOP blocking popup window.close/window.closed)
 async function signInWithGoogle() {
     try {
         const provider = new firebase.auth.GoogleAuthProvider();
-        await firebase.auth().signInWithPopup(provider);
+        await firebase.auth().signInWithRedirect(provider);
     } catch (error) {
         console.error('Sign in error:', error);
         showStatus('Sign in failed: ' + error.message, 'error');
@@ -657,9 +657,26 @@ function initAuthListener() {
     });
 }
 
+// Handle redirect result after Google sign-in (must run before onAuthStateChanged)
+async function handleRedirectResult() {
+    try {
+        const result = await firebase.auth().getRedirectResult();
+        if (result?.user) {
+            showStatus('Signed in as ' + result.user.email, 'success');
+        }
+        if (result?.error) {
+            showStatus('Sign in failed: ' + result.error.message, 'error');
+        }
+    } catch (error) {
+        console.error('Redirect result error:', error);
+        showStatus('Sign in failed: ' + error.message, 'error');
+    }
+}
+
 // Initialize on page load
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     initFirebase();
+    await handleRedirectResult();
     initAuthListener();
 });
 

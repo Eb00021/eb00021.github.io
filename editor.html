@@ -118,6 +118,16 @@
     <!-- Config -->
     <script src="firebase-config.js"></script>
 
+    <!-- Import map: single Yjs instance so Tiptap collaboration extensions use the same copy (fixes yjs#438) -->
+    <script type="importmap">
+    {
+        "imports": {
+            "yjs": "https://esm.sh/yjs@13.6.8",
+            "y-protocols/awareness": "https://esm.sh/y-protocols@1.0.6/awareness"
+        }
+    }
+    </script>
+
     <!-- Editor Module -->
     <script type="module" src="editor-collab.mjs"></script>
 

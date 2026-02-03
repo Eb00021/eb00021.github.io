@@ -1,5 +1,11 @@
 {
   "rules": {
+    "sessions": {
+      "$encodedEmail": {
+        ".read": "auth != null && auth.token.email.replace('.', ',') == $encodedEmail",
+        ".write": "auth != null && auth.token.email.replace('.', ',') == $encodedEmail"
+      }
+    },
     "documentation": {
       "htmlCache": {
         ".read": true,
