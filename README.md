@@ -18,12 +18,6 @@ A collaborative documentation site with real-time editing powered by Firebase.
 4. Make your changes - they save automatically
 5. Click **Publish** to push changes to the public documentation page
 
-## Admin Access
-
-Admins can manage the team whitelist at `/admin.html`:
-- Add users by email address
-- Remove users from the team
-- Only the configured admin email has access
 
 ## Pages
 
