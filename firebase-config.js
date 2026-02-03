@@ -1,5 +1,5 @@
 const firebaseConfig = {
-    apiKey: "YAIzaSyD-3Xk0P0nMlsPsbJeGRfXF6lD9ILbBfsE",
+    apiKey: "AIzaSyD-3Xk0P0nMlsPsbJeGRfXF6lD9ILbBfsE",
     authDomain: "t4bf-docs.firebaseapp.com",
     databaseURL: "https://t4bf-docs-default-rtdb.firebaseio.com",
     projectId: "t4bf-docs",
