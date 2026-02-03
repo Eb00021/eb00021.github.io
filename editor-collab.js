@@ -274,20 +274,25 @@ async function initCollaboration(user) {
 function updatePresence() {
     if (!provider || !provider.awareness) return;
 
-    const avatarsContainer = elements.presenceAvatars();
-    if (!avatarsContainer) return;
+    const container = elements.presenceAvatars();
+    if (!container) return;
 
-    avatarsContainer.innerHTML = '';
+    container.innerHTML = '';
 
     const states = provider.awareness.getStates();
     states.forEach((state, clientId) => {
         if (state.user) {
-            const avatar = createAvatarElement(state.user.photoURL, state.user.name, 28);
-            avatar.className = 'presence-avatar';
-            avatar.dataset.name = state.user.name;
-            avatar.style.border = '2px solid ' + state.user.color;
-            avatar.style.boxSizing = 'border-box';
-            avatarsContainer.appendChild(avatar);
+            const badge = document.createElement('span');
+            badge.className = 'presence-badge';
+            badge.textContent = state.user.name;
+            badge.style.backgroundColor = state.user.color;
+            badge.style.color = 'white';
+            badge.style.padding = '4px 10px';
+            badge.style.borderRadius = '12px';
+            badge.style.fontSize = '12px';
+            badge.style.fontWeight = '500';
+            badge.style.marginLeft = '6px';
+            container.appendChild(badge);
         }
     });
 }

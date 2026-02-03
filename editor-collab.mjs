@@ -347,10 +347,10 @@ class FirebaseYjsProvider {
     }
 
     updatePresenceUI(states) {
-        const avatarsContainer = getElement('presenceAvatars');
-        if (!avatarsContainer) return;
+        const container = getElement('presenceAvatars');
+        if (!container) return;
 
-        avatarsContainer.innerHTML = '';
+        container.innerHTML = '';
         const now = Date.now();
         const TIMEOUT = 30000; // 30 seconds
 
@@ -360,12 +360,17 @@ class FirebaseYjsProvider {
 
             if (state.user) {
                 const userName = state.user.name || 'User';
-                const avatar = createAvatarElement(state.user.photoURL, userName, 28);
-                avatar.className = 'presence-avatar';
-                avatar.dataset.name = userName;
-                avatar.style.border = '2px solid ' + (state.user.color || '#a0aec0');
-                avatar.style.boxSizing = 'border-box';
-                avatarsContainer.appendChild(avatar);
+                const badge = document.createElement('span');
+                badge.className = 'presence-badge';
+                badge.textContent = userName;
+                badge.style.backgroundColor = state.user.color || '#a0aec0';
+                badge.style.color = 'white';
+                badge.style.padding = '4px 10px';
+                badge.style.borderRadius = '12px';
+                badge.style.fontSize = '12px';
+                badge.style.fontWeight = '500';
+                badge.style.marginLeft = '6px';
+                container.appendChild(badge);
             }
         });
     }
