@@ -3,9 +3,9 @@
 
 import { Editor } from 'https://esm.sh/@tiptap/core@2.1.13';
 import StarterKit from 'https://esm.sh/@tiptap/starter-kit@2.1.13';
-// Use ?external=yjs so esm.sh does not bundle Yjs (single instance – fixes yjs#438)
-import Collaboration from 'https://esm.sh/@tiptap/extension-collaboration@2.1.13?external=yjs';
-import CollaborationCursor from 'https://esm.sh/@tiptap/extension-collaboration-cursor@2.1.13?external=yjs&external=y-protocols/awareness';
+// Bare imports so browser resolves via import map (single Yjs instance)
+import Collaboration from '@tiptap/extension-collaboration';
+import CollaborationCursor from '@tiptap/extension-collaboration-cursor';
 import Table from 'https://esm.sh/@tiptap/extension-table@2.1.13';
 import TableRow from 'https://esm.sh/@tiptap/extension-table-row@2.1.13';
 import TableCell from 'https://esm.sh/@tiptap/extension-table-cell@2.1.13';
@@ -427,6 +427,7 @@ async function initEditor(ydoc, provider) {
             }),
             CollaborationCursor.configure({
                 provider: {
+                    doc: ydoc,
                     awareness: provider.awareness
                 },
                 user: {

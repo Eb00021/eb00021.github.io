@@ -118,12 +118,14 @@
     <!-- Config -->
     <script src="firebase-config.js"></script>
 
-    <!-- Import map: single Yjs instance so Tiptap collaboration extensions use the same copy (fixes yjs#438) -->
+    <!-- Import map: single Yjs instance so every package uses the same copy (fixes yjs#438) -->
     <script type="importmap">
     {
         "imports": {
             "yjs": "https://esm.sh/yjs@13.6.8",
-            "y-protocols/awareness": "https://esm.sh/y-protocols@1.0.6/awareness"
+            "y-protocols/awareness": "https://esm.sh/y-protocols@1.0.6/awareness",
+            "@tiptap/extension-collaboration": "https://esm.sh/@tiptap/extension-collaboration@2.1.13?external=yjs",
+            "@tiptap/extension-collaboration-cursor": "https://esm.sh/@tiptap/extension-collaboration-cursor@2.1.13?external=yjs&external=y-protocols/awareness"
         }
     }
     </script>
