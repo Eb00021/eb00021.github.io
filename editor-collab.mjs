@@ -124,16 +124,70 @@ function encodeEmail(email) {
     return email.replace(/\./g, ',');
 }
 
-// Default avatar as data URI (simple gray circle with user icon)
-const DEFAULT_AVATAR = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><circle cx="16" cy="16" r="16" fill="#a0aec0"/><circle cx="16" cy="12" r="5" fill="#fff"/><path d="M16 19c-5 0-9 2.5-9 6v3h18v-3c0-3.5-4-6-9-6z" fill="#fff"/></svg>');
+// Google-style avatar colors
+const avatarColors = [
+    '#f44336', '#e91e63', '#9c27b0', '#673ab7',
+    '#3f51b5', '#2196f3', '#03a9f4', '#00bcd4',
+    '#009688', '#4caf50', '#8bc34a', '#ff9800',
+    '#ff5722', '#795548', '#607d8b'
+];
+
+// Generate consistent color from name (same name = same color)
+function getColorFromName(name) {
+    let hash = 0;
+    for (let i = 0; i < name.length; i++) {
+        hash = name.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    return avatarColors[Math.abs(hash) % avatarColors.length];
+}
+
+// Create avatar element (img if photoURL exists, div with initial otherwise)
+function createAvatarElement(photoURL, name, size = 32) {
+    if (photoURL) {
+        const img = document.createElement('img');
+        img.src = photoURL;
+        img.alt = name;
+        img.style.width = size + 'px';
+        img.style.height = size + 'px';
+        img.style.borderRadius = '50%';
+        img.style.objectFit = 'cover';
+        return img;
+    }
+
+    // Create initial avatar like Google
+    const div = document.createElement('div');
+    const initial = (name || 'U').charAt(0).toUpperCase();
+    const bgColor = getColorFromName(name || 'User');
+
+    div.textContent = initial;
+    div.style.width = size + 'px';
+    div.style.height = size + 'px';
+    div.style.borderRadius = '50%';
+    div.style.backgroundColor = bgColor;
+    div.style.color = 'white';
+    div.style.display = 'flex';
+    div.style.alignItems = 'center';
+    div.style.justifyContent = 'center';
+    div.style.fontSize = (size * 0.5) + 'px';
+    div.style.fontWeight = '500';
+    div.style.fontFamily = 'Google Sans, Roboto, Arial, sans-serif';
+    div.title = name;
+
+    return div;
+}
 
 // Update UI for authenticated user
 function updateAuthUI(user) {
-    const avatar = getElement('userAvatar');
+    const avatarContainer = getElement('userAvatar');
     const name = getElement('userName');
     const email = getElement('userEmail');
 
-    if (avatar) avatar.src = user.photoURL || DEFAULT_AVATAR;
+    if (avatarContainer) {
+        const newAvatar = createAvatarElement(user.photoURL, user.displayName || user.email, 32);
+        newAvatar.id = 'userAvatar';
+        newAvatar.className = avatarContainer.className;
+        avatarContainer.parentNode.replaceChild(newAvatar, avatarContainer);
+    }
     if (name) name.textContent = user.displayName || 'User';
     if (email) email.textContent = user.email;
 }
@@ -173,13 +227,7 @@ function showAccessDenied() {
 
 // Generate a random color for cursor
 function getRandomColor() {
-    const colors = [
-        '#f44336', '#e91e63', '#9c27b0', '#673ab7',
-        '#3f51b5', '#2196f3', '#03a9f4', '#00bcd4',
-        '#009688', '#4caf50', '#8bc34a', '#cddc39',
-        '#ff9800', '#ff5722', '#795548'
-    ];
-    return colors[Math.floor(Math.random() * colors.length)];
+    return avatarColors[Math.floor(Math.random() * avatarColors.length)];
 }
 
 // Firebase-based Yjs persistence
@@ -305,20 +353,18 @@ class FirebaseYjsProvider {
         avatarsContainer.innerHTML = '';
         const now = Date.now();
         const TIMEOUT = 30000; // 30 seconds
-        const defaultAvatar = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28"><circle cx="14" cy="14" r="14" fill="#a0aec0"/><circle cx="14" cy="10" r="4" fill="#fff"/><path d="M14 16c-4 0-7 2-7 5v3h14v-3c0-3-3-5-7-5z" fill="#fff"/></svg>');
 
         Object.entries(states).forEach(([clientId, state]) => {
             // Skip stale entries
             if (state.lastSeen && (now - state.lastSeen > TIMEOUT)) return;
 
             if (state.user) {
-                const avatar = document.createElement('img');
+                const userName = state.user.name || 'User';
+                const avatar = createAvatarElement(state.user.photoURL, userName, 28);
                 avatar.className = 'presence-avatar';
-                avatar.src = state.user.photoURL || defaultAvatar;
-                avatar.alt = state.user.name || 'User';
-                avatar.dataset.name = state.user.name || 'User';
-                avatar.style.borderColor = state.user.color || '#a0aec0';
-                avatar.onerror = () => { avatar.src = defaultAvatar; };
+                avatar.dataset.name = userName;
+                avatar.style.border = '2px solid ' + (state.user.color || '#a0aec0');
+                avatar.style.boxSizing = 'border-box';
                 avatarsContainer.appendChild(avatar);
             }
         });

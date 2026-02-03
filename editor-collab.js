@@ -125,11 +125,17 @@ function encodeEmail(email) {
 
 // Update UI for authenticated user
 function updateAuthUI(user) {
-    const avatar = elements.userAvatar();
+    const avatarContainer = elements.userAvatar();
     const name = elements.userName();
     const email = elements.userEmail();
 
-    if (avatar) avatar.src = user.photoURL || 'https://via.placeholder.com/32';
+    if (avatarContainer) {
+        // Replace the img element with our avatar (could be img or div)
+        const newAvatar = createAvatarElement(user.photoURL, user.displayName || user.email, 32);
+        newAvatar.id = 'userAvatar';
+        newAvatar.className = avatarContainer.className;
+        avatarContainer.parentNode.replaceChild(newAvatar, avatarContainer);
+    }
     if (name) name.textContent = user.displayName || 'User';
     if (email) email.textContent = user.email;
 }
@@ -165,15 +171,61 @@ function showAccessDenied() {
     if (denied) denied.style.display = 'block';
 }
 
+// Google-style avatar colors
+const avatarColors = [
+    '#f44336', '#e91e63', '#9c27b0', '#673ab7',
+    '#3f51b5', '#2196f3', '#03a9f4', '#00bcd4',
+    '#009688', '#4caf50', '#8bc34a', '#ff9800',
+    '#ff5722', '#795548', '#607d8b'
+];
+
+// Generate consistent color from name (same name = same color)
+function getColorFromName(name) {
+    let hash = 0;
+    for (let i = 0; i < name.length; i++) {
+        hash = name.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    return avatarColors[Math.abs(hash) % avatarColors.length];
+}
+
 // Generate a random color for cursor
 function getRandomColor() {
-    const colors = [
-        '#f44336', '#e91e63', '#9c27b0', '#673ab7',
-        '#3f51b5', '#2196f3', '#03a9f4', '#00bcd4',
-        '#009688', '#4caf50', '#8bc34a', '#cddc39',
-        '#ff9800', '#ff5722', '#795548'
-    ];
-    return colors[Math.floor(Math.random() * colors.length)];
+    return avatarColors[Math.floor(Math.random() * avatarColors.length)];
+}
+
+// Create avatar element (img if photoURL exists, div with initial otherwise)
+function createAvatarElement(photoURL, name, size = 32) {
+    if (photoURL) {
+        const img = document.createElement('img');
+        img.src = photoURL;
+        img.alt = name;
+        img.style.width = size + 'px';
+        img.style.height = size + 'px';
+        img.style.borderRadius = '50%';
+        img.style.objectFit = 'cover';
+        return img;
+    }
+
+    // Create initial avatar like Google
+    const div = document.createElement('div');
+    const initial = (name || 'U').charAt(0).toUpperCase();
+    const bgColor = getColorFromName(name || 'User');
+
+    div.textContent = initial;
+    div.style.width = size + 'px';
+    div.style.height = size + 'px';
+    div.style.borderRadius = '50%';
+    div.style.backgroundColor = bgColor;
+    div.style.color = 'white';
+    div.style.display = 'flex';
+    div.style.alignItems = 'center';
+    div.style.justifyContent = 'center';
+    div.style.fontSize = (size * 0.5) + 'px';
+    div.style.fontWeight = '500';
+    div.style.fontFamily = 'Google Sans, Roboto, Arial, sans-serif';
+    div.title = name;
+
+    return div;
 }
 
 // Initialize Yjs and Firebase provider
@@ -230,12 +282,11 @@ function updatePresence() {
     const states = provider.awareness.getStates();
     states.forEach((state, clientId) => {
         if (state.user) {
-            const avatar = document.createElement('img');
+            const avatar = createAvatarElement(state.user.photoURL, state.user.name, 28);
             avatar.className = 'presence-avatar';
-            avatar.src = state.user.photoURL || 'https://via.placeholder.com/28';
-            avatar.alt = state.user.name;
             avatar.dataset.name = state.user.name;
-            avatar.style.borderColor = state.user.color;
+            avatar.style.border = '2px solid ' + state.user.color;
+            avatar.style.boxSizing = 'border-box';
             avatarsContainer.appendChild(avatar);
         }
     });
