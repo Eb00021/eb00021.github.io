@@ -3,8 +3,9 @@
 
 import { Editor } from 'https://esm.sh/@tiptap/core@2.1.13';
 import StarterKit from 'https://esm.sh/@tiptap/starter-kit@2.1.13';
-import Collaboration from 'https://esm.sh/@tiptap/extension-collaboration@2.1.13';
-import CollaborationCursor from 'https://esm.sh/@tiptap/extension-collaboration-cursor@2.1.13';
+// Use ?external=yjs so esm.sh does not bundle Yjs (single instance – fixes yjs#438)
+import Collaboration from 'https://esm.sh/@tiptap/extension-collaboration@2.1.13?external=yjs';
+import CollaborationCursor from 'https://esm.sh/@tiptap/extension-collaboration-cursor@2.1.13?external=yjs&external=y-protocols/awareness';
 import Table from 'https://esm.sh/@tiptap/extension-table@2.1.13';
 import TableRow from 'https://esm.sh/@tiptap/extension-table-row@2.1.13';
 import TableCell from 'https://esm.sh/@tiptap/extension-table-cell@2.1.13';
@@ -268,7 +269,7 @@ class FirebaseYjsProvider {
                         const update = this.base64ToUint8Array(data.update);
                         Y.applyUpdate(this.ydoc, update, 'firebase');
                     } catch (e) {
-                        console.error('Error applying update:', e);
+                        console.warn('Error applying remote update:', e?.message || e);
                     }
                 }
             }
@@ -296,7 +297,7 @@ class FirebaseYjsProvider {
                 }
             }
         } catch (e) {
-            console.error('Error loading document:', e);
+            console.warn('Error loading document (ignoring persisted state):', e?.message || e);
         }
     }
 
@@ -549,45 +550,47 @@ async function publishContent() {
     }
 }
 
-// Load initial content if document is empty
+// Load initial content only when the Yjs document is empty (no remote state yet).
+// Uses try/catch because setContent(html) can throw "Unexpected content type" if
+// the HTML or cached content doesn't match the collaboration schema.
 async function loadInitialContent(provider) {
     const fragment = ydoc.getXmlFragment('prosemirror');
 
-    // Check if document is empty after a short delay
+    // Wait for initial Firebase sync so we don't overwrite remote state
     setTimeout(async () => {
-        if (fragment.length === 0 || (fragment.length === 1 && fragment.toArray()[0].length === 0)) {
-            const db = firebase.database();
+        if (!editor || !ydoc) return;
+        const isEmpty = fragment.length === 0 || (fragment.length === 1 && fragment.toArray()[0].length === 0);
+        if (!isEmpty) return;
 
-            try {
-                // First try to load from Firebase htmlCache
-                const cacheSnapshot = await db.ref('documentation/htmlCache/content').once('value');
-                if (cacheSnapshot.exists()) {
-                    editor.commands.setContent(cacheSnapshot.val());
-                    return;
+        const db = firebase.database();
+        try {
+            const cacheSnapshot = await db.ref('documentation/htmlCache/content').once('value');
+            if (cacheSnapshot.exists()) {
+                const html = cacheSnapshot.val();
+                if (html && typeof html === 'string') {
+                    editor.commands.setContent(html);
                 }
-
-                // If no cache, fetch from documentation.html
-                const response = await fetch('documentation.html');
-                if (response.ok) {
-                    const html = await response.text();
-                    // Extract main content
-                    const mainMatch = html.match(/<main[^>]*id="mainContent"[^>]*>([\s\S]*?)<\/main>/i) ||
-                                     html.match(/<main[^>]*>([\s\S]*?)<\/main>/i);
-                    if (mainMatch) {
-                        editor.commands.setContent(mainMatch[1]);
-                        // Also save to htmlCache
-                        await db.ref('documentation/htmlCache').set({
-                            content: mainMatch[1],
-                            updatedAt: firebase.database.ServerValue.TIMESTAMP,
-                            updatedBy: 'migration'
-                        });
-                    }
-                }
-            } catch (error) {
-                console.error('Failed to load initial content:', error);
+                return;
             }
+
+            const response = await fetch('documentation.html');
+            if (response.ok) {
+                const html = await response.text();
+                const mainMatch = html.match(/<main[^>]*id="mainContent"[^>]*>([\s\S]*?)<\/main>/i) ||
+                                 html.match(/<main[^>]*>([\s\S]*?)<\/main>/i);
+                if (mainMatch && mainMatch[1]) {
+                    editor.commands.setContent(mainMatch[1]);
+                    await db.ref('documentation/htmlCache').set({
+                        content: mainMatch[1],
+                        updatedAt: firebase.database.ServerValue.TIMESTAMP,
+                        updatedBy: 'migration'
+                    });
+                }
+            }
+        } catch (error) {
+            console.warn('Failed to load initial content (doc may already be synced):', error?.message || error);
         }
-    }, 1000);
+    }, 1500);
 }
 
 // Auth state listener
