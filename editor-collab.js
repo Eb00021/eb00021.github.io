@@ -7,6 +7,8 @@ let ydoc = null;
 let provider = null;
 let currentUser = null;
 let isAuthorized = false;
+let sessionId = null;
+let sessionListener = null;
 
 // DOM Elements
 const elements = {
@@ -567,6 +569,33 @@ async function loadInitialContent() {
 }
 
 // Auth state listener
+// Track session to prevent duplicate logins
+async function trackSession(user) {
+    const db = firebase.database();
+    const encodedEmail = encodeEmail(user.email);
+    const sessionRef = db.ref('sessions/' + encodedEmail);
+
+    // Generate unique session ID for this window
+    sessionId = Date.now() + '-' + Math.random().toString(36).substring(2, 9);
+
+    // Set this session as active
+    await sessionRef.set(sessionId);
+
+    // Remove session on disconnect
+    sessionRef.onDisconnect().remove();
+
+    // Listen for session changes (another window signed in)
+    sessionListener = sessionRef.on('value', (snapshot) => {
+        const activeSession = snapshot.val();
+        // If session changed and it's not ours, sign out
+        if (activeSession && activeSession !== sessionId) {
+            sessionRef.off('value', sessionListener);
+            alert('You signed in from another window. This session will be closed.');
+            signOut();
+        }
+    });
+}
+
 function initAuthListener() {
     firebase.auth().onAuthStateChanged(async (user) => {
         if (user) {
@@ -579,6 +608,9 @@ function initAuthListener() {
             if (authorized) {
                 isAuthorized = true;
                 showEditorContainer();
+
+                // Track this session (will sign out old windows)
+                await trackSession(user);
 
                 // Initialize collaboration
                 const { ydoc: doc, provider: prov } = await initCollaboration(user);
