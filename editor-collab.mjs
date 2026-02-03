@@ -124,13 +124,16 @@ function encodeEmail(email) {
     return email.replace(/\./g, ',');
 }
 
+// Default avatar as data URI (simple gray circle with user icon)
+const DEFAULT_AVATAR = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><circle cx="16" cy="16" r="16" fill="#a0aec0"/><circle cx="16" cy="12" r="5" fill="#fff"/><path d="M16 19c-5 0-9 2.5-9 6v3h18v-3c0-3.5-4-6-9-6z" fill="#fff"/></svg>');
+
 // Update UI for authenticated user
 function updateAuthUI(user) {
     const avatar = getElement('userAvatar');
     const name = getElement('userName');
     const email = getElement('userEmail');
 
-    if (avatar) avatar.src = user.photoURL || 'https://via.placeholder.com/32';
+    if (avatar) avatar.src = user.photoURL || DEFAULT_AVATAR;
     if (name) name.textContent = user.displayName || 'User';
     if (email) email.textContent = user.email;
 }
@@ -266,8 +269,8 @@ class FirebaseYjsProvider {
     }
 
     setupAwareness() {
-        // Update awareness in Firebase periodically
-        const updateAwareness = () => {
+        // Update awareness in Firebase when local state changes
+        this.awareness.on('change', () => {
             const state = this.awareness.getLocalState();
             if (state) {
                 this.awarenessRef.child(this.clientId).set({
@@ -275,11 +278,15 @@ class FirebaseYjsProvider {
                     lastSeen: firebase.database.ServerValue.TIMESTAMP
                 });
             }
-        };
+        });
 
-        // Update every 5 seconds
-        this.awarenessInterval = setInterval(updateAwareness, 5000);
-        updateAwareness();
+        // Heartbeat to keep presence alive
+        const heartbeat = () => {
+            this.awarenessRef.child(this.clientId).update({
+                lastSeen: firebase.database.ServerValue.TIMESTAMP
+            });
+        };
+        this.awarenessInterval = setInterval(heartbeat, 10000);
 
         // Remove on disconnect
         this.awarenessRef.child(this.clientId).onDisconnect().remove();
@@ -298,6 +305,7 @@ class FirebaseYjsProvider {
         avatarsContainer.innerHTML = '';
         const now = Date.now();
         const TIMEOUT = 30000; // 30 seconds
+        const defaultAvatar = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28"><circle cx="14" cy="14" r="14" fill="#a0aec0"/><circle cx="14" cy="10" r="4" fill="#fff"/><path d="M14 16c-4 0-7 2-7 5v3h14v-3c0-3-3-5-7-5z" fill="#fff"/></svg>');
 
         Object.entries(states).forEach(([clientId, state]) => {
             // Skip stale entries
@@ -306,10 +314,11 @@ class FirebaseYjsProvider {
             if (state.user) {
                 const avatar = document.createElement('img');
                 avatar.className = 'presence-avatar';
-                avatar.src = state.user.photoURL || 'https://via.placeholder.com/28';
-                avatar.alt = state.user.name;
-                avatar.dataset.name = state.user.name;
-                avatar.style.borderColor = state.user.color;
+                avatar.src = state.user.photoURL || defaultAvatar;
+                avatar.alt = state.user.name || 'User';
+                avatar.dataset.name = state.user.name || 'User';
+                avatar.style.borderColor = state.user.color || '#a0aec0';
+                avatar.onerror = () => { avatar.src = defaultAvatar; };
                 avatarsContainer.appendChild(avatar);
             }
         });

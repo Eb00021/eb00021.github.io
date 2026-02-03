@@ -77,6 +77,9 @@ function isAdmin(email) {
     return email === ADMIN_EMAIL;
 }
 
+// Default avatar as data URI
+const DEFAULT_AVATAR = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><circle cx="16" cy="16" r="16" fill="#a0aec0"/><circle cx="16" cy="12" r="5" fill="#fff"/><path d="M16 19c-5 0-9 2.5-9 6v3h18v-3c0-3.5-4-6-9-6z" fill="#fff"/></svg>');
+
 // Update UI for authenticated user
 function updateAuthUI(user) {
     const avatar = elements.userAvatar();
@@ -84,7 +87,10 @@ function updateAuthUI(user) {
     const email = elements.userEmail();
     const adminDisplay = elements.adminEmailDisplay();
 
-    if (avatar) avatar.src = user.photoURL || 'https://via.placeholder.com/32';
+    if (avatar) {
+        avatar.src = user.photoURL || DEFAULT_AVATAR;
+        avatar.onerror = () => { avatar.src = DEFAULT_AVATAR; };
+    }
     if (name) name.textContent = user.displayName || 'User';
     if (email) email.textContent = user.email;
     if (adminDisplay) adminDisplay.textContent = ADMIN_EMAIL;
