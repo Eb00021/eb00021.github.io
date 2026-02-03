@@ -1,0 +1,26 @@
+{
+  "rules": {
+    "documentation": {
+      "htmlCache": {
+        ".read": true,
+        ".write": "auth != null && (auth.token.email == root.child('config/adminEmail').val() || root.child('users').child(auth.token.email.replace('.', ',')).exists())"
+      },
+      "yjs": {
+        ".read": "auth != null && (auth.token.email == root.child('config/adminEmail').val() || root.child('users').child(auth.token.email.replace('.', ',')).exists())",
+        ".write": "auth != null && (auth.token.email == root.child('config/adminEmail').val() || root.child('users').child(auth.token.email.replace('.', ',')).exists())"
+      },
+      "awareness": {
+        ".read": "auth != null && (auth.token.email == root.child('config/adminEmail').val() || root.child('users').child(auth.token.email.replace('.', ',')).exists())",
+        ".write": "auth != null && (auth.token.email == root.child('config/adminEmail').val() || root.child('users').child(auth.token.email.replace('.', ',')).exists())"
+      }
+    },
+    "users": {
+      ".read": "auth != null && auth.token.email == root.child('config/adminEmail').val()",
+      ".write": "auth != null && auth.token.email == root.child('config/adminEmail').val()"
+    },
+    "config": {
+      ".read": true,
+      ".write": false
+    }
+  }
+}

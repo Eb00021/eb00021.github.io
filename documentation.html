@@ -5,53 +5,107 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>T4BF MPX Documentation</title>
     <link rel="stylesheet" href="css/style.css">
+    <style>
+        .edit-link {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #2c5282;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-family: sans-serif;
+            font-size: 14px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            z-index: 1000;
+        }
+        .edit-link:hover {
+            background: #1a365d;
+        }
+        .content-source {
+            font-family: sans-serif;
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+            padding: 5px;
+            background: #f7fafc;
+            margin-bottom: 20px;
+            border-radius: 3px;
+        }
+        .loading-content {
+            text-align: center;
+            padding: 50px;
+            color: #666;
+            font-family: sans-serif;
+        }
+    </style>
 </head>
 <body>
+    <!-- Edit Link -->
+    <a href="editor.html" class="edit-link">Edit Documentation</a>
+
     <!-- Main Content -->
-    <main><!-- USER'S MANUAL-->
-<section id="users-manual" class="manual-section">
-<h1 class="section-title">User's Manual</h1>
-<article id="user-intro">
-<h2>Introduction</h2>
-<p>Welcome to the T4BF MPX Operating System. This manual provides comprehensive documentation for all available commands and system functionality.</p>
-<p>MPX (Multiprogramming Executive) is a simple operating system designed for educational purposes. This documentation will guide you through all available commands and their usage.</p>
-</article>
-<article id="user-getting-started">
-<h2>Getting Started</h2>
-<p>After booting MPX, you will be presented with a command prompt. From here, you can enter any of the commands documented below.</p>
-<h3>Basic Usage</h3>
-<p>Type a command and press Enter to execute it. Commands are case-insensitive.</p>
-<pre><code class="language-bash">MPX&gt; help
-MPX&gt; version
-MPX&gt; shutdown</code></pre>
-</article>
-<article id="user-commands">
-<h2>Command Reference</h2>
-<!-- TEMPLATE FOR COMMANDS - copy and modify for each command -->
-<div class="command-entry">
-<h3 class="command-name">help</h3>
-<div class="command-details">
-<p class="command-syntax"><strong>Syntax:</strong> <code>help [command]</code></p>
-<p class="command-desc"><strong>Description:</strong> Displays help information for available commands. When called without arguments, lists all commands. When called with a command name, displays detailed help for that specific command.</p>
-<div class="command-params"><strong>Parameters:</strong>
-<table>
-<tbody>
-<tr>
-<th>Parameter</th>
-<th>Required</th>
-<th>Description</th>
-</tr>
-<tr>
-<td><code>command</code></td>
-<td>No</td>
-<td>The name of the command to get help for</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="command-examples"><strong>Examples:</strong>
-<pre><code class="language-bash"># List all available commands
-MPX&gt; help
+    <main id="mainContent">
+        <!-- USER'S MANUAL-->
+        <section id="users-manual" class="manual-section">
+            <h1 class="section-title">User's Manual</h1>
+
+            <article id="user-intro">
+                <h2>Introduction</h2>
+                <p>
+                    Welcome to the T4BF MPX Operating System. This manual provides comprehensive
+                    documentation for all available commands and system functionality.
+                </p>
+                <p>
+                    MPX (Multiprogramming Executive) is a simple operating system designed for
+                    educational purposes. This documentation will guide you through all available
+                    commands and their usage.
+                </p>
+            </article>
+
+            <article id="user-getting-started">
+                <h2>Getting Started</h2>
+                <p>After booting MPX, you will be presented with a command prompt. From here, you can enter any of the commands documented below.</p>
+
+                <h3>Basic Usage</h3>
+                <p>Type a command and press Enter to execute it. Commands are case-insensitive.</p>
+
+                <pre><code class="language-bash">MPX> help
+MPX> version
+MPX> shutdown</code></pre>
+            </article>
+
+            <article id="user-commands">
+                <h2>Command Reference</h2>
+
+                <!-- TEMPLATE FOR COMMANDS - copy and modify for each command -->
+                <div class="command-entry">
+                    <h3 class="command-name">help</h3>
+                    <div class="command-details">
+                        <p class="command-syntax"><strong>Syntax:</strong> <code>help [command]</code></p>
+                        <p class="command-desc"><strong>Description:</strong> Displays help information for available commands. When called without arguments, lists all commands. When called with a command name, displays detailed help for that specific command.</p>
+
+                        <div class="command-params">
+                            <strong>Parameters:</strong>
+                            <table>
+                                <tr>
+                                    <th>Parameter</th>
+                                    <th>Required</th>
+                                    <th>Description</th>
+                                </tr>
+                                <tr>
+                                    <td><code>command</code></td>
+                                    <td>No</td>
+                                    <td>The name of the command to get help for</td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div class="command-examples">
+                            <strong>Examples:</strong>
+                            <pre><code class="language-bash"># List all available commands
+MPX> help
 
 # Get help for a specific command
 MPX&gt; help shutdown</code></pre>
@@ -760,6 +814,63 @@ sys_req(WRITE, COM1, "Hello\r\n", 7);</code></pre>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+
+    <!-- Firebase SDK for loading dynamic content -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script src="firebase-config.js"></script>
+
+    <!-- Load content from Firebase with static fallback -->
+    <script>
+        (function() {
+            const mainContent = document.getElementById('mainContent');
+            const staticContent = mainContent.innerHTML;
+
+            // Try to load from Firebase
+            function loadFromFirebase() {
+                try {
+                    if (typeof firebase === 'undefined' || typeof firebaseConfig === 'undefined') {
+                        console.log('Firebase not configured, using static content');
+                        return;
+                    }
+
+                    if (!firebase.apps.length) {
+                        firebase.initializeApp(firebaseConfig);
+                    }
+
+                    const db = firebase.database();
+                    db.ref('documentation/htmlCache').once('value')
+                        .then((snapshot) => {
+                            if (snapshot.exists()) {
+                                const data = snapshot.val();
+                                if (data.content) {
+                                    mainContent.innerHTML = data.content;
+                                    // Re-run Prism highlighting
+                                    if (typeof Prism !== 'undefined') {
+                                        Prism.highlightAll();
+                                    }
+                                    console.log('Content loaded from Firebase');
+                                }
+                            } else {
+                                console.log('No Firebase content, using static');
+                            }
+                        })
+                        .catch((error) => {
+                            console.log('Firebase load error, using static:', error.message);
+                        });
+                } catch (error) {
+                    console.log('Firebase initialization error:', error.message);
+                }
+            }
+
+            // Load after page ready
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', loadFromFirebase);
+            } else {
+                loadFromFirebase();
+            }
+        })();
+    </script>
 
     <!-- smooth scrolling and active nav highlighting -->
     <script>
