@@ -140,13 +140,27 @@ async function loadUsers() {
                 ? new Date(userData.addedAt).toLocaleDateString()
                 : 'Unknown';
 
-            li.innerHTML = `
-                <div class="user-details">
-                    <span class="user-name">${userData.name || email}</span>
-                    <span class="user-added-info">Added ${addedDate} by ${userData.addedBy || 'admin'}</span>
-                </div>
-                <button class="btn btn-danger btn-small" onclick="removeUser('${encodedEmail}')">Remove</button>
-            `;
+            const userDetails = document.createElement('div');
+            userDetails.className = 'user-details';
+
+            const userName = document.createElement('span');
+            userName.className = 'user-name';
+            userName.textContent = userData.name || email;
+
+            const userAddedInfo = document.createElement('span');
+            userAddedInfo.className = 'user-added-info';
+            userAddedInfo.textContent = `Added ${addedDate} by ${userData.addedBy || 'admin'}`;
+
+            userDetails.appendChild(userName);
+            userDetails.appendChild(userAddedInfo);
+
+            const removeBtn = document.createElement('button');
+            removeBtn.className = 'btn btn-danger btn-small';
+            removeBtn.textContent = 'Remove';
+            removeBtn.addEventListener('click', () => removeUser(encodedEmail));
+
+            li.appendChild(userDetails);
+            li.appendChild(removeBtn);
             usersList.appendChild(li);
         });
     } catch (error) {

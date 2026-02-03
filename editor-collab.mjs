@@ -24,6 +24,7 @@ let awareness = null;
 let firebaseUnsubscribe = null;
 let sessionId = null;
 let sessionListener = null;
+let provider = null;
 
 // DOM Elements
 const getElement = (id) => document.getElementById(id);
@@ -91,6 +92,9 @@ async function signOut() {
     try {
         if (firebaseUnsubscribe) {
             firebaseUnsubscribe();
+        }
+        if (provider) {
+            provider.destroy();
         }
         if (editor) {
             editor.destroy();
@@ -245,6 +249,10 @@ class FirebaseYjsProvider {
         this.awareness = new Awareness(ydoc);
         this.userColor = getRandomColor();
         this.clientId = Math.random().toString(36).substring(2, 15);
+        this.synced = false;
+        this.whenSynced = new Promise((resolve) => {
+            this._resolveSynced = resolve;
+        });
 
         this.init();
     }
@@ -298,6 +306,9 @@ class FirebaseYjsProvider {
             }
         } catch (e) {
             console.warn('Error loading document (ignoring persisted state):', e?.message || e);
+        } finally {
+            this.synced = true;
+            this._resolveSynced();
         }
     }
 
@@ -379,9 +390,12 @@ class FirebaseYjsProvider {
     }
 
     uint8ArrayToBase64(uint8Array) {
-        let binary = '';
-        uint8Array.forEach(byte => binary += String.fromCharCode(byte));
-        return btoa(binary);
+        const CHUNK_SIZE = 0x8000;
+        const chunks = [];
+        for (let i = 0; i < uint8Array.length; i += CHUNK_SIZE) {
+            chunks.push(String.fromCharCode.apply(null, uint8Array.subarray(i, i + CHUNK_SIZE)));
+        }
+        return btoa(chunks.join(''));
     }
 
     base64ToUint8Array(base64) {
@@ -555,43 +569,49 @@ async function publishContent() {
 // Uses try/catch because setContent(html) can throw "Unexpected content type" if
 // the HTML or cached content doesn't match the collaboration schema.
 async function loadInitialContent(provider) {
+    if (!editor || !ydoc) return;
+
     const fragment = ydoc.getXmlFragment('prosemirror');
+    const isEmpty = fragment.length === 0 || (fragment.length === 1 && fragment.toArray()[0].length === 0);
+    if (!isEmpty) return;
 
-    // Wait for initial Firebase sync so we don't overwrite remote state
-    setTimeout(async () => {
-        if (!editor || !ydoc) return;
-        const isEmpty = fragment.length === 0 || (fragment.length === 1 && fragment.toArray()[0].length === 0);
-        if (!isEmpty) return;
-
-        const db = firebase.database();
-        try {
-            const cacheSnapshot = await db.ref('documentation/htmlCache/content').once('value');
-            if (cacheSnapshot.exists()) {
-                const html = cacheSnapshot.val();
-                if (html && typeof html === 'string') {
+    const db = firebase.database();
+    try {
+        const cacheSnapshot = await db.ref('documentation/htmlCache/content').once('value');
+        if (cacheSnapshot.exists()) {
+            const html = cacheSnapshot.val();
+            if (html && typeof html === 'string') {
+                try {
                     editor.commands.setContent(html);
-                }
-                return;
-            }
-
-            const response = await fetch('documentation.html');
-            if (response.ok) {
-                const html = await response.text();
-                const mainMatch = html.match(/<main[^>]*id="mainContent"[^>]*>([\s\S]*?)<\/main>/i) ||
-                                 html.match(/<main[^>]*>([\s\S]*?)<\/main>/i);
-                if (mainMatch && mainMatch[1]) {
-                    editor.commands.setContent(mainMatch[1]);
-                    await db.ref('documentation/htmlCache').set({
-                        content: mainMatch[1],
-                        updatedAt: firebase.database.ServerValue.TIMESTAMP,
-                        updatedBy: 'migration'
-                    });
+                } catch (e) {
+                    console.warn('Failed to set content from cache:', e?.message || e);
                 }
             }
-        } catch (error) {
-            console.warn('Failed to load initial content (doc may already be synced):', error?.message || error);
+            return;
         }
-    }, 1500);
+
+        const response = await fetch('documentation.html');
+        if (response.ok) {
+            const html = await response.text();
+            const mainMatch = html.match(/<main[^>]*id="mainContent"[^>]*>([\s\S]*?)<\/main>/i) ||
+                             html.match(/<main[^>]*>([\s\S]*?)<\/main>/i);
+            if (mainMatch && mainMatch[1]) {
+                try {
+                    editor.commands.setContent(mainMatch[1]);
+                } catch (e) {
+                    console.warn('Failed to set content from HTML:', e?.message || e);
+                    return;
+                }
+                await db.ref('documentation/htmlCache').set({
+                    content: mainMatch[1],
+                    updatedAt: firebase.database.ServerValue.TIMESTAMP,
+                    updatedBy: 'migration'
+                });
+            }
+        }
+    } catch (error) {
+        console.warn('Failed to load initial content (doc may already be synced):', error?.message || error);
+    }
 }
 
 // Auth state listener
@@ -642,14 +662,14 @@ function initAuthListener() {
                 ydoc = new Y.Doc();
 
                 // Initialize Firebase provider
-                const provider = new FirebaseYjsProvider(ydoc, 'content', user);
+                provider = new FirebaseYjsProvider(ydoc, 'content', user);
                 awareness = provider.awareness;
 
-                // Initialize editor after a short delay to let the doc sync
-                setTimeout(async () => {
+                // Wait for provider sync before initializing editor
+                provider.whenSynced.then(async () => {
                     await initEditor(ydoc, provider);
-                    loadInitialContent(provider);
-                }, 500);
+                    await loadInitialContent(provider);
+                });
             } else {
                 showAccessDenied();
             }
