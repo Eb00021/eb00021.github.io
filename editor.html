@@ -43,7 +43,7 @@
                     <span class="save-text"></span>
                 </div>
                 <button class="btn btn-save" onclick="publishContent()">Publish</button>
-                <button class="btn btn-secondary" onclick="showGitHubConfig()" title="Configure GitHub">GitHub</button>
+                <button class="btn btn-secondary" id="githubConfigBtn" onclick="showGitHubConfig()" title="Configure GitHub" style="display: none;">GitHub</button>
                 <a href="documentation.html" class="btn btn-cancel">View Docs</a>
                 <a href="admin.html" class="btn btn-primary" id="adminLink" style="display: none;">Admin</a>
                 <button class="btn btn-logout" onclick="signOut()">Sign Out</button>
@@ -140,8 +140,8 @@
     <!-- GitHub Config Modal -->
     <div id="githubModal" class="modal modal-hidden">
         <div class="modal-content">
-            <h3>GitHub Configuration</h3>
-            <p>Enter a GitHub Personal Access Token (PAT) with <code>repo</code> scope to enable publishing directly to GitHub.</p>
+            <h3>GitHub Configuration (Global)</h3>
+            <p>Enter a GitHub Personal Access Token (PAT) with <code>repo</code> scope. This token is shared globally for all authorized users.</p>
             <input type="password" id="githubTokenInput" placeholder="ghp_xxxxxxxxxxxx">
             <div class="modal-actions">
                 <button class="btn btn-danger btn-small" onclick="clearGitHubConfig()">Clear</button>
@@ -151,7 +151,7 @@
         </div>
     </div>
 
-    <!-- Show admin link for admin user -->
+    <!-- Show admin link and GitHub config for admin user -->
     <script>
         // Wait for firebase to be ready
         document.addEventListener('DOMContentLoaded', () => {
@@ -162,6 +162,9 @@
                         if (user && typeof ADMIN_EMAIL !== 'undefined' && user.email === ADMIN_EMAIL) {
                             const adminLink = document.getElementById('adminLink');
                             if (adminLink) adminLink.style.display = 'inline-block';
+                            // Only admin can configure the global GitHub token
+                            const githubBtn = document.getElementById('githubConfigBtn');
+                            if (githubBtn) githubBtn.style.display = 'inline-block';
                         }
                     });
                 }

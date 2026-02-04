@@ -61,22 +61,49 @@ function hideStatus() {
     }
 }
 
-// GitHub token management
-function getGitHubToken() {
-    return localStorage.getItem('github_token');
+// GitHub token management (stored in Firebase for global access)
+let cachedGitHubToken = null;
+
+async function getGitHubToken() {
+    if (cachedGitHubToken !== null) {
+        return cachedGitHubToken;
+    }
+    try {
+        const db = firebase.database();
+        const snapshot = await db.ref('settings/githubToken').once('value');
+        cachedGitHubToken = snapshot.exists() ? snapshot.val() : null;
+        return cachedGitHubToken;
+    } catch (error) {
+        console.error('Error fetching GitHub token:', error);
+        return null;
+    }
 }
 
-function setGitHubToken(token) {
-    localStorage.setItem('github_token', token);
+async function setGitHubToken(token) {
+    try {
+        const db = firebase.database();
+        await db.ref('settings/githubToken').set(token);
+        cachedGitHubToken = token;
+    } catch (error) {
+        console.error('Error saving GitHub token:', error);
+        throw error;
+    }
 }
 
-function clearGitHubToken() {
-    localStorage.removeItem('github_token');
+async function clearGitHubToken() {
+    try {
+        const db = firebase.database();
+        await db.ref('settings/githubToken').remove();
+        cachedGitHubToken = null;
+    } catch (error) {
+        console.error('Error clearing GitHub token:', error);
+        throw error;
+    }
 }
 
 // GitHub API: Fetch file SHA (required for updates)
 async function fetchFileSha() {
-    const token = getGitHubToken();
+    const token = await getGitHubToken();
     if (!token) return null;
 
     try {
@@ -147,7 +174,7 @@ ${mainContent}
 
 // GitHub API: Update file
 async function updateGitHubFile(htmlContent, commitMessage) {
-    const token = getGitHubToken();
+    const token = await getGitHubToken();
     if (!token) {
         throw new Error('No GitHub token configured');
     }
@@ -193,13 +220,13 @@ async function updateGitHubFile(htmlContent, commitMessage) {
 }
 
 // GitHub config modal functions
-function showGitHubConfig() {
+async function showGitHubConfig() {
     const modal = getElement('githubModal');
     const input = getElement('githubTokenInput');
     if (modal) {
         modal.classList.remove('modal-hidden');
         if (input) {
-            input.value = getGitHubToken() || '';
+            input.value = (await getGitHubToken()) || '';
         }
     }
 }
@@ -211,35 +238,44 @@ function hideGitHubModal() {
     }
 }
 
-function saveGitHubConfig() {
+async function saveGitHubConfig() {
     const input = getElement('githubTokenInput');
     if (input) {
         const token = input.value.trim();
         if (token) {
-            setGitHubToken(token);
-            // Reset SHA so it gets fetched fresh on next publish
-            currentFileSha = null;
-            originalHtmlHead = '';
-            originalHtmlTail = '';
-            showStatus('GitHub token saved', 'success');
-            setTimeout(hideStatus, 2000);
+            try {
+                await setGitHubToken(token);
+                // Reset SHA so it gets fetched fresh on next publish
+                currentFileSha = null;
+                originalHtmlHead = '';
+                originalHtmlTail = '';
+                showStatus('GitHub token saved (global)', 'success');
+                setTimeout(hideStatus, 2000);
+            } catch (error) {
+                showStatus('Failed to save token: ' + error.message, 'error');
+                return;
+            }
         }
         hideGitHubModal();
     }
 }
 
-function clearGitHubConfig() {
-    clearGitHubToken();
-    currentFileSha = null;
-    originalHtmlHead = '';
-    originalHtmlTail = '';
-    const input = getElement('githubTokenInput');
-    if (input) {
-        input.value = '';
+async function clearGitHubConfig() {
+    try {
+        await clearGitHubToken();
+        currentFileSha = null;
+        originalHtmlHead = '';
+        originalHtmlTail = '';
+        const input = getElement('githubTokenInput');
+        if (input) {
+            input.value = '';
+        }
+        hideGitHubModal();
+        showStatus('GitHub token cleared (global)', 'info');
+        setTimeout(hideStatus, 2000);
+    } catch (error) {
+        showStatus('Failed to clear token: ' + error.message, 'error');
     }
-    hideGitHubModal();
-    showStatus('GitHub token cleared', 'info');
-    setTimeout(hideStatus, 2000);
 }
 
 // Update save indicator
@@ -751,7 +787,7 @@ async function publishContent() {
         firebaseSuccess = true;
 
         // Step 2: Publish to GitHub if token is configured
-        const githubToken = getGitHubToken();
+        const githubToken = await getGitHubToken();
         if (githubToken) {
             showStatus('Publishing to GitHub...', 'loading');
             try {

@@ -1,5 +1,11 @@
 {
   "rules": {
+    "settings": {
+      "githubToken": {
+        ".read": "auth != null && (auth.token.email == 'ehboyd131@gmail.com' || root.child('users').child(auth.token.email.replace('.', ',')).exists())",
+        ".write": "auth != null && auth.token.email == 'ehboyd131@gmail.com'"
+      }
+    },
     "sessions": {
       "$encodedEmail": {
         ".read": "auth != null && auth.token.email.replace('.', ',') == $encodedEmail",
