@@ -15,6 +15,12 @@ import Underline from 'https://esm.sh/@tiptap/extension-underline@2.1.13';
 import * as Y from 'yjs';
 import { Awareness } from 'y-protocols/awareness';
 
+// GitHub configuration
+const GITHUB_OWNER = 'eb00021';
+const GITHUB_REPO = 'eb00021.github.io';
+const GITHUB_FILE = 'documentation.html';
+const GITHUB_API = 'https://api.github.com';
+
 // Editor state
 let editor = null;
 let ydoc = null;
@@ -25,6 +31,9 @@ let firebaseUnsubscribe = null;
 let sessionId = null;
 let sessionListener = null;
 let provider = null;
+let currentFileSha = null;
+let originalHtmlHead = '';
+let originalHtmlTail = '';
 
 // DOM Elements
 const getElement = (id) => document.getElementById(id);
@@ -50,6 +59,187 @@ function hideStatus() {
     if (statusBar) {
         statusBar.className = 'status-bar';
     }
+}
+
+// GitHub token management
+function getGitHubToken() {
+    return localStorage.getItem('github_token');
+}
+
+function setGitHubToken(token) {
+    localStorage.setItem('github_token', token);
+}
+
+function clearGitHubToken() {
+    localStorage.removeItem('github_token');
+}
+
+// GitHub API: Fetch file SHA (required for updates)
+async function fetchFileSha() {
+    const token = getGitHubToken();
+    if (!token) return null;
+
+    try {
+        const response = await fetch(
+            `${GITHUB_API}/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_FILE}`,
+            {
+                headers: {
+                    'Authorization': `token ${token}`,
+                    'Accept': 'application/vnd.github.v3+json'
+                }
+            }
+        );
+
+        if (!response.ok) {
+            if (response.status === 401) {
+                throw new Error('Invalid or expired GitHub token');
+            }
+            throw new Error(`GitHub API error: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        currentFileSha = data.sha;
+
+        // Extract original HTML structure for rebuilding
+        const content = decodeURIComponent(escape(atob(data.content)));
+        extractHtmlStructure(content);
+
+        return data.sha;
+    } catch (error) {
+        console.error('Failed to fetch file SHA:', error);
+        throw error;
+    }
+}
+
+// Extract HTML head/tail from full document
+function extractHtmlStructure(html) {
+    const mainMatch = html.match(/<main[^>]*id="mainContent"[^>]*>([\s\S]*?)<\/main>/i) ||
+                     html.match(/<main[^>]*>([\s\S]*?)<\/main>/i);
+    if (mainMatch) {
+        const mainIndex = html.indexOf(mainMatch[0]);
+        const mainTagMatch = html.match(/<main[^>]*>/i);
+        originalHtmlHead = html.substring(0, mainIndex) + mainTagMatch[0];
+        originalHtmlTail = '</main>' + html.substring(mainIndex + mainMatch[0].length);
+    }
+}
+
+// Build full HTML document from main content
+function buildFullDocumentHtml(mainContent) {
+    if (originalHtmlHead && originalHtmlTail) {
+        return originalHtmlHead + mainContent + originalHtmlTail;
+    }
+    // Fallback: minimal document structure
+    return `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation - T4BF MPX</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <main id="mainContent">
+${mainContent}
+    </main>
+</body>
+</html>`;
+}
+
+// GitHub API: Update file
+async function updateGitHubFile(htmlContent, commitMessage) {
+    const token = getGitHubToken();
+    if (!token) {
+        throw new Error('No GitHub token configured');
+    }
+
+    // Fetch current SHA if we don't have it
+    if (!currentFileSha) {
+        await fetchFileSha();
+    }
+
+    const fullHtml = buildFullDocumentHtml(htmlContent);
+    const encodedContent = btoa(unescape(encodeURIComponent(fullHtml)));
+
+    const response = await fetch(
+        `${GITHUB_API}/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_FILE}`,
+        {
+            method: 'PUT',
+            headers: {
+                'Authorization': `token ${token}`,
+                'Accept': 'application/vnd.github.v3+json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                message: commitMessage,
+                content: encodedContent,
+                sha: currentFileSha
+            })
+        }
+    );
+
+    if (!response.ok) {
+        if (response.status === 401) {
+            throw new Error('Invalid or expired GitHub token');
+        }
+        if (response.status === 409) {
+            throw new Error('Conflict: File was modified. Please try again.');
+        }
+        throw new Error(`GitHub API error: ${response.statusText}`);
+    }
+
+    const result = await response.json();
+    currentFileSha = result.content.sha;
+    return result;
+}
+
+// GitHub config modal functions
+function showGitHubConfig() {
+    const modal = getElement('githubModal');
+    const input = getElement('githubTokenInput');
+    if (modal) {
+        modal.classList.remove('modal-hidden');
+        if (input) {
+            input.value = getGitHubToken() || '';
+        }
+    }
+}
+
+function hideGitHubModal() {
+    const modal = getElement('githubModal');
+    if (modal) {
+        modal.classList.add('modal-hidden');
+    }
+}
+
+function saveGitHubConfig() {
+    const input = getElement('githubTokenInput');
+    if (input) {
+        const token = input.value.trim();
+        if (token) {
+            setGitHubToken(token);
+            // Reset SHA so it gets fetched fresh on next publish
+            currentFileSha = null;
+            originalHtmlHead = '';
+            originalHtmlTail = '';
+            showStatus('GitHub token saved', 'success');
+            setTimeout(hideStatus, 2000);
+        }
+        hideGitHubModal();
+    }
+}
+
+function clearGitHubConfig() {
+    clearGitHubToken();
+    currentFileSha = null;
+    originalHtmlHead = '';
+    originalHtmlTail = '';
+    const input = getElement('githubTokenInput');
+    if (input) {
+        input.value = '';
+    }
+    hideGitHubModal();
+    showStatus('GitHub token cleared', 'info');
+    setTimeout(hideStatus, 2000);
 }
 
 // Update save indicator
@@ -540,22 +730,48 @@ function updateToolbarState() {
     });
 }
 
-// Publish content to Firebase htmlCache (for documentation.html to read)
+// Publish content to Firebase htmlCache and optionally to GitHub
 async function publishContent() {
     if (!editor) return;
 
     const html = editor.getHTML();
     const db = firebase.database();
+    let firebaseSuccess = false;
+    let githubSuccess = false;
+    let githubError = null;
 
     try {
-        showStatus('Publishing...', 'loading');
+        // Step 1: Publish to Firebase
+        showStatus('Publishing to Firebase...', 'loading');
         await db.ref('documentation/htmlCache').set({
             content: html,
             updatedAt: firebase.database.ServerValue.TIMESTAMP,
             updatedBy: currentUser.email
         });
-        showStatus('Content published successfully!', 'success');
-        setTimeout(hideStatus, 3000);
+        firebaseSuccess = true;
+
+        // Step 2: Publish to GitHub if token is configured
+        const githubToken = getGitHubToken();
+        if (githubToken) {
+            showStatus('Publishing to GitHub...', 'loading');
+            try {
+                await updateGitHubFile(html, 'Update documentation via collaborative editor');
+                githubSuccess = true;
+            } catch (error) {
+                githubError = error;
+                console.error('GitHub publish error:', error);
+            }
+        }
+
+        // Show final status
+        if (firebaseSuccess && githubSuccess) {
+            showStatus('Published to Firebase and GitHub!', 'success');
+        } else if (firebaseSuccess && !githubToken) {
+            showStatus('Published to Firebase. (GitHub not configured)', 'info');
+        } else if (firebaseSuccess && githubError) {
+            showStatus('Published to Firebase. GitHub failed: ' + githubError.message, 'error');
+        }
+        setTimeout(hideStatus, 5000);
     } catch (error) {
         console.error('Publish error:', error);
         showStatus('Failed to publish: ' + error.message, 'error');
@@ -688,3 +904,7 @@ document.addEventListener('DOMContentLoaded', () => {
 window.signInWithGoogle = signInWithGoogle;
 window.signOut = signOut;
 window.publishContent = publishContent;
+window.showGitHubConfig = showGitHubConfig;
+window.hideGitHubModal = hideGitHubModal;
+window.saveGitHubConfig = saveGitHubConfig;
+window.clearGitHubConfig = clearGitHubConfig;
