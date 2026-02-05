@@ -235,6 +235,15 @@ body.app-shell > * {
     transform: none;
 }
 
+.app-shell .btn-export {
+    background: #059669;
+    color: #fff;
+}
+
+.app-shell .btn-export:hover {
+    background: #047857;
+}
+
 .app-shell .btn-cancel {
     background: var(--btn-danger);
     color: #fff;

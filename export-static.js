@@ -1,4 +1,14 @@
 // Export documentation as a single static HTML file (content + contributions baked in, no Firebase/fetch).
+// Also pushes the file to export/documentation-static.html in the repo when a GitHub token is set (same as editor).
+
+var EXPORT_REPO_OWNER = 'eb00021';
+var EXPORT_REPO_NAME = 'eb00021.github.io';
+var EXPORT_FILE_PATH = 'export/documentation-static.html';
+var GITHUB_API = 'https://api.github.com';
+
+function getGitHubToken() {
+    return localStorage.getItem('github_token') || '';
+}
 
 function encodeEmail(e) { return (e || '').replace(/\./g, ','); }
 
@@ -177,6 +187,11 @@ function doExport() {
             a.click();
             URL.revokeObjectURL(a.href);
             showStatus('Downloaded documentation-static.html', 'success');
+            pushExportToRepo(templateHtml).then(function () {
+                showStatus('Downloaded and updated export file in repo.', 'success');
+            }).catch(function (err) {
+                showStatus('Downloaded. Repo update failed: ' + (err && err.message ? err.message : 'unknown'), 'error');
+            });
         }).catch(function () {
             var docTemplate = getDocTemplate();
             var fullHtml = docTemplate
@@ -188,9 +203,51 @@ function doExport() {
             a.click();
             URL.revokeObjectURL(a.href);
             showStatus('Downloaded documentation-static.html', 'success');
+            pushExportToRepo(fullHtml).then(function () {
+                showStatus('Downloaded and updated export file in repo.', 'success');
+            }).catch(function (err) {
+                showStatus('Downloaded. Repo update failed: ' + (err && err.message ? err.message : 'unknown'), 'error');
+            });
         });
     }).catch(function (err) {
         showStatus('Export failed: ' + err.message, 'error');
+    });
+}
+
+function pushExportToRepo(htmlContent) {
+    var token = getGitHubToken();
+    if (!token || !token.trim()) return Promise.resolve();
+
+    var encodedContent = btoa(unescape(encodeURIComponent(htmlContent)));
+    var body = {
+        message: 'Export static documentation (auto from Export static page)',
+        content: encodedContent
+    };
+
+    return fetch(GITHUB_API + '/repos/' + EXPORT_REPO_OWNER + '/' + EXPORT_REPO_NAME + '/contents/' + EXPORT_FILE_PATH, {
+        method: 'GET',
+        headers: {
+            'Authorization': 'token ' + token,
+            'Accept': 'application/vnd.github.v3+json'
+        }
+    }).then(function (res) {
+        if (res.ok) {
+            return res.json().then(function (data) { body.sha = data.sha; return body; });
+        }
+        return body;
+    }).catch(function () { return body; }).then(function (reqBody) {
+        return fetch(GITHUB_API + '/repos/' + EXPORT_REPO_OWNER + '/' + EXPORT_REPO_NAME + '/contents/' + EXPORT_FILE_PATH, {
+            method: 'PUT',
+            headers: {
+                'Authorization': 'token ' + token,
+                'Accept': 'application/vnd.github.v3+json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(reqBody)
+        });
+    }).then(function (res) {
+        if (!res.ok) throw new Error(res.status === 401 ? 'Invalid GitHub token.' : 'Failed to update export file in repo.');
+        return res.json();
     });
 }
 
