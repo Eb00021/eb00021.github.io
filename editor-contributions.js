@@ -1,7 +1,6 @@
-// Editor contributions panel: read-only view + editable Other contributions
+// Editor contributions panel: read-only view (assignments edited in contribution-editor)
 
 (function () {
-    function enc(email) { return (email || '').replace(/\./g, ','); }
     function escapeHtml(s) {
         var d = document.createElement('div');
         d.textContent = s == null ? '' : s;
@@ -50,8 +49,7 @@
     function loadAndShow() {
         var panel = document.getElementById('contributionsPanel');
         var readOnly = document.getElementById('contributionsReadOnly');
-        var otherEdit = document.getElementById('contributionsOtherEdit');
-        if (!panel || !readOnly || !otherEdit) return;
+        if (!panel || !readOnly) return;
         if (typeof firebase === 'undefined' || !firebase.apps || !firebase.apps.length) return;
 
         var db = firebase.database();
@@ -61,17 +59,14 @@
             return fetch('data/contributions.json').then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; });
         }).catch(function () { return fetch('data/contributions.json').then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }); });
         var assignPromise = db.ref('contributions/assignments').once('value').then(function (snap) { return snap.val() || {}; }).catch(function () { return {}; });
-        var otherPromise = db.ref('contributions/otherContributions').once('value').then(function (snap) { return snap.val() || {}; }).catch(function () { return {}; });
 
-        Promise.all([defPromise, assignPromise, otherPromise]).then(function (results) {
+        Promise.all([defPromise, assignPromise]).then(function (results) {
             var contributionsData = results[0];
             var assignments = results[1];
-            var otherContributions = results[2];
             var keys = Object.keys(assignments || {});
 
             if (!contributionsData || !contributionsData.releases) {
                 readOnly.innerHTML = '<p class="contributions-empty">No contribution data loaded. Add modules in Contribution entries or ensure <code>data/contributions.json</code> exists.</p>';
-                otherEdit.innerHTML = '';
                 panel.style.display = 'block';
                 return;
             }
@@ -96,45 +91,11 @@
                     emptyHtml += '</tbody></table>';
                 });
                 readOnly.innerHTML = emptyHtml;
-                otherEdit.innerHTML = '';
                 panel.style.display = 'block';
                 return;
             }
 
             readOnly.innerHTML = buildReadOnlyHtml(contributionsData, assignments);
-            otherEdit.innerHTML = '';
-
-            Object.keys(byMember).sort().forEach(function (email) {
-                var m = byMember[email];
-                var encoded = enc(email);
-                var items = (otherContributions && otherContributions[encoded]) || [];
-                var text = items.join('\n');
-
-                var wrap = document.createElement('div');
-                wrap.className = 'contributions-other-block';
-                var label = document.createElement('h4');
-                label.textContent = 'Other contributions: ' + m.name;
-                wrap.appendChild(label);
-                var ta = document.createElement('textarea');
-                ta.placeholder = 'One line per item';
-                ta.value = text;
-                ta.setAttribute('data-email-enc', encoded);
-                wrap.appendChild(ta);
-                var saved = document.createElement('div');
-                saved.className = 'other-saved';
-                saved.style.display = 'none';
-                saved.textContent = 'Saved';
-                wrap.appendChild(saved);
-                ta.addEventListener('blur', function () {
-                    var lines = ta.value.split('\n').map(function (s) { return s.trim(); }).filter(Boolean);
-                    db.ref('contributions/otherContributions/' + encoded).set(lines.length ? lines : null).then(function () {
-                        saved.style.display = 'block';
-                        setTimeout(function () { saved.style.display = 'none'; }, 2000);
-                    });
-                });
-                otherEdit.appendChild(wrap);
-            });
-
             panel.style.display = 'block';
         }).catch(function (err) {
             readOnly.innerHTML = '<p class="contributions-empty">Could not load contributions. ' + (err && err.message ? err.message : '') + '</p>';

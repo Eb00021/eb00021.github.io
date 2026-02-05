@@ -141,14 +141,15 @@ sys_req(WRITE, COM1, "Hello\r\n", 7);</code></pre><h3>sys_alloc_mem</h3><p><stro
                     }).catch(function() { return fetch('data/contributions.json').then(function(r) { return r.ok ? r.json() : null; }).catch(function() { return null; }); })
                     : fetch('data/contributions.json').then(function(r) { return r.ok ? r.json() : null; }).catch(function() { return null; });
                 const assignPromise = db ? db.ref('contributions/assignments').once('value').then(function(snap) { return snap.val() || {}; }) : Promise.resolve({});
-                const otherPromise = db ? db.ref('contributions/otherContributions').once('value').then(function(snap) { return snap.val() || {}; }) : Promise.resolve({});
-                Promise.all([ defPromise, assignPromise, otherPromise ]).then(function(results) {
+                Promise.all([ defPromise, assignPromise ]).then(function(results) {
                     const contributionsData = results[0];
                     const assignments = results[1];
-                    const otherContributions = results[2];
-                    if (!contributionsData || !contributionsData.releases || Object.keys(assignments).length === 0) return;
+                    if (!contributionsData || !contributionsData.releases || Object.keys(assignments).length === 0) {
+                        const block = document.getElementById('contributionsBlock');
+                        if (block) block.innerHTML = '';
+                        return;
+                    }
 
-                    function enc(s) { return (s || '').replace(/\./g, ','); }
                     const byMember = {};
                     Object.keys(assignments).forEach(function(id) {
                         const a = assignments[id];
@@ -162,7 +163,7 @@ sys_req(WRITE, COM1, "Hello\r\n", 7);</code></pre><h3>sys_alloc_mem</h3><p><stro
                     let html = '<h1>Contributions</h1><h2>Overview</h2><p>This section documents each team member\'s contributions to the T4BF MPX project throughout the semester.</p>';
                     contributionsData.releases.forEach(function(release) {
                         html += '<h2>' + escapeHtml(release.title) + '</h2><table><tbody><tr><th><p>Task</p></th><th><p>Description</p></th><th><p>Files</p></th></tr>';
-                        release.rows.forEach(function(row, idx) {
+                        (release.rows || []).forEach(function(row, idx) {
                             const id = release.id + '-' + idx;
                             html += '<tr><td><p>' + escapeHtml(row.task) + '</p></td><td><p>' + escapeHtml(row.description) + '</p></td><td><p>' + escapeHtml(row.files) + '</p></td></tr>';
                         });
@@ -171,25 +172,35 @@ sys_req(WRITE, COM1, "Hello\r\n", 7);</code></pre><h3>sys_alloc_mem</h3><p><stro
                     html += '<h2>Team Members</h2>';
                     Object.keys(byMember).sort().forEach(function(email) {
                         const m = byMember[email];
-                        const otherList = otherContributions[enc(email)];
                         html += '<h3>' + escapeHtml(m.name) + '</h3><h4>Functions Implemented</h4><table><tbody><tr><th><p>Function</p></th><th><p>Module</p></th><th><p>Description</p></th></tr>';
                         m.ids.forEach(function(cid) {
                             const parts = cid.split('-');
                             const releaseId = parts[0];
                             const rowIdx = parseInt(parts[1], 10);
                             const release = contributionsData.releases.find(function(r) { return r.id === releaseId; });
-                            if (!release || !release.rows[rowIdx]) return;
+                            if (!release || !release.rows || !release.rows[rowIdx]) return;
                             const row = release.rows[rowIdx];
                             html += '<tr><td><p><code>' + escapeHtml(row.task) + '</code></p></td><td><p>' + escapeHtml(row.files) + '</p></td><td><p>' + escapeHtml(row.description) + '</p></td></tr>';
                         });
-                        html += '</tbody></table><h4>Other Contributions</h4><ul>';
-                        if (otherList && otherList.length) otherList.forEach(function(item) { html += '<li><p>' + escapeHtml(item) + '</p></li>'; });
-                        else html += '<li><p>[Add contributions here]</p></li>';
-                        html += '</ul>';
+                        html += '</tbody></table>';
                     });
-                    mainContent.insertAdjacentHTML('beforeend', html);
+
+                    let block = document.getElementById('contributionsBlock');
+                    if (!block) {
+                        block = document.createElement('div');
+                        block.id = 'contributionsBlock';
+                        mainContent.appendChild(block);
+                    }
+                    block.innerHTML = html;
                     if (typeof Prism !== 'undefined') Prism.highlightAll();
                 }).catch(function(err) { console.log('Contributions injection error:', err.message); });
+            }
+
+            function setupContributionsListeners() {
+                const db = typeof firebase !== 'undefined' && firebase.apps.length ? firebase.database() : null;
+                if (!db) return;
+                db.ref('contributions/definition').on('value', function() { injectContributions(); });
+                db.ref('contributions/assignments').on('value', function() { injectContributions(); });
             }
 
             function loadFromFirebase() {
@@ -199,6 +210,7 @@ sys_req(WRITE, COM1, "Hello\r\n", 7);</code></pre><h3>sys_alloc_mem</h3><p><stro
                         console.log('Firebase not configured, using static content');
                     } else {
                         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+                        setupContributionsListeners();
                         p = firebase.database().ref('documentation/htmlCache').once('value')
                             .then(function(snapshot) {
                                 if (snapshot.exists()) {

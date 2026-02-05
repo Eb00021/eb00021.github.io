@@ -115,7 +115,7 @@ function renderTables() {
         table.innerHTML = '<thead><tr><th>Task</th><th>Description</th><th>Files</th><th>Assigned to</th></tr></thead><tbody></tbody>';
         var tbody = table.querySelector('tbody');
 
-        release.rows.forEach(function (row, idx) {
+        (release.rows || []).forEach(function (row, idx) {
             var id = getContributionId(release.id, idx);
             var current = assignments[id];
             var currentEmail = (current && (typeof current === 'string' ? current : current.email)) || '';

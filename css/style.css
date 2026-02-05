@@ -4,6 +4,13 @@ body {
     margin: 0 auto;
     padding: 20px;
     line-height: 1.5;
+    box-sizing: border-box;
+}
+
+main {
+    display: block;
+    width: 100%;
+    max-width: 100%;
 }
 
 code, pre {

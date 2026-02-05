@@ -151,7 +151,7 @@ function render() {
         block.appendChild(h3);
         var rowList = document.createElement('div');
         rowList.className = 'row-list';
-        release.rows.forEach(function (row, rowIdx) {
+        (release.rows || []).forEach(function (row, rowIdx) {
             var item = document.createElement('div');
             item.className = 'row-item';
             item.innerHTML =

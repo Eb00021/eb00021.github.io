@@ -51,11 +51,10 @@ function escapeHtml(s) {
 
 function encEmail(e) { return (e || '').replace(/\./g, ','); }
 
-function buildContributionsHtml(contributionsData, assignments, otherContributions) {
+function buildContributionsHtml(contributionsData, assignments) {
     if (!contributionsData || !contributionsData.releases) return '';
     var keys = Object.keys(assignments || {});
     if (keys.length === 0) return '';
-    otherContributions = otherContributions || {};
 
     var byMember = {};
     keys.forEach(function (id) {
@@ -78,7 +77,6 @@ function buildContributionsHtml(contributionsData, assignments, otherContributio
     html += '<h2>Team Members</h2>';
     Object.keys(byMember).sort().forEach(function (email) {
         var m = byMember[email];
-        var otherList = otherContributions[encEmail(email)];
         html += '<h3>' + escapeHtml(m.name) + '</h3><h4>Functions Implemented</h4><table><tbody><tr><th><p>Function</p></th><th><p>Module</p></th><th><p>Description</p></th></tr>';
         m.ids.forEach(function (cid) {
             var parts = cid.split('-');
@@ -89,10 +87,7 @@ function buildContributionsHtml(contributionsData, assignments, otherContributio
             var row = release.rows[rowIdx];
             html += '<tr><td><p><code>' + escapeHtml(row.task) + '</code></p></td><td><p>' + escapeHtml(row.files) + '</p></td><td><p>' + escapeHtml(row.description) + '</p></td></tr>';
         });
-        html += '</tbody></table><h4>Other Contributions</h4><ul>';
-        if (otherList && otherList.length) otherList.forEach(function (item) { html += '<li><p>' + escapeHtml(item) + '</p></li>'; });
-        else html += '<li><p>[Add contributions here]</p></li>';
-        html += '</ul>';
+        html += '</tbody></table>';
     });
     return html;
 }
@@ -116,23 +111,31 @@ function doExport() {
     });
 
     var assignPromise = db.ref('contributions/assignments').once('value').then(function (snap) { return snap.val() || {}; }).catch(function () { return {}; });
-    var otherPromise = db.ref('contributions/otherContributions').once('value').then(function (snap) { return snap.val() || {}; }).catch(function () { return {}; });
 
-    Promise.all([ docContentPromise, defPromise, assignPromise, otherPromise ]).then(function (results) {
+    Promise.all([ docContentPromise, defPromise, assignPromise ]).then(function (results) {
         var docContent = results[0];
         var contributionsData = results[1];
         var assignments = results[2];
-        var otherContributions = results[3];
-        var contributionsHtml = buildContributionsHtml(contributionsData, assignments, otherContributions);
+        var contributionsHtml = buildContributionsHtml(contributionsData, assignments);
         var fullMainContent = docContent + contributionsHtml;
 
         var staticScript = '    <script>\n        (function(){ if (typeof Prism !== \'undefined\') Prism.highlightAll(); })();\n    <\/script>';
-        return fetch('documentation.html').then(function (r) { return r.text(); }).then(function (templateHtml) {
-            var fullHtml = templateHtml
-                .replace(/<main id="mainContent">[\s\S]*?<\/main>/, '<main id="mainContent">' + fullMainContent + '</main>')
-                .replace(/<!-- Firebase SDK for loading dynamic content -->[\s\S]*?<!-- smooth scrolling/, staticScript + '\n\n    <!-- smooth scrolling');
+        return Promise.all([
+            fetch('documentation.html').then(function (r) { return r.text(); }),
+            fetch('css/style.css').then(function (r) { return r.ok ? r.text() : ''; }).catch(function () { return ''; })
+        ]).then(function (arr) {
+            var templateHtml = arr[0];
+            var styleCss = arr[1] || getInlineDocCss();
+            // Remove edit link and its comment (editor-only UI; export is view-only)
+            templateHtml = templateHtml.replace(/\s*<!-- Edit Link -->\s*<a [^>]*class="edit-link"[^>]*>[\s\S]*?<\/a>/i, '');
+            // Replace main content
+            templateHtml = templateHtml.replace(/<main id="mainContent">[\s\S]*?<\/main>/, '<main id="mainContent">' + fullMainContent + '</main>');
+            // Replace Firebase block with Prism-only and inject embedded CSS for standalone viewing
+            var styleBlock = '<style>\n' + styleCss + '\n</style>';
+            templateHtml = templateHtml.replace(/<link rel="stylesheet" href="css\/style\.css">/i, styleBlock);
+            templateHtml = templateHtml.replace(/<!-- Firebase SDK for loading dynamic content -->[\s\S]*?<!-- smooth scrolling/, staticScript + '\n\n    <!-- smooth scrolling');
 
-            var blob = new Blob([ fullHtml ], { type: 'text/html;charset=utf-8' });
+            var blob = new Blob([ templateHtml ], { type: 'text/html;charset=utf-8' });
             var a = document.createElement('a');
             a.href = URL.createObjectURL(blob);
             a.download = 'documentation-static.html';
@@ -160,8 +163,12 @@ function getStaticFallbackContent() {
     return '<p>Content not available. Publish from the editor first or run export from the documentation site.</p>';
 }
 
+function getInlineDocCss() {
+    return 'body{font-family:Georgia,serif;max-width:800px;margin:0 auto;padding:20px;line-height:1.5;box-sizing:border-box}main{display:block;width:100%;max-width:100%}code,pre{font-family:monospace;background:#f4f4f4}pre{padding:10px;overflow-x:auto;border:1px solid #ddd}table{border-collapse:collapse;margin:1em 0}th,td{border:1px solid #000;padding:5px 10px}';
+}
+
 function getDocTemplate() {
-    return '<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="UTF-8">\n<link rel="icon" type="image/svg+xml" href="favicon.svg">\n<meta name="viewport" content="width=device-width, initial-scale=1.0">\n<title>T4BF MPX Documentation</title>\n<link rel="stylesheet" href="css/style.css">\n<style>\n.edit-link{position:fixed;bottom:20px;right:20px;background:#2c5282;color:white;padding:10px 20px;border-radius:5px;text-decoration:none;font-size:14px;}\n.edit-link:hover{background:#1a365d;}\ntable{border-collapse:collapse;width:100%;}th,td{border:1px solid #ddd;padding:8px;text-align:left;}\n</style>\n</head>\n<body>\n<a href="editor.html" class="edit-link">Edit Documentation</a>\n<main id="mainContent"></main>\n<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"><\/script>\n<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"><\/script>\n<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"><\/script>\n<script>(function(){ if (typeof Prism !== \'undefined\') Prism.highlightAll(); })();<\/script>\n</body>\n</html>';
+    return '<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="UTF-8">\n<link rel="icon" type="image/svg+xml" href="favicon.svg">\n<meta name="viewport" content="width=device-width, initial-scale=1.0">\n<title>T4BF MPX Documentation</title>\n<style>\n' + getInlineDocCss() + '\n</style>\n</head>\n<body>\n<main id="mainContent"></main>\n<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"><\/script>\n<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"><\/script>\n<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"><\/script>\n<script>(function(){ if (typeof Prism !== \'undefined\') Prism.highlightAll(); })();<\/script>\n</body>\n</html>';
 }
 
 function init() {
