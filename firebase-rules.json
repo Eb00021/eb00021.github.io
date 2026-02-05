@@ -41,6 +41,10 @@
       "definition": {
         ".read": true,
         ".write": "auth != null && (auth.token.email == 'ehboyd131@gmail.com' || root.child('users').child(auth.token.email.replace('.', ',')).exists())"
+      },
+      "otherContributions": {
+        ".read": true,
+        ".write": "auth != null && (auth.token.email == 'ehboyd131@gmail.com' || root.child('users').child(auth.token.email.replace('.', ',')).exists())"
       }
     }
   }

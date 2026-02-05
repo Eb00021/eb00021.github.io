@@ -1,0 +1,550 @@
+/* App shell: editor site only. Documentation view/export stay basic (no app.css). */
+
+:root {
+    --app-bg: #f8fafc;
+    --app-card: #fff;
+    --app-text: #1e293b;
+    --app-text-muted: #64748b;
+    --app-border: #e2e8f0;
+    --app-input-bg: #fff;
+    --btn-primary: #2563eb;
+    --btn-primary-hover: #1d4ed8;
+    --btn-secondary: #64748b;
+    --btn-secondary-hover: #475569;
+    --btn-save: #059669;
+    --btn-save-hover: #047857;
+    --btn-danger: #dc2626;
+    --btn-danger-hover: #b91c1c;
+    --status-success-bg: #d1fae5;
+    --status-success-text: #065f46;
+    --status-error-bg: #fee2e2;
+    --status-error-text: #991b1b;
+    --status-info-bg: #e0e7ff;
+    --status-info-text: #3730a3;
+    --shadow: 0 1px 3px rgba(0,0,0,0.08);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+    --radius: 10px;
+    --radius-btn: 8px;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --app-bg: #0f172a;
+        --app-card: #1e293b;
+        --app-text: #f1f5f9;
+        --app-text-muted: #94a3b8;
+        --app-border: #334155;
+        --app-input-bg: #334155;
+        --btn-primary: #3b82f6;
+        --btn-primary-hover: #60a5fa;
+        --btn-secondary: #475569;
+        --btn-secondary-hover: #64748b;
+        --btn-save: #10b981;
+        --btn-save-hover: #34d399;
+        --btn-danger: #ef4444;
+        --btn-danger-hover: #f87171;
+        --status-success-bg: #064e3b;
+        --status-success-text: #a7f3d0;
+        --status-error-bg: #7f1d1d;
+        --status-error-text: #fecaca;
+        --status-info-bg: #312e81;
+        --status-info-text: #c7d2fe;
+        --shadow: 0 1px 3px rgba(0,0,0,0.3);
+        --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+    }
+}
+
+/* Only apply app styles when this class is present (editor site pages) */
+body.app-shell {
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    background: var(--app-bg);
+    color: var(--app-text);
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    line-height: 1.5;
+}
+
+.app-shell code {
+    background: var(--app-border);
+    padding: 0.15em 0.4em;
+    border-radius: 4px;
+    font-size: 0.9em;
+}
+
+/* ---- Auth & access ---- */
+.app-shell .auth-container,
+.app-shell .access-denied {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    text-align: center;
+}
+
+.app-shell .auth-container .auth-card,
+.app-shell .access-denied .denied-card {
+    background: var(--app-card);
+    border: 1px solid var(--app-border);
+    border-radius: var(--radius);
+    padding: 2.5rem;
+    max-width: 380px;
+    width: 100%;
+    box-shadow: var(--shadow-md);
+}
+
+.app-shell .auth-container h2,
+.app-shell .access-denied h2 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.35rem;
+    font-weight: 600;
+}
+
+.app-shell .auth-container p,
+.app-shell .access-denied p {
+    color: var(--app-text-muted);
+    margin: 0 0 1.5rem 0;
+    font-size: 0.95rem;
+}
+
+.app-shell .btn-google {
+    background: #4285f4;
+    color: #fff;
+    border: none;
+    padding: 12px 24px;
+    border-radius: var(--radius-btn);
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.app-shell .btn-google:hover {
+    background: #357ae8;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+/* ---- Buttons ---- */
+.app-shell .btn {
+    padding: 10px 18px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border: none;
+    border-radius: var(--radius-btn);
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s, background-color 0.15s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.app-shell .btn:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow);
+}
+
+.app-shell .btn-primary {
+    background: var(--btn-primary);
+    color: #fff;
+}
+
+.app-shell .btn-primary:hover {
+    background: var(--btn-primary-hover);
+}
+
+.app-shell .btn-secondary {
+    background: var(--btn-secondary);
+    color: #fff;
+}
+
+.app-shell .btn-secondary:hover {
+    background: var(--btn-secondary-hover);
+}
+
+.app-shell .btn-save {
+    background: var(--btn-save);
+    color: #fff;
+}
+
+.app-shell .btn-save:hover {
+    background: var(--btn-save-hover);
+}
+
+.app-shell .btn-save:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.app-shell .btn-cancel {
+    background: var(--btn-danger);
+    color: #fff;
+}
+
+.app-shell .btn-cancel:hover {
+    background: var(--btn-danger-hover);
+}
+
+.app-shell .btn-logout {
+    background: var(--btn-secondary);
+    color: #fff;
+}
+
+.app-shell .btn-logout:hover {
+    background: var(--btn-secondary-hover);
+}
+
+.app-shell .btn-danger {
+    background: var(--btn-danger);
+    color: #fff;
+}
+
+.app-shell .btn-danger:hover {
+    background: var(--btn-danger-hover);
+}
+
+.app-shell .btn-small {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+}
+
+/* ---- Layout: editor / admin / contrib pages ---- */
+.app-shell .editor-container,
+.app-shell .admin-container,
+.app-shell .contrib-editor-container,
+.app-shell .entries-container,
+.app-shell #exportContainer {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 1.5rem;
+}
+
+.app-shell .editor-header,
+.app-shell .admin-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--app-border);
+}
+
+.app-shell .editor-header h1,
+.app-shell .admin-header h1 {
+    margin: 0;
+    font-size: 1.4rem;
+    font-weight: 600;
+}
+
+.app-shell .editor-actions,
+.app-shell .admin-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.app-shell .status-bar {
+    padding: 10px 14px;
+    border-radius: var(--radius-btn);
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+}
+
+.app-shell .status-success {
+    background: var(--status-success-bg);
+    color: var(--status-success-text);
+    display: block;
+}
+
+.app-shell .status-error {
+    background: var(--status-error-bg);
+    color: var(--status-error-text);
+    display: block;
+}
+
+.app-shell .status-info {
+    background: var(--status-info-bg);
+    color: var(--status-info-text);
+    display: block;
+}
+
+.app-shell .user-info,
+.app-shell .presence-bar {
+    background: var(--app-card);
+    border: 1px solid var(--app-border);
+    border-radius: var(--radius-btn);
+    padding: 10px 14px;
+    margin-bottom: 12px;
+}
+
+.app-shell .user-email,
+.app-shell .presence-label {
+    color: var(--app-text-muted);
+    font-size: 0.85rem;
+}
+
+/* ---- Admin ---- */
+.app-shell .admin-section {
+    background: var(--app-card);
+    border: 1px solid var(--app-border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: var(--shadow);
+}
+
+.app-shell .admin-section h2 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.15rem;
+}
+
+.app-shell .users-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.app-shell .users-list li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--app-border);
+}
+
+.app-shell .users-list li:last-child {
+    border-bottom: none;
+}
+
+.app-shell .user-name-input {
+    background: var(--app-input-bg);
+    border: 1px solid var(--app-border);
+    color: var(--app-text);
+    padding: 6px 10px;
+    border-radius: 6px;
+    width: 180px;
+}
+
+.app-shell .add-user-form {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.app-shell .add-user-form input[type="email"] {
+    background: var(--app-input-bg);
+    border: 1px solid var(--app-border);
+    color: var(--app-text);
+    padding: 8px 12px;
+    border-radius: var(--radius-btn);
+    min-width: 220px;
+}
+
+/* ---- Contribution editor tables ---- */
+.app-shell .contrib-table th,
+.app-shell .contrib-table td {
+    border-color: var(--app-border);
+}
+
+.app-shell .contrib-table th {
+    background: var(--app-card);
+}
+
+.app-shell .contrib-table select {
+    background: var(--app-input-bg);
+    border: 1px solid var(--app-border);
+    color: var(--app-text);
+    border-radius: 6px;
+}
+
+/* ---- Contributions panel (editor page) ---- */
+.app-shell .contributions-panel {
+    background: var(--app-card);
+    border: 1px solid var(--app-border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    margin-top: 2rem;
+    box-shadow: var(--shadow);
+}
+
+.app-shell .contributions-readonly {
+    background: var(--app-bg);
+    border: 1px solid var(--app-border);
+}
+
+.app-shell .contributions-other-edit textarea {
+    background: var(--app-input-bg);
+    border: 1px solid var(--app-border);
+    color: var(--app-text);
+}
+
+/* ---- Landing (index) ---- */
+.app-shell.landing-page {
+    padding: 0;
+}
+
+.app-shell .landing-wrap {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 1.5rem;
+}
+
+.app-shell .landing-title {
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 700;
+    margin: 0 0 0.25rem 0;
+    letter-spacing: -0.02em;
+}
+
+.app-shell .landing-subtitle {
+    font-size: 1.1rem;
+    color: var(--app-text-muted);
+    margin: 0 0 2.5rem 0;
+}
+
+.app-shell .landing-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    margin-bottom: 3rem;
+}
+
+.app-shell .landing-btn {
+    padding: 14px 26px;
+    font-size: 1rem;
+    font-weight: 500;
+    text-decoration: none;
+    border-radius: var(--radius-btn);
+    transition: transform 0.15s, box-shadow 0.15s;
+    border: none;
+    cursor: pointer;
+}
+
+.app-shell .landing-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.app-shell .landing-btn.btn-primary {
+    background: var(--btn-primary);
+    color: #fff;
+}
+
+.app-shell .landing-btn.btn-primary:hover {
+    background: var(--btn-primary-hover);
+}
+
+.app-shell .landing-btn.btn-secondary {
+    background: var(--btn-secondary);
+    color: #fff;
+}
+
+.app-shell .landing-btn.btn-secondary:hover {
+    background: var(--btn-secondary-hover);
+}
+
+.app-shell .landing-description {
+    max-width: 560px;
+    text-align: left;
+}
+
+.app-shell .landing-description h2 {
+    font-size: 1.1rem;
+    margin: 1.5rem 0 0.5rem 0;
+    color: var(--app-text-muted);
+}
+
+.app-shell .landing-description p,
+.app-shell .landing-description ul {
+    margin: 0 0 0.5rem 0;
+    color: var(--app-text);
+    font-size: 0.95rem;
+}
+
+.app-shell .landing-footer {
+    margin-top: auto;
+    padding: 1.5rem;
+    text-align: center;
+    color: var(--app-text-muted);
+    font-size: 0.9rem;
+}
+
+/* Editor toolbar */
+.app-shell .editor-toolbar {
+    background: var(--app-card);
+    border: 1px solid var(--app-border);
+    border-radius: var(--radius-btn);
+}
+
+.app-shell .toolbar-btn {
+    color: var(--app-text);
+}
+
+.app-shell .toolbar-btn:hover:not(:disabled) {
+    background: var(--app-border);
+}
+
+.app-shell .editor-wrapper {
+    background: var(--app-card);
+    border: 1px solid var(--app-border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+}
+
+.app-shell .tiptap {
+    background: var(--app-card);
+    color: var(--app-text);
+}
+
+/* Contribution entries: release blocks */
+.app-shell .release-block {
+    background: var(--app-card);
+    border: 1px solid var(--app-border);
+}
+
+/* Save indicator in editor */
+.app-shell .save-indicator {
+    font-size: 0.85rem;
+    color: var(--app-text-muted);
+}
+
+.app-shell .save-dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--app-text-muted);
+    margin-right: 6px;
+    vertical-align: middle;
+}
+
+/* Modal (GitHub config) */
+.app-shell .modal-content {
+    background: var(--app-card);
+    border: 1px solid var(--app-border);
+    color: var(--app-text);
+}
+
+.app-shell .modal-content input {
+    background: var(--app-input-bg);
+    border: 1px solid var(--app-border);
+    color: var(--app-text);
+}

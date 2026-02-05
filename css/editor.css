@@ -648,3 +648,27 @@
 .btn-secondary:hover {
     background-color: #4a5568;
 }
+
+/* Contributions panel in editor */
+.contributions-panel {
+    margin-top: 2em;
+    padding-top: 1.5em;
+    border-top: 1px solid #e2e8f0;
+    max-width: 1000px;
+}
+.contributions-panel-title { margin: 0 0 0.25em 0; }
+.contributions-panel-desc { color: #666; font-size: 0.95em; margin: 0 0 1em 0; }
+.contributions-readonly {
+    background: #f7fafc;
+    padding: 1em;
+    border-radius: 6px;
+    margin-bottom: 1.5em;
+    max-height: 400px;
+    overflow-y: auto;
+}
+.contributions-readonly table { border-collapse: collapse; width: 100%; }
+.contributions-readonly th, .contributions-readonly td { border: 1px solid #e2e8f0; padding: 6px 10px; text-align: left; }
+.contributions-readonly th { background: #edf2f7; }
+.contributions-other-edit h4 { margin: 1em 0 0.25em 0; font-size: 1em; }
+.contributions-other-edit textarea { width: 100%; min-height: 60px; padding: 8px; font-family: inherit; margin-bottom: 0.5em; }
+.contributions-other-edit .other-saved { font-size: 0.85em; color: #38a169; }

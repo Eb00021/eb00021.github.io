@@ -141,11 +141,14 @@ sys_req(WRITE, COM1, "Hello\r\n", 7);</code></pre><h3>sys_alloc_mem</h3><p><stro
                     }).catch(function() { return fetch('data/contributions.json').then(function(r) { return r.ok ? r.json() : null; }).catch(function() { return null; }); })
                     : fetch('data/contributions.json').then(function(r) { return r.ok ? r.json() : null; }).catch(function() { return null; });
                 const assignPromise = db ? db.ref('contributions/assignments').once('value').then(function(snap) { return snap.val() || {}; }) : Promise.resolve({});
-                Promise.all([ defPromise, assignPromise ]).then(function(results) {
+                const otherPromise = db ? db.ref('contributions/otherContributions').once('value').then(function(snap) { return snap.val() || {}; }) : Promise.resolve({});
+                Promise.all([ defPromise, assignPromise, otherPromise ]).then(function(results) {
                     const contributionsData = results[0];
                     const assignments = results[1];
+                    const otherContributions = results[2];
                     if (!contributionsData || !contributionsData.releases || Object.keys(assignments).length === 0) return;
 
+                    function enc(s) { return (s || '').replace(/\./g, ','); }
                     const byMember = {};
                     Object.keys(assignments).forEach(function(id) {
                         const a = assignments[id];
@@ -168,6 +171,7 @@ sys_req(WRITE, COM1, "Hello\r\n", 7);</code></pre><h3>sys_alloc_mem</h3><p><stro
                     html += '<h2>Team Members</h2>';
                     Object.keys(byMember).sort().forEach(function(email) {
                         const m = byMember[email];
+                        const otherList = otherContributions[enc(email)];
                         html += '<h3>' + escapeHtml(m.name) + '</h3><h4>Functions Implemented</h4><table><tbody><tr><th><p>Function</p></th><th><p>Module</p></th><th><p>Description</p></th></tr>';
                         m.ids.forEach(function(cid) {
                             const parts = cid.split('-');
@@ -178,7 +182,10 @@ sys_req(WRITE, COM1, "Hello\r\n", 7);</code></pre><h3>sys_alloc_mem</h3><p><stro
                             const row = release.rows[rowIdx];
                             html += '<tr><td><p><code>' + escapeHtml(row.task) + '</code></p></td><td><p>' + escapeHtml(row.files) + '</p></td><td><p>' + escapeHtml(row.description) + '</p></td></tr>';
                         });
-                        html += '</tbody></table><h4>Other Contributions</h4><ul><li><p>[Add contributions here]</p></li></ul>';
+                        html += '</tbody></table><h4>Other Contributions</h4><ul>';
+                        if (otherList && otherList.length) otherList.forEach(function(item) { html += '<li><p>' + escapeHtml(item) + '</p></li>'; });
+                        else html += '<li><p>[Add contributions here]</p></li>';
+                        html += '</ul>';
                     });
                     mainContent.insertAdjacentHTML('beforeend', html);
                     if (typeof Prism !== 'undefined') Prism.highlightAll();

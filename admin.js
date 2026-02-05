@@ -143,15 +143,22 @@ async function loadUsers() {
             const userDetails = document.createElement('div');
             userDetails.className = 'user-details';
 
-            const userName = document.createElement('span');
-            userName.className = 'user-name';
-            userName.textContent = userData.name || email;
+            const nameLabel = document.createElement('label');
+            nameLabel.className = 'user-name-label';
+            nameLabel.textContent = 'Display name: ';
+            const nameInput = document.createElement('input');
+            nameInput.type = 'text';
+            nameInput.className = 'user-name-input';
+            nameInput.placeholder = 'e.g. Ethan Boyd';
+            nameInput.value = userData.name || email.split('@')[0] || '';
+            nameInput.addEventListener('blur', () => updateUserName(encodedEmail, nameInput.value.trim()));
+            nameLabel.appendChild(nameInput);
 
             const userAddedInfo = document.createElement('span');
             userAddedInfo.className = 'user-added-info';
-            userAddedInfo.textContent = `Added ${addedDate} by ${userData.addedBy || 'admin'}`;
+            userAddedInfo.textContent = ` ${email} · Added ${addedDate}`;
 
-            userDetails.appendChild(userName);
+            userDetails.appendChild(nameLabel);
             userDetails.appendChild(userAddedInfo);
 
             const removeBtn = document.createElement('button');
@@ -217,6 +224,19 @@ async function addUser(event) {
     } catch (error) {
         console.error('Error adding user:', error);
         showStatus('Failed to add user: ' + error.message, 'error');
+    }
+}
+
+// Update a user's display name
+async function updateUserName(encodedEmail, name) {
+    const db = firebase.database();
+    try {
+        await db.ref('users/' + encodedEmail + '/name').set(name || null);
+        showStatus('Name saved.', 'success');
+        setTimeout(hideStatus, 2000);
+    } catch (error) {
+        console.error('Error updating name:', error);
+        showStatus('Failed to save name.', 'error');
     }
 }
 

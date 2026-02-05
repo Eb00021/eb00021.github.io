@@ -49,10 +49,13 @@ function escapeHtml(s) {
     return d.innerHTML;
 }
 
-function buildContributionsHtml(contributionsData, assignments) {
+function encEmail(e) { return (e || '').replace(/\./g, ','); }
+
+function buildContributionsHtml(contributionsData, assignments, otherContributions) {
     if (!contributionsData || !contributionsData.releases) return '';
     var keys = Object.keys(assignments || {});
     if (keys.length === 0) return '';
+    otherContributions = otherContributions || {};
 
     var byMember = {};
     keys.forEach(function (id) {
@@ -75,6 +78,7 @@ function buildContributionsHtml(contributionsData, assignments) {
     html += '<h2>Team Members</h2>';
     Object.keys(byMember).sort().forEach(function (email) {
         var m = byMember[email];
+        var otherList = otherContributions[encEmail(email)];
         html += '<h3>' + escapeHtml(m.name) + '</h3><h4>Functions Implemented</h4><table><tbody><tr><th><p>Function</p></th><th><p>Module</p></th><th><p>Description</p></th></tr>';
         m.ids.forEach(function (cid) {
             var parts = cid.split('-');
@@ -85,7 +89,10 @@ function buildContributionsHtml(contributionsData, assignments) {
             var row = release.rows[rowIdx];
             html += '<tr><td><p><code>' + escapeHtml(row.task) + '</code></p></td><td><p>' + escapeHtml(row.files) + '</p></td><td><p>' + escapeHtml(row.description) + '</p></td></tr>';
         });
-        html += '</tbody></table><h4>Other Contributions</h4><ul><li><p>[Add contributions here]</p></li></ul>';
+        html += '</tbody></table><h4>Other Contributions</h4><ul>';
+        if (otherList && otherList.length) otherList.forEach(function (item) { html += '<li><p>' + escapeHtml(item) + '</p></li>'; });
+        else html += '<li><p>[Add contributions here]</p></li>';
+        html += '</ul>';
     });
     return html;
 }
@@ -109,12 +116,14 @@ function doExport() {
     });
 
     var assignPromise = db.ref('contributions/assignments').once('value').then(function (snap) { return snap.val() || {}; }).catch(function () { return {}; });
+    var otherPromise = db.ref('contributions/otherContributions').once('value').then(function (snap) { return snap.val() || {}; }).catch(function () { return {}; });
 
-    Promise.all([ docContentPromise, defPromise, assignPromise ]).then(function (results) {
+    Promise.all([ docContentPromise, defPromise, assignPromise, otherPromise ]).then(function (results) {
         var docContent = results[0];
         var contributionsData = results[1];
         var assignments = results[2];
-        var contributionsHtml = buildContributionsHtml(contributionsData, assignments);
+        var otherContributions = results[3];
+        var contributionsHtml = buildContributionsHtml(contributionsData, assignments, otherContributions);
         var fullMainContent = docContent + contributionsHtml;
 
         var staticScript = '    <script>\n        (function(){ if (typeof Prism !== \'undefined\') Prism.highlightAll(); })();\n    <\/script>';

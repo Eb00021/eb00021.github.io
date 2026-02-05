@@ -6,78 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>T4BF MPX - Home</title>
     <link rel="stylesheet" href="css/style.css">
-    <style>
-        .landing-container {
-            text-align: center;
-            padding: 60px 20px;
-        }
-
-        .landing-title {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-        }
-
-        .landing-subtitle {
-            font-size: 1.2em;
-            color: #666;
-            margin-bottom: 40px;
-        }
-
-        .landing-buttons {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .landing-btn {
-            display: inline-block;
-            padding: 15px 30px;
-            font-size: 1.1em;
-            text-decoration: none;
-            border-radius: 5px;
-            transition: background-color 0.2s, transform 0.2s;
-        }
-
-        .landing-btn:hover {
-            transform: translateY(-2px);
-        }
-
-        .btn-primary {
-            background-color: #2c5282;
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background-color: #1a365d;
-        }
-
-        .btn-secondary {
-            background-color: #718096;
-            color: white;
-        }
-
-        .btn-secondary:hover {
-            background-color: #4a5568;
-        }
-
-        .landing-description {
-            max-width: 600px;
-            margin: 40px auto;
-            text-align: left;
-        }
-
-        .landing-description h2 {
-            margin-top: 30px;
-        }
-
-        .landing-description ul {
-            margin-left: 20px;
-        }
-    </style>
+    <link rel="stylesheet" href="css/app.css">
 </head>
-<body>
-    <main class="landing-container">
+<body class="app-shell landing-page">
+    <main class="landing-wrap">
         <h1 class="landing-title">T4BF MPX</h1>
         <p class="landing-subtitle">Multiprogramming Executive Operating System</p>
 
@@ -89,27 +21,19 @@
 
         <div class="landing-description">
             <h2>About</h2>
-            <p>
-                MPX is a simple operating system designed for educational purposes.
-                This documentation provides comprehensive guides for both users and programmers.
-            </p>
-
-            <h2>Documentation Sections</h2>
+            <p>MPX is a simple operating system designed for educational purposes. This site hosts the user manual, programmer reference, and team contributions.</p>
+            <h2>Documentation</h2>
             <ul>
-                <li><strong>User's Manual</strong> - Command reference and usage guide</li>
-                <li><strong>Programmer's Manual</strong> - API documentation and function reference</li>
-                <li><strong>Contributions</strong> - Team member contributions</li>
+                <li><strong>User's Manual</strong> — Command reference and usage</li>
+                <li><strong>Programmer's Manual</strong> — API and function reference</li>
+                <li><strong>Contributions</strong> — Team member contributions</li>
             </ul>
-
             <h2>Editing</h2>
-            <p>
-                Team members can edit the documentation using the visual editor.
-                You'll need a GitHub Personal Access Token with <code>repo</code> scope to save changes.
-            </p>
+            <p>Team members can edit docs in the visual editor. A GitHub Personal Access Token with <code>repo</code> scope is required to publish changes.</p>
         </div>
     </main>
 
-    <footer style="text-align: center; padding: 20px; color: #666;">
+    <footer class="landing-footer">
         <p>T4BF MPX Documentation</p>
     </footer>
 </body>
