@@ -215,8 +215,9 @@ function doExport() {
 }
 
 function pushExportToRepo(htmlContent) {
-    var token = getGitHubToken();
-    if (!token || !token.trim()) return Promise.resolve();
+    var rawToken = getGitHubToken();
+    var token = rawToken && rawToken.trim();
+    if (!token) return Promise.resolve();
 
     var encodedContent = btoa(unescape(encodeURIComponent(htmlContent)));
     var body = {
@@ -224,30 +225,48 @@ function pushExportToRepo(htmlContent) {
         content: encodedContent
     };
 
-    return fetch(GITHUB_API + '/repos/' + EXPORT_REPO_OWNER + '/' + EXPORT_REPO_NAME + '/contents/' + EXPORT_FILE_PATH, {
-        method: 'GET',
-        headers: {
-            'Authorization': 'token ' + token,
-            'Accept': 'application/vnd.github.v3+json'
-        }
-    }).then(function (res) {
-        if (res.ok) {
-            return res.json().then(function (data) { body.sha = data.sha; return body; });
-        }
-        return body;
-    }).catch(function () { return body; }).then(function (reqBody) {
+    function doGet(authHeader) {
+        return fetch(GITHUB_API + '/repos/' + EXPORT_REPO_OWNER + '/' + EXPORT_REPO_NAME + '/contents/' + EXPORT_FILE_PATH, {
+            method: 'GET',
+            headers: {
+                'Authorization': authHeader,
+                'Accept': 'application/vnd.github.v3+json'
+            }
+        });
+    }
+    function doPut(authHeader, reqBody) {
         return fetch(GITHUB_API + '/repos/' + EXPORT_REPO_OWNER + '/' + EXPORT_REPO_NAME + '/contents/' + EXPORT_FILE_PATH, {
             method: 'PUT',
             headers: {
-                'Authorization': 'token ' + token,
+                'Authorization': authHeader,
                 'Accept': 'application/vnd.github.v3+json',
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(reqBody)
         });
-    }).then(function (res) {
-        if (!res.ok) throw new Error(res.status === 401 ? 'Invalid GitHub token.' : 'Failed to update export file in repo.');
-        return res.json();
+    }
+
+    function runWithAuth(authHeader) {
+        return doGet(authHeader).then(function (res) {
+            var reqBody = { message: body.message, content: body.content };
+            if (res.ok) {
+                return res.json().then(function (data) { reqBody.sha = data.sha; return reqBody; });
+            }
+            return reqBody;
+        }).catch(function () { return { message: body.message, content: body.content }; }).then(function (reqBody) {
+            return doPut(authHeader, reqBody);
+        });
+    }
+
+    return runWithAuth('Bearer ' + token).then(function (res) {
+        if (res.ok) return res.json();
+        if (res.status === 401) {
+            return runWithAuth('token ' + token).then(function (res2) {
+                if (!res2.ok) throw new Error('Invalid or expired GitHub token. Set it again in the Editor (GitHub button).');
+                return res2.json();
+            });
+        }
+        throw new Error('Failed to update export file in repo.');
     });
 }
 
