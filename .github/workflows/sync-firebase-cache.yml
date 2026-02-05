@@ -1,0 +1,42 @@
+name: Sync Firebase Cache
+
+on:
+  push:
+    paths:
+      - 'documentation.html'
+    branches:
+      - main
+
+jobs:
+  sync-cache:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Extract and sync content to Firebase
+        run: |
+          # Extract content between <main> tags
+          CONTENT=$(sed -n '/<main[^>]*>/,/<\/main>/p' documentation.html | sed '1s/.*<main[^>]*>//;$s/<\/main>.*//')
+
+          # Escape for JSON
+          ESCAPED_CONTENT=$(echo "$CONTENT" | jq -Rs .)
+
+          # Create JSON payload
+          JSON_PAYLOAD=$(cat <<EOF
+          {
+            "content": $ESCAPED_CONTENT,
+            "updatedAt": {".sv": "timestamp"},
+            "updatedBy": "github-actions"
+          }
+          EOF
+          )
+
+          # Update Firebase Realtime Database
+          curl -X PUT \
+            "https://t4bf-docs-default-rtdb.firebaseio.com/documentation/htmlCache.json?auth=${{ secrets.FIREBASE_DATABASE_SECRET }}" \
+            -H "Content-Type: application/json" \
+            -d "$JSON_PAYLOAD"
+
+          echo "Firebase cache updated successfully"
