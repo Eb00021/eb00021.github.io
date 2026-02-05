@@ -30,6 +30,7 @@ let awareness = null;
 let firebaseUnsubscribe = null;
 let sessionId = null;
 let sessionListener = null;
+let sessionRef = null;
 let provider = null;
 let currentFileSha = null;
 let originalHtmlHead = '';
@@ -317,6 +318,12 @@ async function signInWithGoogle() {
 // Sign Out
 async function signOut() {
     try {
+        // Clean up session listener before signing out
+        if (sessionRef && sessionListener) {
+            sessionRef.off('value', sessionListener);
+            sessionListener = null;
+        }
+        sessionRef = null;
         if (firebaseUnsubscribe) {
             firebaseUnsubscribe();
         }
@@ -1020,7 +1027,7 @@ async function resetEditorState() {
 async function trackSession(user) {
     const db = firebase.database();
     const encodedEmail = encodeEmail(user.email);
-    const sessionRef = db.ref('sessions/' + encodedEmail);
+    sessionRef = db.ref('sessions/' + encodedEmail);
 
     // Generate unique session ID for this window
     sessionId = Date.now() + '-' + Math.random().toString(36).substring(2, 9);
@@ -1037,8 +1044,9 @@ async function trackSession(user) {
         // If session changed and it's not ours, sign out
         if (activeSession && activeSession !== sessionId) {
             sessionRef.off('value', sessionListener);
-            alert('You signed in from another window. This session will be closed.');
-            signOut();
+            sessionListener = null;
+            showStatus('You signed in from another window. This session will be closed.', 'error');
+            setTimeout(() => signOut(), 2000);
         }
     });
 }

@@ -137,9 +137,51 @@ function editRow(releaseIndex, rowIndex) {
     saveDefinition().then(render);
 }
 
+// Event delegation flag - only attach listeners once
+var delegatedListenersAttached = false;
+
+function setupEventDelegation() {
+    if (delegatedListenersAttached) return;
+    var root = document.getElementById('releasesRoot');
+    if (!root) return;
+
+    // Single delegated listener for release title changes
+    root.addEventListener('change', function (e) {
+        var target = e.target;
+
+        // Handle release title changes
+        if (target.classList.contains('release-title')) {
+            var idx = parseInt(target.getAttribute('data-release-index'), 10);
+            if (!isNaN(idx) && contributionsData.releases[idx]) {
+                contributionsData.releases[idx].title = target.value.trim();
+                saveDefinition();
+            }
+            return;
+        }
+
+        // Handle row input changes
+        if (target.closest('.row-item') && target.tagName === 'INPUT') {
+            var r = parseInt(target.getAttribute('data-r'), 10);
+            var c = parseInt(target.getAttribute('data-c'), 10);
+            var field = target.getAttribute('data-field');
+            if (!isNaN(r) && !isNaN(c) && field &&
+                contributionsData.releases[r] && contributionsData.releases[r].rows[c]) {
+                contributionsData.releases[r].rows[c][field] = target.value.trim();
+                saveDefinition();
+            }
+        }
+    });
+
+    delegatedListenersAttached = true;
+}
+
 function render() {
     var root = document.getElementById('releasesRoot');
     if (!root) return;
+
+    // Setup event delegation once (before clearing innerHTML)
+    setupEventDelegation();
+
     root.innerHTML = '';
     contributionsData.releases.forEach(function (release, rIdx) {
         var block = document.createElement('div');
@@ -167,23 +209,6 @@ function render() {
         addRowForm.innerHTML = '<button type="button" class="btn btn-save btn-small" onclick="addRow(' + rIdx + ')">+ Add row</button>';
         block.appendChild(addRowForm);
         root.appendChild(block);
-    });
-    root.querySelectorAll('.release-title').forEach(function (input) {
-        input.addEventListener('change', function () {
-            var idx = parseInt(this.getAttribute('data-release-index'), 10);
-            contributionsData.releases[idx].title = this.value.trim();
-            saveDefinition();
-        });
-    });
-    root.querySelectorAll('.row-item input').forEach(function (input) {
-        input.addEventListener('change', function () {
-            var r = parseInt(this.getAttribute('data-r'), 10);
-            var c = parseInt(this.getAttribute('data-c'), 10);
-            var field = this.getAttribute('data-field');
-            if (contributionsData.releases[r] && contributionsData.releases[r].rows[c])
-                contributionsData.releases[r].rows[c][field] = this.value.trim();
-            saveDefinition();
-        });
     });
 }
 
