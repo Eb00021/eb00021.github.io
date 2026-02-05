@@ -73,7 +73,8 @@ async function getGitHubToken() {
     try {
         const db = firebase.database();
         const snapshot = await db.ref('settings/githubToken').once('value');
-        cachedGitHubToken = snapshot.exists() ? snapshot.val() : null;
+        const raw = snapshot.exists() ? snapshot.val() : null;
+        cachedGitHubToken = raw ? raw.trim() : null;
         return cachedGitHubToken;
     } catch (error) {
         console.error('Error fetching GitHub token:', error);
@@ -103,26 +104,40 @@ async function clearGitHubToken() {
     }
 }
 
+// GitHub API helper: try Bearer first, fall back to token on 401
+let workingAuthPrefix = null; // 'Bearer' or 'token', cached after first success
+
+async function githubFetch(url, options = {}) {
+    const token = await getGitHubToken();
+    if (!token) throw new Error('No GitHub token configured');
+
+    const prefixes = workingAuthPrefix ? [workingAuthPrefix] : ['Bearer', 'token'];
+
+    for (const prefix of prefixes) {
+        const headers = {
+            ...options.headers,
+            'Authorization': `${prefix} ${token}`,
+            'Accept': 'application/vnd.github.v3+json'
+        };
+        const response = await fetch(url, { ...options, headers });
+        if (response.status === 401 && !workingAuthPrefix) continue;
+        if (response.ok) workingAuthPrefix = prefix;
+        return response;
+    }
+    throw new Error('Invalid or expired GitHub token');
+}
+
 // GitHub API: Fetch file SHA (required for updates)
 async function fetchFileSha() {
     const token = await getGitHubToken();
     if (!token) return null;
 
     try {
-        const response = await fetch(
-            `${GITHUB_API}/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_FILE}`,
-            {
-                headers: {
-                    'Authorization': `token ${token}`,
-                    'Accept': 'application/vnd.github.v3+json'
-                }
-            }
+        const response = await githubFetch(
+            `${GITHUB_API}/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_FILE}`
         );
 
         if (!response.ok) {
-            if (response.status === 401) {
-                throw new Error('Invalid or expired GitHub token');
-            }
             throw new Error(`GitHub API error: ${response.statusText}`);
         }
 
@@ -189,13 +204,11 @@ async function updateGitHubFile(htmlContent, commitMessage) {
     const fullHtml = buildFullDocumentHtml(htmlContent);
     const encodedContent = btoa(unescape(encodeURIComponent(fullHtml)));
 
-    const response = await fetch(
+    const response = await githubFetch(
         `${GITHUB_API}/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_FILE}`,
         {
             method: 'PUT',
             headers: {
-                'Authorization': `token ${token}`,
-                'Accept': 'application/vnd.github.v3+json',
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
@@ -207,9 +220,6 @@ async function updateGitHubFile(htmlContent, commitMessage) {
     );
 
     if (!response.ok) {
-        if (response.status === 401) {
-            throw new Error('Invalid or expired GitHub token');
-        }
         if (response.status === 409) {
             throw new Error('Conflict: File was modified. Please try again.');
         }
