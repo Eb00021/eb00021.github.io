@@ -719,12 +719,18 @@ function setupToolbar() {
         'btn-undo': () => editor.chain().focus().undo().run(),
         'btn-redo': () => editor.chain().focus().redo().run(),
         'btn-table': () => editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run(),
+        'btn-table-add-row': () => editor.chain().focus().addRowAfter().run(),
+        'btn-table-add-col': () => editor.chain().focus().addColumnAfter().run(),
+        'btn-table-delete-row': () => editor.chain().focus().deleteRow().run(),
+        'btn-table-delete-col': () => editor.chain().focus().deleteColumn().run(),
+        'btn-table-delete': () => editor.chain().focus().deleteTable().run(),
         'btn-link': () => {
             const url = prompt('Enter URL:');
             if (url) {
                 editor.chain().focus().setLink({ href: url }).run();
             }
-        }
+        },
+        'btn-unlink': () => editor.chain().focus().unsetLink().run(),
     };
 
     Object.entries(buttons).forEach(([id, handler]) => {
@@ -739,7 +745,7 @@ function setupToolbar() {
     editor.on('update', updateToolbarState);
 }
 
-// Update toolbar button active states
+// Update toolbar button active states and enable/disable table ops
 function updateToolbarState() {
     if (!editor) return;
 
@@ -763,6 +769,15 @@ function updateToolbarState() {
         const btn = getElement(id);
         if (btn) {
             btn.classList.toggle('is-active', isActive);
+        }
+    });
+
+    // Enable table operation buttons only when cursor is inside a table
+    const inTable = editor.isActive('table');
+    ['btn-table-add-row', 'btn-table-add-col', 'btn-table-delete-row', 'btn-table-delete-col', 'btn-table-delete'].forEach(id => {
+        const btn = getElement(id);
+        if (btn) {
+            btn.disabled = !inTable;
         }
     });
 }
