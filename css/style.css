@@ -1,11 +1,13 @@
 body {
     font-family: Georgia, serif;
     max-width: 800px;
-    margin: 0 auto;
+    margin-left: auto;
+    margin-right: auto;
     padding: 20px;
     line-height: 1.5;
     box-sizing: border-box;
     text-align: center;
+    width: 100%;
 }
 
 main {
@@ -17,11 +19,12 @@ main {
     text-align: left;
 }
 
-/* Center main content when used as main content area (e.g. documentation) */
+/* Documentation page: main content centered (body has no app-shell, so this keeps content centered) */
 #mainContent {
-    max-width: 100%;
+    max-width: 800px;
     margin-left: auto;
     margin-right: auto;
+    width: 100%;
 }
 
 code, pre {

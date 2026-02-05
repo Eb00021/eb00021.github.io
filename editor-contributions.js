@@ -7,10 +7,16 @@
         return d.innerHTML;
     }
 
+    function normalizeEmail(e) {
+        if (!e || typeof e !== 'string') return '';
+        return e.replace(/,/g, '.').toLowerCase().trim();
+    }
+
     function resolveDisplayName(email, assignment, usersMap) {
         if (!email) return 'Unknown';
-        var fromUser = usersMap && usersMap[email] && usersMap[email].name;
-        if (fromUser && fromUser.trim()) return fromUser.trim();
+        var canonical = normalizeEmail(email);
+        var fromUser = (usersMap && (usersMap[email] && usersMap[email].name)) || (usersMap && canonical && usersMap[canonical] && usersMap[canonical].name);
+        if (fromUser && String(fromUser).trim()) return String(fromUser).trim();
         if (assignment && assignment.displayName) return assignment.displayName;
         return email.split('@')[0];
     }
@@ -73,8 +79,12 @@
             if (val) {
                 Object.keys(val).forEach(function (k) {
                     var u = val[k];
-                    var email = u.email || k.replace(/,/g, '.');
-                    map[email] = { name: u.name || '' };
+                    var email = (u.email || k.replace(/,/g, '.')).trim();
+                    var canonical = email.toLowerCase();
+                    var entry = { name: u.name || '' };
+                    map[email] = entry;
+                    if (canonical !== email) map[canonical] = entry;
+                    if (k !== email && k.replace(/,/g, '.') !== email) map[k.replace(/,/g, '.')] = entry;
                 });
             }
             return map;

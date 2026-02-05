@@ -51,19 +51,25 @@ function escapeHtml(s) {
 
 function encEmail(e) { return (e || '').replace(/\./g, ','); }
 
+function normalizeEmail(e) {
+    if (!e || typeof e !== 'string') return '';
+    return e.replace(/,/g, '.').toLowerCase().trim();
+}
+
 function resolveDisplayName(email, assignment, usersMap) {
     if (!email) return 'Unknown';
-    var fromUser = usersMap && usersMap[email] && usersMap[email].name;
+    var canonical = normalizeEmail(email);
+    var fromUser = (usersMap && usersMap[email] && usersMap[email].name) || (usersMap && canonical && usersMap[canonical] && usersMap[canonical].name);
     if (fromUser && String(fromUser).trim()) return String(fromUser).trim();
     if (assignment && assignment.displayName) return assignment.displayName;
     return email.split('@')[0];
 }
 
 function buildContributionsHtml(contributionsData, assignments, usersMap) {
-    if (!contributionsData || !contributionsData.releases) return '';
-    var keys = Object.keys(assignments || {});
-    if (keys.length === 0) return '';
+    if (!contributionsData || !contributionsData.releases || !contributionsData.releases.length) return '';
+    assignments = assignments || {};
     usersMap = usersMap || {};
+    var keys = Object.keys(assignments);
 
     var byMember = {};
     keys.forEach(function (id) {
@@ -83,21 +89,23 @@ function buildContributionsHtml(contributionsData, assignments, usersMap) {
         });
         html += '</tbody></table>';
     });
-    html += '<h2>Team Members</h2>';
-    Object.keys(byMember).sort().forEach(function (email) {
-        var m = byMember[email];
-        html += '<h3>' + escapeHtml(m.name) + '</h3><h4>Functions Implemented</h4><table><tbody><tr><th><p>Function</p></th><th><p>Module</p></th><th><p>Description</p></th></tr>';
-        m.ids.forEach(function (cid) {
-            var parts = cid.split('-');
-            var releaseId = parts[0];
-            var rowIdx = parseInt(parts[1], 10);
-            var release = contributionsData.releases.filter(function (r) { return r.id === releaseId; })[0];
-            if (!release || !release.rows || !release.rows[rowIdx]) return;
-            var row = release.rows[rowIdx];
-            html += '<tr><td><p><code>' + escapeHtml(row.task) + '</code></p></td><td><p>' + escapeHtml(row.files) + '</p></td><td><p>' + escapeHtml(row.description) + '</p></td></tr>';
+    if (keys.length > 0) {
+        html += '<h2>Team Members</h2>';
+        Object.keys(byMember).sort().forEach(function (email) {
+            var m = byMember[email];
+            html += '<h3>' + escapeHtml(m.name) + '</h3><h4>Functions Implemented</h4><table><tbody><tr><th><p>Function</p></th><th><p>Module</p></th><th><p>Description</p></th></tr>';
+            m.ids.forEach(function (cid) {
+                var parts = cid.split('-');
+                var releaseId = parts[0];
+                var rowIdx = parseInt(parts[1], 10);
+                var release = contributionsData.releases.filter(function (r) { return r.id === releaseId; })[0];
+                if (!release || !release.rows || !release.rows[rowIdx]) return;
+                var row = release.rows[rowIdx];
+                html += '<tr><td><p><code>' + escapeHtml(row.task) + '</code></p></td><td><p>' + escapeHtml(row.files) + '</p></td><td><p>' + escapeHtml(row.description) + '</p></td></tr>';
+            });
+            html += '</tbody></table>';
         });
-        html += '</tbody></table>';
-    });
+    }
     return html;
 }
 
@@ -127,8 +135,12 @@ function doExport() {
         if (val) {
             Object.keys(val).forEach(function (k) {
                 var u = val[k];
-                var email = u.email || k.replace(/,/g, '.');
-                map[email] = { name: u.name || '' };
+                var email = (u.email || k.replace(/,/g, '.')).trim();
+                var canonical = email.toLowerCase();
+                var entry = { name: u.name || '' };
+                map[email] = entry;
+                if (canonical !== email) map[canonical] = entry;
+                if (k.replace(/,/g, '.') !== email) map[k.replace(/,/g, '.')] = entry;
             });
         }
         return map;

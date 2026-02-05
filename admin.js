@@ -245,11 +245,27 @@ async function addUser(event) {
     }
 }
 
-// Update a user's display name
+// Update a user's display name and sync to all contribution assignments (so custom names show everywhere, including doc page and static export)
 async function updateUserName(encodedEmail, name) {
     const db = firebase.database();
+    const email = decodeEmail(encodedEmail);
+    const displayName = (name && name.trim()) ? name.trim() : email.split('@')[0];
     try {
         await db.ref('users/' + encodedEmail + '/name').set(name || null);
+        // Sync displayName to every contribution assignment for this user so names are correct everywhere (doc page, static export, editor panel)
+        const assignmentsSnap = await db.ref('contributions/assignments').once('value');
+        const assignments = assignmentsSnap.val() || {};
+        const updates = {};
+        Object.keys(assignments).forEach((id) => {
+            const a = assignments[id];
+            const assignEmail = a && (typeof a === 'string' ? a : a.email);
+            if (assignEmail && (assignEmail === email || encodeEmail(assignEmail) === encodedEmail)) {
+                updates['contributions/assignments/' + id + '/displayName'] = displayName;
+            }
+        });
+        if (Object.keys(updates).length) {
+            await db.ref().update(updates);
+        }
         showStatus('Name saved.', 'success');
         setTimeout(hideStatus, 2000);
     } catch (error) {

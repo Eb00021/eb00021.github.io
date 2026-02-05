@@ -131,9 +131,14 @@ sys_req(WRITE, COM1, "Hello\r\n", 7);</code></pre><h3>sys_alloc_mem</h3><p><stro
                 return div.innerHTML;
             }
 
+            function normalizeEmail(e) {
+                if (!e || typeof e !== 'string') return '';
+                return e.replace(/,/g, '.').toLowerCase().trim();
+            }
             function resolveDisplayName(email, assignment, usersMap) {
                 if (!email) return 'Unknown';
-                const fromUser = usersMap && usersMap[email] && usersMap[email].name;
+                const canonical = normalizeEmail(email);
+                const fromUser = (usersMap && usersMap[email] && usersMap[email].name) || (usersMap && canonical && usersMap[canonical] && usersMap[canonical].name);
                 if (fromUser && String(fromUser).trim()) return String(fromUser).trim();
                 if (assignment && assignment.displayName) return assignment.displayName;
                 return email.split('@')[0];
@@ -155,8 +160,12 @@ sys_req(WRITE, COM1, "Hello\r\n", 7);</code></pre><h3>sys_alloc_mem</h3><p><stro
                     if (val) {
                         Object.keys(val).forEach(function(k) {
                             const u = val[k];
-                            const email = u.email || k.replace(/,/g, '.');
-                            map[email] = { name: u.name || '' };
+                            const email = (u.email || k.replace(/,/g, '.')).trim();
+                            const canonical = email.toLowerCase();
+                            const entry = { name: u.name || '' };
+                            map[email] = entry;
+                            if (canonical !== email) map[canonical] = entry;
+                            if (k.replace(/,/g, '.') !== email) map[k.replace(/,/g, '.')] = entry;
                         });
                     }
                     return map;

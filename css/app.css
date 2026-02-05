@@ -91,6 +91,7 @@ body.app-shell.admin-force-light .presence-bar {
 }
 
 /* Only apply app styles when this class is present (editor site pages) */
+/* Override style.css: body must be full width so inner containers can center with margin: auto */
 body.app-shell {
     font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
     background: var(--app-bg);
@@ -98,11 +99,14 @@ body.app-shell {
     min-height: 100vh;
     margin: 0;
     padding: 0;
+    max-width: none;        /* override style.css 800px so body is full width */
+    width: 100%;
     line-height: 1.5;
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
+    box-sizing: border-box;
 }
 
 body.app-shell > * {
