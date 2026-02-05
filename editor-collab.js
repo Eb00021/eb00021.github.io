@@ -9,6 +9,7 @@ let currentUser = null;
 let isAuthorized = false;
 let sessionId = null;
 let sessionListener = null;
+let lastKnownCacheTimestamp = 0;
 
 // DOM Elements
 const elements = {
@@ -540,14 +541,22 @@ async function loadInitialContent() {
 
         try {
             // First try to load from Firebase htmlCache
-            const cacheSnapshot = await db.ref('documentation/htmlCache/content').once('value');
+            const cacheSnapshot = await db.ref('documentation/htmlCache').once('value');
             if (cacheSnapshot.exists()) {
-                editor.commands.setContent(cacheSnapshot.val());
-                return;
+                const data = cacheSnapshot.val();
+                if (data.content) {
+                    editor.commands.setContent(data.content);
+                    lastKnownCacheTimestamp = data.updatedAt || 0;
+                    return;
+                }
             }
 
-            // If no cache, fetch from documentation.html
-            const response = await fetch('documentation.html');
+            // If no cache, fetch from documentation.html with cache buster
+            const cacheBuster = Date.now();
+            const response = await fetch('documentation.html?_=' + cacheBuster, {
+                cache: 'no-store',
+                headers: { 'Cache-Control': 'no-cache' }
+            });
             if (response.ok) {
                 const html = await response.text();
                 // Extract main content
@@ -565,6 +574,112 @@ async function loadInitialContent() {
         } catch (error) {
             console.error('Failed to load initial content:', error);
         }
+    } else {
+        // Document has content, but check if htmlCache is newer
+        await checkForNewerCache();
+    }
+}
+
+// Check if Firebase htmlCache has newer content than what we have
+async function checkForNewerCache() {
+    const db = firebase.database();
+    try {
+        const cacheSnapshot = await db.ref('documentation/htmlCache').once('value');
+        if (cacheSnapshot.exists()) {
+            const data = cacheSnapshot.val();
+            const cacheTimestamp = data.updatedAt || 0;
+
+            // If cache is newer and was updated by github-actions or manual-fix, prompt to refresh
+            if (cacheTimestamp > lastKnownCacheTimestamp &&
+                (data.updatedBy === 'github-actions' || data.updatedBy === 'manual-fix')) {
+                lastKnownCacheTimestamp = cacheTimestamp;
+                const shouldRefresh = confirm(
+                    'A newer version of the documentation was pushed to GitHub. ' +
+                    'Would you like to load it? (This will replace the current editor content)'
+                );
+                if (shouldRefresh) {
+                    await forceRefreshFromCache();
+                }
+            }
+        }
+    } catch (error) {
+        console.error('Error checking for newer cache:', error);
+    }
+}
+
+// Force refresh content from Firebase htmlCache
+async function forceRefreshFromCache() {
+    if (!editor) return;
+
+    const db = firebase.database();
+    try {
+        showStatus('Refreshing content from source...', 'loading');
+
+        const cacheSnapshot = await db.ref('documentation/htmlCache').once('value');
+        if (cacheSnapshot.exists()) {
+            const data = cacheSnapshot.val();
+            if (data.content) {
+                editor.commands.setContent(data.content);
+                lastKnownCacheTimestamp = data.updatedAt || 0;
+                showStatus('Content refreshed successfully!', 'success');
+                setTimeout(hideStatus, 3000);
+                return true;
+            }
+        }
+
+        showStatus('No cached content found', 'error');
+        setTimeout(hideStatus, 3000);
+        return false;
+    } catch (error) {
+        console.error('Failed to refresh from cache:', error);
+        showStatus('Failed to refresh: ' + error.message, 'error');
+        return false;
+    }
+}
+
+// Force refresh from documentation.html file (bypasses all caches)
+async function forceRefreshFromFile() {
+    if (!editor) return;
+
+    const db = firebase.database();
+    try {
+        showStatus('Fetching fresh content from file...', 'loading');
+
+        const cacheBuster = Date.now();
+        const response = await fetch('documentation.html?_=' + cacheBuster, {
+            cache: 'no-store',
+            headers: {
+                'Cache-Control': 'no-cache, no-store, must-revalidate',
+                'Pragma': 'no-cache'
+            }
+        });
+
+        if (response.ok) {
+            const html = await response.text();
+            const mainMatch = html.match(/<main[^>]*>([\s\S]*?)<\/main>/i);
+            if (mainMatch) {
+                editor.commands.setContent(mainMatch[1]);
+
+                // Update Firebase cache too
+                await db.ref('documentation/htmlCache').set({
+                    content: mainMatch[1],
+                    updatedAt: firebase.database.ServerValue.TIMESTAMP,
+                    updatedBy: currentUser ? currentUser.email : 'refresh'
+                });
+                lastKnownCacheTimestamp = Date.now();
+
+                showStatus('Content refreshed from file!', 'success');
+                setTimeout(hideStatus, 3000);
+                return true;
+            }
+        }
+
+        showStatus('Failed to fetch file', 'error');
+        return false;
+    } catch (error) {
+        console.error('Failed to refresh from file:', error);
+        showStatus('Failed to refresh: ' + error.message, 'error');
+        return false;
     }
 }
 
@@ -644,3 +759,5 @@ window.signInWithGoogle = signInWithGoogle;
 window.signOut = signOut;
 window.publishContent = publishContent;
 window.exportToHtml = exportToHtml;
+window.forceRefreshFromCache = forceRefreshFromCache;
+window.forceRefreshFromFile = forceRefreshFromFile;
