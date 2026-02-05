@@ -108,7 +108,7 @@ sys_req(WRITE, COM1, "Hello\r\n", 7);</code></pre><h3>sys_alloc_mem</h3><p><stro
 │   └── core.c       # Memory allocation (provided)
 └── include/         # Header files
     ├── mpx/         # Kernel headers
-    └── *.h          # User/lib headers</code></pre><h1>Contributions</h1><h2>Overview</h2><p>This section documents each team member's contributions to the T4BF MPX project throughout the semester.</p><h2>R0 Contributions</h2><table><tbody><tr><th colspan="1" rowspan="1"><p>Task</p></th><th colspan="1" rowspan="1"><p>Description</p></th><th colspan="1" rowspan="1"><p>Files</p></th></tr><tr><td colspan="1" rowspan="1"><p>Serial port initialization</p></td><td colspan="1" rowspan="1"><p>Configure COM1 UART at 9600 baud</p></td><td colspan="1" rowspan="1"><p>kernel/serial.c</p></td></tr><tr><td colspan="1" rowspan="1"><p>Kernel main setup</p></td><td colspan="1" rowspan="1"><p>Initialize all subsystems in correct order</p></td><td colspan="1" rowspan="1"><p>kernel/kmain.c</p></td></tr><tr><td colspan="1" rowspan="1"><p>GDT/IDT/IRQ/PIC/VM setup</p></td><td colspan="1" rowspan="1"><p>(Provided code)</p></td><td colspan="1" rowspan="1"><p>kernel/core-c.c</p></td></tr></tbody></table><h2>R1 Contributions</h2><table><tbody><tr><th colspan="1" rowspan="1"><p>Task</p></th><th colspan="1" rowspan="1"><p>Description</p></th><th colspan="1" rowspan="1"><p>Files</p></th></tr><tr><td colspan="1" rowspan="1"><p>serial_poll() implementation</p></td><td colspan="1" rowspan="1"><p>Polling input with line editing support</p></td><td colspan="1" rowspan="1"><p>kernel/serial.c</p></td></tr><tr><td colspan="1" rowspan="1"><p>Arrow key navigation</p></td><td colspan="1" rowspan="1"><p>Left/right cursor movement in input</p></td><td colspan="1" rowspan="1"><p>kernel/serial.c</p></td></tr><tr><td colspan="1" rowspan="1"><p>Home/End/Delete keys</p></td><td colspan="1" rowspan="1"><p>Extended keyboard support</p></td><td colspan="1" rowspan="1"><p>kernel/serial.c</p></td></tr><tr><td colspan="1" rowspan="1"><p>Backspace handling</p></td><td colspan="1" rowspan="1"><p>Delete character with visual update</p></td><td colspan="1" rowspan="1"><p>kernel/serial.c</p></td></tr><tr><td colspan="1" rowspan="1"><p>Command handler (comhand)</p></td><td colspan="1" rowspan="1"><p>Main REPL loop with command dispatch</p></td><td colspan="1" rowspan="1"><p>user/comhand.c</p></td></tr><tr><td colspan="1" rowspan="1"><p>help command</p></td><td colspan="1" rowspan="1"><p>Display available commands and usage</p></td><td colspan="1" rowspan="1"><p>user/cmd_help.c</p></td></tr><tr><td colspan="1" rowspan="1"><p>version command</p></td><td colspan="1" rowspan="1"><p>Show MPX version info</p></td><td colspan="1" rowspan="1"><p>user/cmd_version.c</p></td></tr><tr><td colspan="1" rowspan="1"><p>shutdown command</p></td><td colspan="1" rowspan="1"><p>Graceful exit with confirmation</p></td><td colspan="1" rowspan="1"><p>user/cmd_shutdown.c</p></td></tr><tr><td colspan="1" rowspan="1"><p>getdate command</p></td><td colspan="1" rowspan="1"><p>Read and display RTC date</p></td><td colspan="1" rowspan="1"><p>user/cmd_getdate.c</p></td></tr><tr><td colspan="1" rowspan="1"><p>setdate command</p></td><td colspan="1" rowspan="1"><p>Set RTC date with validation</p></td><td colspan="1" rowspan="1"><p>user/cmd_setdate.c</p></td></tr><tr><td colspan="1" rowspan="1"><p>Leap year validation</p></td><td colspan="1" rowspan="1"><p>Correct Feb 29 handling</p></td><td colspan="1" rowspan="1"><p>user/cmd_setdate.c</p></td></tr><tr><td colspan="1" rowspan="1"><p>RTC write order fix</p></td><td colspan="1" rowspan="1"><p>Century/year first for edge cases</p></td><td colspan="1" rowspan="1"><p>user/cmd_setdate.c</p></td></tr><tr><td colspan="1" rowspan="1"><p>gettime command</p></td><td colspan="1" rowspan="1"><p>Read and display RTC time</p></td><td colspan="1" rowspan="1"><p>user/cmd_gettime.c</p></td></tr><tr><td colspan="1" rowspan="1"><p>settime command</p></td><td colspan="1" rowspan="1"><p>Set RTC time with validation</p></td><td colspan="1" rowspan="1"><p>user/cmd_settime.c</p></td></tr><tr><td colspan="1" rowspan="1"><p>RTC kernel interface</p></td><td colspan="1" rowspan="1"><p>Hardware access functions</p></td><td colspan="1" rowspan="1"><p>kernel/rtc.c</p></td></tr><tr><td colspan="1" rowspan="1"><p>BCD conversion helpers</p></td><td colspan="1" rowspan="1"><p>Binary/BCD conversion utilities</p></td><td colspan="1" rowspan="1"><p>user/cmd_helpers.c</p></td></tr><tr><td colspan="1" rowspan="1"><p>print() helper</p></td><td colspan="1" rowspan="1"><p>Wrapper for sys_req WRITE</p></td><td colspan="1" rowspan="1"><p>user/cmd_helpers.c</p></td></tr><tr><td colspan="1" rowspan="1"><p>int_to_str() helper</p></td><td colspan="1" rowspan="1"><p>Integer to string conversion</p></td><td colspan="1" rowspan="1"><p>user/cmd_helpers.c</p></td></tr><tr><td colspan="1" rowspan="1"><p>Documentation</p></td><td colspan="1" rowspan="1"><p>Setup guides, code layout docs</p></td><td colspan="1" rowspan="1"><p>doc/*.md</p></td></tr></tbody></table><h2>Team Members</h2><h3>Ethan Boyd</h3><h4>Functions Implemented</h4><table><tbody><tr><th colspan="1" rowspan="1"><p>Function</p></th><th colspan="1" rowspan="1"><p>Module</p></th><th colspan="1" rowspan="1"><p>Description</p></th></tr><tr><td colspan="1" rowspan="1"><p><code>[Select from R0/R1 table above]</code></p></td><td colspan="1" rowspan="1"><p></p></td><td colspan="1" rowspan="1"><p></p></td></tr></tbody></table><h4>Other Contributions</h4><ul><li><p>Designed the documentation HTML</p></li></ul><h3>Benjamin Eft</h3><h4>Functions Implemented</h4><table><tbody><tr><th colspan="1" rowspan="1"><p>Function</p></th><th colspan="1" rowspan="1"><p>Module</p></th><th colspan="1" rowspan="1"><p>Description</p></th></tr><tr><td colspan="1" rowspan="1"><p><code>[Select from R0/R1 table above]</code></p></td><td colspan="1" rowspan="1"><p></p></td><td colspan="1" rowspan="1"><p></p></td></tr></tbody></table><h4>Other Contributions</h4><ul><li><p>[Add contributions here]</p></li></ul><h3>Shannon Seiler</h3><h4>Functions Implemented</h4><table><tbody><tr><th colspan="1" rowspan="1"><p>Function</p></th><th colspan="1" rowspan="1"><p>Module</p></th><th colspan="1" rowspan="1"><p>Description</p></th></tr><tr><td colspan="1" rowspan="1"><p><code>[Select from R0/R1 table above]</code></p></td><td colspan="1" rowspan="1"><p></p></td><td colspan="1" rowspan="1"><p></p></td></tr></tbody></table><h4>Other Contributions</h4><ul><li><p>[Add contributions here]</p></li></ul><h3>Matt Welch</h3><h4>Functions Implemented</h4><table><tbody><tr><th colspan="1" rowspan="1"><p>Function</p></th><th colspan="1" rowspan="1"><p>Module</p></th><th colspan="1" rowspan="1"><p>Description</p></th></tr><tr><td colspan="1" rowspan="1"><p><code>[Select from R0/R1 table above]</code></p></td><td colspan="1" rowspan="1"><p></p></td><td colspan="1" rowspan="1"><p></p></td></tr></tbody></table><h4>Other Contributions</h4><ul><li><p>[Add contributions here]</p></li></ul><pre><code>T4BF MPX Documentation</code></pre></main>
+    └── *.h          # User/lib headers</code></pre></main>
 
     <!--prism.js for syntax highlighting (we can change this later if needed)-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
@@ -124,46 +124,97 @@ sys_req(WRITE, COM1, "Hello\r\n", 7);</code></pre><h3>sys_alloc_mem</h3><p><stro
     <script>
         (function() {
             const mainContent = document.getElementById('mainContent');
-            const staticContent = mainContent.innerHTML;
 
-            // Try to load from Firebase
+            function escapeHtml(s) {
+                const div = document.createElement('div');
+                div.textContent = s;
+                return div.innerHTML;
+            }
+
+            function injectContributions() {
+                const db = typeof firebase !== 'undefined' && firebase.apps.length ? firebase.database() : null;
+                const defPromise = db
+                    ? db.ref('contributions/definition').once('value').then(function(snap) {
+                        const val = snap.val();
+                        if (val && val.releases && val.releases.length) return val;
+                        return fetch('data/contributions.json').then(function(r) { return r.ok ? r.json() : null; }).catch(function() { return null; });
+                    }).catch(function() { return fetch('data/contributions.json').then(function(r) { return r.ok ? r.json() : null; }).catch(function() { return null; }); })
+                    : fetch('data/contributions.json').then(function(r) { return r.ok ? r.json() : null; }).catch(function() { return null; });
+                const assignPromise = db ? db.ref('contributions/assignments').once('value').then(function(snap) { return snap.val() || {}; }) : Promise.resolve({});
+                Promise.all([ defPromise, assignPromise ]).then(function(results) {
+                    const contributionsData = results[0];
+                    const assignments = results[1];
+                    if (!contributionsData || !contributionsData.releases || Object.keys(assignments).length === 0) return;
+
+                    const byMember = {};
+                    Object.keys(assignments).forEach(function(id) {
+                        const a = assignments[id];
+                        const email = a && (a.email || a);
+                        const name = (a && a.displayName) ? a.displayName : (email ? email.split('@')[0] : 'Unknown');
+                        if (!email) return;
+                        if (!byMember[email]) byMember[email] = { name: name, ids: [] };
+                        byMember[email].ids.push(id);
+                    });
+
+                    let html = '<h1>Contributions</h1><h2>Overview</h2><p>This section documents each team member\'s contributions to the T4BF MPX project throughout the semester.</p>';
+                    contributionsData.releases.forEach(function(release) {
+                        html += '<h2>' + escapeHtml(release.title) + '</h2><table><tbody><tr><th><p>Task</p></th><th><p>Description</p></th><th><p>Files</p></th></tr>';
+                        release.rows.forEach(function(row, idx) {
+                            const id = release.id + '-' + idx;
+                            html += '<tr><td><p>' + escapeHtml(row.task) + '</p></td><td><p>' + escapeHtml(row.description) + '</p></td><td><p>' + escapeHtml(row.files) + '</p></td></tr>';
+                        });
+                        html += '</tbody></table>';
+                    });
+                    html += '<h2>Team Members</h2>';
+                    Object.keys(byMember).sort().forEach(function(email) {
+                        const m = byMember[email];
+                        html += '<h3>' + escapeHtml(m.name) + '</h3><h4>Functions Implemented</h4><table><tbody><tr><th><p>Function</p></th><th><p>Module</p></th><th><p>Description</p></th></tr>';
+                        m.ids.forEach(function(cid) {
+                            const parts = cid.split('-');
+                            const releaseId = parts[0];
+                            const rowIdx = parseInt(parts[1], 10);
+                            const release = contributionsData.releases.find(function(r) { return r.id === releaseId; });
+                            if (!release || !release.rows[rowIdx]) return;
+                            const row = release.rows[rowIdx];
+                            html += '<tr><td><p><code>' + escapeHtml(row.task) + '</code></p></td><td><p>' + escapeHtml(row.files) + '</p></td><td><p>' + escapeHtml(row.description) + '</p></td></tr>';
+                        });
+                        html += '</tbody></table><h4>Other Contributions</h4><ul><li><p>[Add contributions here]</p></li></ul>';
+                    });
+                    mainContent.insertAdjacentHTML('beforeend', html);
+                    if (typeof Prism !== 'undefined') Prism.highlightAll();
+                }).catch(function(err) { console.log('Contributions injection error:', err.message); });
+            }
+
             function loadFromFirebase() {
+                let p = Promise.resolve();
                 try {
                     if (typeof firebase === 'undefined' || typeof firebaseConfig === 'undefined') {
                         console.log('Firebase not configured, using static content');
-                        return;
-                    }
-
-                    if (!firebase.apps.length) {
-                        firebase.initializeApp(firebaseConfig);
-                    }
-
-                    const db = firebase.database();
-                    db.ref('documentation/htmlCache').once('value')
-                        .then((snapshot) => {
-                            if (snapshot.exists()) {
-                                const data = snapshot.val();
-                                if (data.content) {
-                                    mainContent.innerHTML = data.content;
-                                    // Re-run Prism highlighting
-                                    if (typeof Prism !== 'undefined') {
-                                        Prism.highlightAll();
+                    } else {
+                        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+                        p = firebase.database().ref('documentation/htmlCache').once('value')
+                            .then(function(snapshot) {
+                                if (snapshot.exists()) {
+                                    const data = snapshot.val();
+                                    if (data.content) {
+                                        mainContent.innerHTML = data.content;
+                                        if (typeof Prism !== 'undefined') Prism.highlightAll();
+                                        console.log('Content loaded from Firebase');
                                     }
-                                    console.log('Content loaded from Firebase');
+                                } else {
+                                    console.log('No Firebase content, using static');
                                 }
-                            } else {
-                                console.log('No Firebase content, using static');
-                            }
-                        })
-                        .catch((error) => {
-                            console.log('Firebase load error, using static:', error.message);
-                        });
+                            })
+                            .catch(function(error) {
+                                console.log('Firebase load error, using static:', error.message);
+                            });
+                    }
                 } catch (error) {
                     console.log('Firebase initialization error:', error.message);
                 }
+                p.then(injectContributions);
             }
 
-            // Load after page ready
             if (document.readyState === 'loading') {
                 document.addEventListener('DOMContentLoaded', loadFromFirebase);
             } else {

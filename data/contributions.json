@@ -1,0 +1,38 @@
+{
+  "releases": [
+    {
+      "id": "R0",
+      "title": "R0 Contributions",
+      "rows": [
+        { "task": "Serial port initialization", "description": "Configure COM1 UART at 9600 baud", "files": "kernel/serial.c" },
+        { "task": "Kernel main setup", "description": "Initialize all subsystems in correct order", "files": "kernel/kmain.c" },
+        { "task": "GDT/IDT/IRQ/PIC/VM setup", "description": "(Provided code)", "files": "kernel/core-c.c" }
+      ]
+    },
+    {
+      "id": "R1",
+      "title": "R1 Contributions",
+      "rows": [
+        { "task": "serial_poll() implementation", "description": "Polling input with line editing support", "files": "kernel/serial.c" },
+        { "task": "Arrow key navigation", "description": "Left/right cursor movement in input", "files": "kernel/serial.c" },
+        { "task": "Home/End/Delete keys", "description": "Extended keyboard support", "files": "kernel/serial.c" },
+        { "task": "Backspace handling", "description": "Delete character with visual update", "files": "kernel/serial.c" },
+        { "task": "Command handler (comhand)", "description": "Main REPL loop with command dispatch", "files": "user/comhand.c" },
+        { "task": "help command", "description": "Display available commands and usage", "files": "user/cmd_help.c" },
+        { "task": "version command", "description": "Show MPX version info", "files": "user/cmd_version.c" },
+        { "task": "shutdown command", "description": "Graceful exit with confirmation", "files": "user/cmd_shutdown.c" },
+        { "task": "getdate command", "description": "Read and display RTC date", "files": "user/cmd_getdate.c" },
+        { "task": "setdate command", "description": "Set RTC date with validation", "files": "user/cmd_setdate.c" },
+        { "task": "Leap year validation", "description": "Correct Feb 29 handling", "files": "user/cmd_setdate.c" },
+        { "task": "RTC write order fix", "description": "Century/year first for edge cases", "files": "user/cmd_setdate.c" },
+        { "task": "gettime command", "description": "Read and display RTC time", "files": "user/cmd_gettime.c" },
+        { "task": "settime command", "description": "Set RTC time with validation", "files": "user/cmd_settime.c" },
+        { "task": "RTC kernel interface", "description": "Hardware access functions", "files": "kernel/rtc.c" },
+        { "task": "BCD conversion helpers", "description": "Binary/BCD conversion utilities", "files": "user/cmd_helpers.c" },
+        { "task": "print() helper", "description": "Wrapper for sys_req WRITE", "files": "user/cmd_helpers.c" },
+        { "task": "int_to_str() helper", "description": "Integer to string conversion", "files": "user/cmd_helpers.c" },
+        { "task": "Documentation", "description": "Setup guides, code layout docs", "files": "doc/*.md" }
+      ]
+    }
+  ]
+}

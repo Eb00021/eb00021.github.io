@@ -27,10 +27,20 @@
       }
     },
     "users": {
-      ".read": "auth != null && auth.token.email == 'ehboyd131@gmail.com'",
+      ".read": "auth != null && (auth.token.email == 'ehboyd131@gmail.com' || root.child('users').child(auth.token.email.replace('.', ',')).exists())",
       ".write": "auth != null && auth.token.email == 'ehboyd131@gmail.com'",
       "$email": {
         ".read": "auth != null"
+      }
+    },
+    "contributions": {
+      "assignments": {
+        ".read": true,
+        ".write": "auth != null && (auth.token.email == 'ehboyd131@gmail.com' || root.child('users').child(auth.token.email.replace('.', ',')).exists())"
+      },
+      "definition": {
+        ".read": true,
+        ".write": "auth != null && (auth.token.email == 'ehboyd131@gmail.com' || root.child('users').child(auth.token.email.replace('.', ',')).exists())"
       }
     }
   }
