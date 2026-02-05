@@ -143,23 +143,41 @@ async function loadUsers() {
             const userDetails = document.createElement('div');
             userDetails.className = 'user-details';
 
+            const emailLine = document.createElement('div');
+            emailLine.className = 'user-email-line';
+            emailLine.textContent = email;
+            userDetails.appendChild(emailLine);
+
+            const nameRow = document.createElement('div');
+            nameRow.className = 'user-name-row';
             const nameLabel = document.createElement('label');
             nameLabel.className = 'user-name-label';
-            nameLabel.textContent = 'Display name: ';
+            nameLabel.textContent = 'Display name ';
             const nameInput = document.createElement('input');
             nameInput.type = 'text';
             nameInput.className = 'user-name-input';
             nameInput.placeholder = 'e.g. Ethan Boyd';
             nameInput.value = userData.name || email.split('@')[0] || '';
+            nameInput.setAttribute('aria-label', 'Display name for ' + email);
+            const saveNameBtn = document.createElement('button');
+            saveNameBtn.type = 'button';
+            saveNameBtn.className = 'btn btn-save btn-small';
+            saveNameBtn.textContent = 'Save name';
+            saveNameBtn.addEventListener('click', () => {
+                const val = nameInput.value.trim();
+                updateUserName(encodedEmail, val);
+            });
             nameInput.addEventListener('blur', () => updateUserName(encodedEmail, nameInput.value.trim()));
             nameLabel.appendChild(nameInput);
+            nameRow.appendChild(nameLabel);
+            nameRow.appendChild(saveNameBtn);
+            userDetails.appendChild(nameRow);
 
-            const userAddedInfo = document.createElement('span');
-            userAddedInfo.className = 'user-added-info';
-            userAddedInfo.textContent = ` ${email} · Added ${addedDate}`;
+            const addedInfo = document.createElement('span');
+            addedInfo.className = 'user-added-info';
+            addedInfo.textContent = 'Added ' + addedDate;
 
-            userDetails.appendChild(nameLabel);
-            userDetails.appendChild(userAddedInfo);
+            userDetails.appendChild(addedInfo);
 
             const removeBtn = document.createElement('button');
             removeBtn.className = 'btn btn-danger btn-small';

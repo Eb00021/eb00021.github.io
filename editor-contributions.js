@@ -52,6 +52,7 @@
         var readOnly = document.getElementById('contributionsReadOnly');
         var otherEdit = document.getElementById('contributionsOtherEdit');
         if (!panel || !readOnly || !otherEdit) return;
+        if (typeof firebase === 'undefined' || !firebase.apps || !firebase.apps.length) return;
 
         var db = firebase.database();
         var defPromise = db.ref('contributions/definition').once('value').then(function (snap) {
@@ -66,9 +67,14 @@
             var contributionsData = results[0];
             var assignments = results[1];
             var otherContributions = results[2];
-            if (!contributionsData || !contributionsData.releases) return;
             var keys = Object.keys(assignments || {});
-            if (keys.length === 0) return;
+
+            if (!contributionsData || !contributionsData.releases) {
+                readOnly.innerHTML = '<p class="contributions-empty">No contribution data loaded. Add modules in Contribution entries or ensure <code>data/contributions.json</code> exists.</p>';
+                otherEdit.innerHTML = '';
+                panel.style.display = 'block';
+                return;
+            }
 
             var byMember = {};
             keys.forEach(function (id) {
@@ -79,6 +85,21 @@
                 if (!byMember[email]) byMember[email] = { name: name, ids: [] };
                 byMember[email].ids.push(id);
             });
+
+            if (keys.length === 0) {
+                var emptyHtml = '<h2>Overview</h2><p>No contributions assigned yet. Go to <a href="contribution-editor.html">Assign Contributions</a> to assign tasks to team members.</p>';
+                contributionsData.releases.forEach(function (release) {
+                    emptyHtml += '<h2>' + escapeHtml(release.title) + '</h2><table><tbody><tr><th>Task</th><th>Description</th><th>Files</th></tr>';
+                    (release.rows || []).forEach(function (row) {
+                        emptyHtml += '<tr><td>' + escapeHtml(row.task) + '</td><td>' + escapeHtml(row.description) + '</td><td>' + escapeHtml(row.files) + '</td></tr>';
+                    });
+                    emptyHtml += '</tbody></table>';
+                });
+                readOnly.innerHTML = emptyHtml;
+                otherEdit.innerHTML = '';
+                panel.style.display = 'block';
+                return;
+            }
 
             readOnly.innerHTML = buildReadOnlyHtml(contributionsData, assignments);
             otherEdit.innerHTML = '';
@@ -115,14 +136,20 @@
             });
 
             panel.style.display = 'block';
-        }).catch(function () {});
+        }).catch(function (err) {
+            readOnly.innerHTML = '<p class="contributions-empty">Could not load contributions. ' + (err && err.message ? err.message : '') + '</p>';
+            panel.style.display = 'block';
+        });
     }
 
     function init() {
         if (typeof firebase === 'undefined' || !firebase.auth) return;
+        if (firebase.apps && firebase.apps.length === 0 && typeof firebaseConfig !== 'undefined') {
+            firebase.initializeApp(firebaseConfig);
+        }
         firebase.auth().onAuthStateChanged(function (user) {
             if (!user) return;
-            setTimeout(loadAndShow, 1500);
+            setTimeout(loadAndShow, 800);
         });
     }
 

@@ -63,6 +63,15 @@ body.app-shell {
     margin: 0;
     padding: 0;
     line-height: 1.5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+body.app-shell > * {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
 }
 
 .app-shell code {
@@ -93,6 +102,7 @@ body.app-shell {
     max-width: 380px;
     width: 100%;
     box-shadow: var(--shadow-md);
+    text-align: center;
 }
 
 .app-shell .auth-container h2,
@@ -223,8 +233,11 @@ body.app-shell {
 .app-shell .entries-container,
 .app-shell #exportContainer {
     max-width: 1000px;
-    margin: 0 auto;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
     padding: 1.5rem;
+    box-sizing: border-box;
 }
 
 .app-shell .editor-header,
@@ -237,6 +250,13 @@ body.app-shell {
     margin-bottom: 1.25rem;
     padding-bottom: 1rem;
     border-bottom: 1px solid var(--app-border);
+}
+
+.app-shell .editor-container,
+.app-shell .admin-container,
+.app-shell .contrib-editor-container,
+.app-shell .entries-container {
+    text-align: left;
 }
 
 .app-shell .editor-header h1,
@@ -329,13 +349,33 @@ body.app-shell {
     border-bottom: none;
 }
 
+.app-shell .user-name-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin: 8px 0 4px 0;
+}
+
+.app-shell .user-name-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
 .app-shell .user-name-input {
     background: var(--app-input-bg);
     border: 1px solid var(--app-border);
     color: var(--app-text);
-    padding: 6px 10px;
+    padding: 8px 12px;
     border-radius: 6px;
-    width: 180px;
+    min-width: 200px;
+    font-size: 1rem;
+}
+
+.app-shell .user-email-line {
+    font-weight: 600;
+    margin-bottom: 4px;
 }
 
 .app-shell .add-user-form {
@@ -547,4 +587,124 @@ body.app-shell {
     background: var(--app-input-bg);
     border: 1px solid var(--app-border);
     color: var(--app-text);
+}
+
+/* ---- Dark mode: force every element to use theme (override editor.css etc.) ---- */
+@media (prefers-color-scheme: dark) {
+    .app-shell .tiptap {
+        background: var(--app-card) !important;
+        color: var(--app-text) !important;
+    }
+
+    .app-shell .tiptap code {
+        background: var(--app-input-bg) !important;
+        color: var(--app-text) !important;
+    }
+
+    .app-shell .tiptap pre {
+        background: var(--app-input-bg) !important;
+        border-color: var(--app-border) !important;
+        color: var(--app-text) !important;
+    }
+
+    .app-shell .tiptap pre code {
+        background: transparent !important;
+        color: inherit !important;
+    }
+
+    .app-shell .tiptap blockquote {
+        border-left-color: var(--app-border) !important;
+        color: var(--app-text-muted) !important;
+    }
+
+    .app-shell .tiptap hr {
+        border-top-color: var(--app-border) !important;
+    }
+
+    .app-shell .tiptap table th,
+    .app-shell .tiptap table td {
+        border-color: var(--app-border) !important;
+        color: var(--app-text) !important;
+    }
+
+    .app-shell .tiptap table th {
+        background: var(--app-input-bg) !important;
+    }
+
+    .app-shell .editor-toolbar {
+        background: var(--app-card) !important;
+        border-color: var(--app-border) !important;
+    }
+
+    .app-shell .toolbar-btn {
+        background: var(--app-input-bg) !important;
+        border-color: var(--app-border) !important;
+        color: var(--app-text) !important;
+    }
+
+    .app-shell .toolbar-btn:hover:not(:disabled) {
+        background: var(--app-border) !important;
+    }
+
+    .app-shell .toolbar-group {
+        border-right-color: var(--app-border) !important;
+    }
+
+    .app-shell .loading-spinner {
+        color: var(--app-text-muted) !important;
+    }
+
+    .app-shell .presence-avatar {
+        border-color: var(--app-border) !important;
+    }
+
+    .app-shell .save-indicator.saving {
+        color: #fbbf24 !important;
+    }
+
+    .app-shell .save-indicator.saved {
+        color: var(--btn-save) !important;
+    }
+
+    .app-shell .save-indicator.error {
+        color: var(--btn-danger) !important;
+    }
+
+    .app-shell .contributions-readonly,
+    .app-shell .contributions-readonly th,
+    .app-shell .contributions-readonly td {
+        background: var(--app-bg) !important;
+        border-color: var(--app-border) !important;
+    }
+
+    .app-shell .contributions-readonly th {
+        background: var(--app-input-bg) !important;
+        color: var(--app-text) !important;
+    }
+
+    .app-shell .contributions-empty {
+        color: var(--app-text-muted);
+    }
+
+    .app-shell .no-users {
+        color: var(--app-text-muted) !important;
+    }
+
+    .app-shell .user-added-info {
+        color: var(--app-text-muted) !important;
+    }
+
+    .app-shell .contributions-readonly a {
+        color: var(--btn-primary);
+    }
+
+    .app-shell .modal {
+        background: rgba(0, 0, 0, 0.6);
+    }
+
+    .app-shell .release-block input {
+        background: var(--app-input-bg) !important;
+        border-color: var(--app-border) !important;
+        color: var(--app-text) !important;
+    }
 }
