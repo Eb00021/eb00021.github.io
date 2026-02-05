@@ -51,16 +51,25 @@ function escapeHtml(s) {
 
 function encEmail(e) { return (e || '').replace(/\./g, ','); }
 
-function buildContributionsHtml(contributionsData, assignments) {
+function resolveDisplayName(email, assignment, usersMap) {
+    if (!email) return 'Unknown';
+    var fromUser = usersMap && usersMap[email] && usersMap[email].name;
+    if (fromUser && String(fromUser).trim()) return String(fromUser).trim();
+    if (assignment && assignment.displayName) return assignment.displayName;
+    return email.split('@')[0];
+}
+
+function buildContributionsHtml(contributionsData, assignments, usersMap) {
     if (!contributionsData || !contributionsData.releases) return '';
     var keys = Object.keys(assignments || {});
     if (keys.length === 0) return '';
+    usersMap = usersMap || {};
 
     var byMember = {};
     keys.forEach(function (id) {
         var a = assignments[id];
         var email = a && (typeof a === 'string' ? a : a.email);
-        var name = (a && a.displayName) ? a.displayName : (email ? email.split('@')[0] : 'Unknown');
+        var name = resolveDisplayName(email, a, usersMap);
         if (!email) return;
         if (!byMember[email]) byMember[email] = { name: name, ids: [] };
         byMember[email].ids.push(id);
@@ -112,11 +121,25 @@ function doExport() {
 
     var assignPromise = db.ref('contributions/assignments').once('value').then(function (snap) { return snap.val() || {}; }).catch(function () { return {}; });
 
-    Promise.all([ docContentPromise, defPromise, assignPromise ]).then(function (results) {
+    var usersPromise = db.ref('users').once('value').then(function (snap) {
+        var val = snap.val();
+        var map = {};
+        if (val) {
+            Object.keys(val).forEach(function (k) {
+                var u = val[k];
+                var email = u.email || k.replace(/,/g, '.');
+                map[email] = { name: u.name || '' };
+            });
+        }
+        return map;
+    }).catch(function () { return {}; });
+
+    Promise.all([ docContentPromise, defPromise, assignPromise, usersPromise ]).then(function (results) {
         var docContent = results[0];
         var contributionsData = results[1];
         var assignments = results[2];
-        var contributionsHtml = buildContributionsHtml(contributionsData, assignments);
+        var usersMap = results[3];
+        var contributionsHtml = buildContributionsHtml(contributionsData, assignments, usersMap);
         var fullMainContent = docContent + contributionsHtml;
 
         var staticScript = '    <script>\n        (function(){ if (typeof Prism !== \'undefined\') Prism.highlightAll(); })();\n    <\/script>';

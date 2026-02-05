@@ -54,37 +54,37 @@
     }
 }
 
-/* Force dark theme on admin (no media query) */
-body.app-shell.admin-force-dark {
-    --app-bg: #0f172a;
-    --app-card: #1e293b;
-    --app-text: #f1f5f9;
-    --app-text-muted: #94a3b8;
-    --app-border: #334155;
-    --app-input-bg: #334155;
-    --btn-primary: #3b82f6;
-    --btn-primary-hover: #60a5fa;
-    --btn-secondary: #475569;
-    --btn-secondary-hover: #64748b;
-    --btn-save: #10b981;
-    --btn-save-hover: #34d399;
-    --btn-danger: #ef4444;
-    --btn-danger-hover: #f87171;
-    --status-success-bg: #064e3b;
-    --status-success-text: #a7f3d0;
-    --status-error-bg: #7f1d1d;
-    --status-error-text: #fecaca;
-    --status-info-bg: #312e81;
-    --status-info-text: #c7d2fe;
-    --shadow: 0 1px 3px rgba(0,0,0,0.3);
-    --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+/* Force light theme on admin (no media query) */
+body.app-shell.admin-force-light {
+    --app-bg: #f8fafc;
+    --app-card: #fff;
+    --app-text: #1e293b;
+    --app-text-muted: #64748b;
+    --app-border: #e2e8f0;
+    --app-input-bg: #fff;
+    --btn-primary: #2563eb;
+    --btn-primary-hover: #1d4ed8;
+    --btn-secondary: #64748b;
+    --btn-secondary-hover: #475569;
+    --btn-save: #059669;
+    --btn-save-hover: #047857;
+    --btn-danger: #dc2626;
+    --btn-danger-hover: #b91c1c;
+    --status-success-bg: #d1fae5;
+    --status-success-text: #065f46;
+    --status-error-bg: #fee2e2;
+    --status-error-text: #991b1b;
+    --status-info-bg: #e0e7ff;
+    --status-info-text: #3730a3;
+    --shadow: 0 1px 3px rgba(0,0,0,0.08);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
 }
 
-body.app-shell.admin-force-dark .auth-container .auth-card,
-body.app-shell.admin-force-dark .access-denied .denied-card,
-body.app-shell.admin-force-dark .admin-section,
-body.app-shell.admin-force-dark .user-info,
-body.app-shell.admin-force-dark .presence-bar {
+body.app-shell.admin-force-light .auth-container .auth-card,
+body.app-shell.admin-force-light .access-denied .denied-card,
+body.app-shell.admin-force-light .admin-section,
+body.app-shell.admin-force-light .user-info,
+body.app-shell.admin-force-light .presence-bar {
     background: var(--app-card);
     border-color: var(--app-border);
     color: var(--app-text);
@@ -102,6 +102,7 @@ body.app-shell {
     display: flex;
     flex-direction: column;
     align-items: center;
+    text-align: center;
 }
 
 body.app-shell > * {
@@ -267,6 +268,7 @@ body.app-shell > * {
 .app-shell .admin-container,
 .app-shell .contrib-editor-container,
 .app-shell .entries-container,
+.app-shell .landing-wrap,
 .app-shell #exportContainer {
     max-width: 1000px;
     width: 100%;

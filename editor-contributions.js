@@ -7,7 +7,15 @@
         return d.innerHTML;
     }
 
-    function buildReadOnlyHtml(contributionsData, assignments) {
+    function resolveDisplayName(email, assignment, usersMap) {
+        if (!email) return 'Unknown';
+        var fromUser = usersMap && usersMap[email] && usersMap[email].name;
+        if (fromUser && fromUser.trim()) return fromUser.trim();
+        if (assignment && assignment.displayName) return assignment.displayName;
+        return email.split('@')[0];
+    }
+
+    function buildReadOnlyHtml(contributionsData, assignments, usersMap) {
         if (!contributionsData || !contributionsData.releases) return '';
         var keys = Object.keys(assignments || {});
         if (keys.length === 0) return '';
@@ -16,7 +24,7 @@
         keys.forEach(function (id) {
             var a = assignments[id];
             var email = a && (typeof a === 'string' ? a : a.email);
-            var name = (a && a.displayName) ? a.displayName : (email ? email.split('@')[0] : 'Unknown');
+            var name = resolveDisplayName(email, a, usersMap);
             if (!email) return;
             if (!byMember[email]) byMember[email] = { name: name, ids: [] };
             byMember[email].ids.push(id);
@@ -59,10 +67,23 @@
             return fetch('data/contributions.json').then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; });
         }).catch(function () { return fetch('data/contributions.json').then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }); });
         var assignPromise = db.ref('contributions/assignments').once('value').then(function (snap) { return snap.val() || {}; }).catch(function () { return {}; });
+        var usersPromise = db.ref('users').once('value').then(function (snap) {
+            var val = snap.val();
+            var map = {};
+            if (val) {
+                Object.keys(val).forEach(function (k) {
+                    var u = val[k];
+                    var email = u.email || k.replace(/,/g, '.');
+                    map[email] = { name: u.name || '' };
+                });
+            }
+            return map;
+        }).catch(function () { return {}; });
 
-        Promise.all([defPromise, assignPromise]).then(function (results) {
+        Promise.all([defPromise, assignPromise, usersPromise]).then(function (results) {
             var contributionsData = results[0];
             var assignments = results[1];
+            var usersMap = results[2];
             var keys = Object.keys(assignments || {});
 
             if (!contributionsData || !contributionsData.releases) {
@@ -75,7 +96,7 @@
             keys.forEach(function (id) {
                 var a = assignments[id];
                 var email = a && (typeof a === 'string' ? a : a.email);
-                var name = (a && a.displayName) ? a.displayName : (email ? email.split('@')[0] : 'Unknown');
+                var name = resolveDisplayName(email, a, usersMap);
                 if (!email) return;
                 if (!byMember[email]) byMember[email] = { name: name, ids: [] };
                 byMember[email].ids.push(id);
@@ -95,7 +116,7 @@
                 return;
             }
 
-            readOnly.innerHTML = buildReadOnlyHtml(contributionsData, assignments);
+            readOnly.innerHTML = buildReadOnlyHtml(contributionsData, assignments, usersMap);
             panel.style.display = 'block';
         }).catch(function (err) {
             readOnly.innerHTML = '<p class="contributions-empty">Could not load contributions. ' + (err && err.message ? err.message : '') + '</p>';

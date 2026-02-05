@@ -131,6 +131,14 @@ sys_req(WRITE, COM1, "Hello\r\n", 7);</code></pre><h3>sys_alloc_mem</h3><p><stro
                 return div.innerHTML;
             }
 
+            function resolveDisplayName(email, assignment, usersMap) {
+                if (!email) return 'Unknown';
+                const fromUser = usersMap && usersMap[email] && usersMap[email].name;
+                if (fromUser && String(fromUser).trim()) return String(fromUser).trim();
+                if (assignment && assignment.displayName) return assignment.displayName;
+                return email.split('@')[0];
+            }
+
             function injectContributions() {
                 const db = typeof firebase !== 'undefined' && firebase.apps.length ? firebase.database() : null;
                 const defPromise = db
@@ -141,9 +149,22 @@ sys_req(WRITE, COM1, "Hello\r\n", 7);</code></pre><h3>sys_alloc_mem</h3><p><stro
                     }).catch(function() { return fetch('data/contributions.json').then(function(r) { return r.ok ? r.json() : null; }).catch(function() { return null; }); })
                     : fetch('data/contributions.json').then(function(r) { return r.ok ? r.json() : null; }).catch(function() { return null; });
                 const assignPromise = db ? db.ref('contributions/assignments').once('value').then(function(snap) { return snap.val() || {}; }) : Promise.resolve({});
-                Promise.all([ defPromise, assignPromise ]).then(function(results) {
+                const usersPromise = db ? db.ref('users').once('value').then(function(snap) {
+                    const val = snap.val();
+                    const map = {};
+                    if (val) {
+                        Object.keys(val).forEach(function(k) {
+                            const u = val[k];
+                            const email = u.email || k.replace(/,/g, '.');
+                            map[email] = { name: u.name || '' };
+                        });
+                    }
+                    return map;
+                }).catch(function() { return {}; }) : Promise.resolve({});
+                Promise.all([ defPromise, assignPromise, usersPromise ]).then(function(results) {
                     const contributionsData = results[0];
                     const assignments = results[1];
+                    const usersMap = results[2];
                     if (!contributionsData || !contributionsData.releases || Object.keys(assignments).length === 0) {
                         const block = document.getElementById('contributionsBlock');
                         if (block) block.innerHTML = '';
@@ -154,7 +175,7 @@ sys_req(WRITE, COM1, "Hello\r\n", 7);</code></pre><h3>sys_alloc_mem</h3><p><stro
                     Object.keys(assignments).forEach(function(id) {
                         const a = assignments[id];
                         const email = a && (a.email || a);
-                        const name = (a && a.displayName) ? a.displayName : (email ? email.split('@')[0] : 'Unknown');
+                        const name = resolveDisplayName(email, a, usersMap);
                         if (!email) return;
                         if (!byMember[email]) byMember[email] = { name: name, ids: [] };
                         byMember[email].ids.push(id);

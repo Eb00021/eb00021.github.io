@@ -5,12 +5,23 @@ body {
     padding: 20px;
     line-height: 1.5;
     box-sizing: border-box;
+    text-align: center;
 }
 
 main {
     display: block;
     width: 100%;
     max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+}
+
+/* Center main content when used as main content area (e.g. documentation) */
+#mainContent {
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 code, pre {
