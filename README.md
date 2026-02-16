@@ -1,27 +1,20 @@
-# T4BF MPX Documentation Site
+# T4BF Bonus Features Guide
 
-Collaborative docs with real-time editing (Firebase + Tiptap/Yjs).
+Static reference site for implementing CS450 MPX bonus features (5 pts each, max 20 pts).
 
-## Features
+**Live at:** [eb00021.github.io](https://eb00021.github.io)
 
-- **Editor** – Rich text, tables, links; real-time sync; presence. Publish to update live docs.
-- **Contributions** – Data-driven task list (`data/contributions.json` or Firebase). Assign tasks to team members; section appears on docs when assigned.
-- **Contribution entries** – Add/edit modules (e.g. R2) and rows (task, description, files). Seed from JSON.
-- **Export static** – Download one HTML file with doc + contributions baked in (no Firebase/fetch).
-- **Admin** – Whitelist team members (Google). Admin-only: GitHub token, user list.
+## Features Covered
 
-## Pages
+- **A. Unique Startup** — Custom ASCII art boot message
+- **B. Variable Text Color** — ANSI escape code color output
+- **C. Command History** — Arrow-key history recall (already ~90% done)
+- **D. Clear Command** — Terminal clear via ANSI sequence
+- **E. Alias Command** — Shorthand command aliases
+- **F. Other Approved** — Tab completion, command timing, custom prompt
 
-| Page | Purpose |
-|------|---------|
-| `index.html` | Landing |
-| `documentation.html` | Public docs |
-| `editor.html` | Edit docs |
-| `contribution-editor.html` | Assign contributions |
-| `contribution-entries.html` | Add/edit contribution modules & rows |
-| `export-static.html` | Download static HTML |
-| `admin.html` | Team management (admin) |
+Plus a complete ANSI escape code quick reference.
 
-## Stack
+## Tech
 
-- Tiptap, Yjs, Firebase Realtime DB, Firebase Auth (Google). Vanilla JS.
+Pure HTML/CSS/JS, no dependencies. CRT terminal theme with JetBrains Mono font.
