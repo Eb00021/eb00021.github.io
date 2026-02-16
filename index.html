@@ -25,6 +25,7 @@
     <li><a href="#feature-e">Alias</a></li>
     <li><a href="#feature-f">Custom</a></li>
     <li><a href="#ansi-ref">ANSI Ref</a></li>
+    <li><a href="#" id="docs-toggle">Docs</a></li>
   </ul>
 </nav>
 
@@ -901,6 +902,888 @@ USER_OBJECTS=\
   T4BF // WVU CS450 // Spring 2026
 </footer>
 </main>
+
+<!-- ====== DOCS OVERLAY ====== -->
+<div id="docs-overlay" class="docs-overlay hidden">
+  <div class="docs-header">
+    <button class="docs-close">[x]</button>
+    <div class="docs-tabs">
+      <button class="docs-tab active" data-panel="docs-users">User's Manual</button>
+      <button class="docs-tab" data-panel="docs-programmers">Programmer's Manual</button>
+      <button class="docs-tab" data-panel="docs-contributions">Contributions</button>
+    </div>
+  </div>
+
+  <div class="docs-body">
+
+    <!-- ====== USER'S MANUAL TAB ====== -->
+    <div id="docs-users" class="docs-panel active">
+      <h2>User's Manual</h2>
+      <p>T4BF MPX Operating System &mdash; Version R2 &mdash; February 2026</p>
+
+      <hr>
+
+      <h2>1. Introduction</h2>
+      <p>Welcome to the T4BF MPX Operating System. This manual provides comprehensive documentation for all available commands and system functionality.</p>
+      <p>MPX (Multiprogramming Executive) is a simple operating system designed for educational purposes. It runs on x86 hardware and provides a command-line interface for system management, including date/time operations and process control.</p>
+
+      <h2>2. Getting Started</h2>
+      <p>After booting MPX, you will be presented with a command prompt (<code>&gt;</code>). From here, you can enter any of the commands documented below.</p>
+      <h3>Basic Usage</h3>
+      <p>Type a command and press Enter to execute it. Commands are case-sensitive and should be entered in lowercase. Line editing is supported: use arrow keys to move the cursor, Backspace to delete, and Home/End to jump to the start or end of the line.</p>
+      <div class="code-block">
+        <div class="code-block-header"><span>Basic Commands</span><button class="copy-btn">copy</button></div>
+<pre>&gt; help
+&gt; version
+&gt; shutdown</pre>
+      </div>
+
+      <h2>3. Command Reference</h2>
+
+      <!-- help -->
+      <h3>help</h3>
+      <p><strong>Syntax:</strong> <code>help</code> or <code>help [command]</code></p>
+      <p><strong>Description:</strong> Displays help information for available commands. When called without arguments, lists all commands. When called with a command name, displays detailed help for that specific command.</p>
+      <table class="ansi-table">
+        <tr><th>Parameter</th><th>Required</th><th>Description</th></tr>
+        <tr><td><code>command</code></td><td>No</td><td>The name of the command to get help for</td></tr>
+      </table>
+      <div class="code-block">
+        <div class="code-block-header"><span>Examples</span><button class="copy-btn">copy</button></div>
+<pre># List all available commands
+&gt; help
+# Get help for a specific command
+&gt; help shutdown</pre>
+      </div>
+
+      <!-- version -->
+      <h3>version</h3>
+      <p><strong>Syntax:</strong> <code>version</code></p>
+      <p><strong>Description:</strong> Displays the current version of MPX and compilation information.</p>
+      <div class="code-block">
+        <div class="code-block-header"><span>Example</span><button class="copy-btn">copy</button></div>
+<pre>&gt; version
+MPX Version: 1.0
+Compiled: January 2026</pre>
+      </div>
+
+      <!-- shutdown -->
+      <h3>shutdown</h3>
+      <p><strong>Syntax:</strong> <code>shutdown</code></p>
+      <p><strong>Description:</strong> Safely shuts down the MPX system. Prompts the user for confirmation before proceeding. Type "yes" to confirm or "no" to cancel.</p>
+      <div class="code-block">
+        <div class="code-block-header"><span>Example</span><button class="copy-btn">copy</button></div>
+<pre>&gt; shutdown
+Are you sure you want to shutdown? (yes/no): yes
+Shutting down...</pre>
+      </div>
+
+      <!-- getdate -->
+      <h3>getdate</h3>
+      <p><strong>Syntax:</strong> <code>getdate</code></p>
+      <p><strong>Description:</strong> Reads the current date from the Real-Time Clock (RTC) hardware and displays it in MM/DD/YYYY format.</p>
+      <div class="code-block">
+        <div class="code-block-header"><span>Example</span><button class="copy-btn">copy</button></div>
+<pre>&gt; getdate
+Current date: 02/15/2026</pre>
+      </div>
+
+      <!-- setdate -->
+      <h3>setdate</h3>
+      <p><strong>Syntax:</strong> <code>setdate MM/DD/YYYY</code></p>
+      <p><strong>Description:</strong> Sets the system date in the RTC hardware. Validates month (1&ndash;12), day (1&ndash;31 depending on month), and year (1900&ndash;2099). Handles leap year validation for February 29.</p>
+      <table class="ansi-table">
+        <tr><th>Parameter</th><th>Required</th><th>Description</th></tr>
+        <tr><td><code>MM/DD/YYYY</code></td><td>Yes</td><td>Date to set. Month (1&ndash;12), Day (1&ndash;31), Year (1900&ndash;2099)</td></tr>
+      </table>
+      <div class="code-block">
+        <div class="code-block-header"><span>Example</span><button class="copy-btn">copy</button></div>
+<pre>&gt; setdate 02/15/2026
+Date set successfully.</pre>
+      </div>
+
+      <!-- gettime -->
+      <h3>gettime</h3>
+      <p><strong>Syntax:</strong> <code>gettime</code></p>
+      <p><strong>Description:</strong> Reads the current time from the RTC hardware and displays it in HH:MM:SS format (24-hour clock).</p>
+      <div class="code-block">
+        <div class="code-block-header"><span>Example</span><button class="copy-btn">copy</button></div>
+<pre>&gt; gettime
+Current time: 14:30:45</pre>
+      </div>
+
+      <!-- settime -->
+      <h3>settime</h3>
+      <p><strong>Syntax:</strong> <code>settime HH:MM:SS</code></p>
+      <p><strong>Description:</strong> Sets the system time in the RTC hardware. Time must be in HH:MM:SS format (24-hour clock). Validates hours (0&ndash;23), minutes (0&ndash;59), and seconds (0&ndash;59).</p>
+      <table class="ansi-table">
+        <tr><th>Parameter</th><th>Required</th><th>Description</th></tr>
+        <tr><td><code>HH:MM:SS</code></td><td>Yes</td><td>Time to set. Hours (0&ndash;23), Minutes (0&ndash;59), Seconds (0&ndash;59)</td></tr>
+      </table>
+      <div class="code-block">
+        <div class="code-block-header"><span>Example</span><button class="copy-btn">copy</button></div>
+<pre>&gt; settime 14:30:00
+Time set successfully.</pre>
+      </div>
+
+      <!-- createpcb -->
+      <h3>createpcb</h3>
+      <p><strong>Syntax:</strong> <code>createpcb &lt;name&gt; &lt;class&gt; &lt;priority&gt;</code></p>
+      <p><strong>Description:</strong> Creates a new process (Process Control Block). The process is placed in the Ready queue after creation. Process names must be unique and no longer than 15 characters.</p>
+      <table class="ansi-table">
+        <tr><th>Parameter</th><th>Required</th><th>Description</th></tr>
+        <tr><td><code>name</code></td><td>Yes</td><td>Process name (max 15 characters, must be unique)</td></tr>
+        <tr><td><code>class</code></td><td>Yes</td><td>Process class: 0 (system) or 1 (user)</td></tr>
+        <tr><td><code>priority</code></td><td>Yes</td><td>Process priority: 0 (highest) to 9 (lowest)</td></tr>
+      </table>
+      <div class="code-block">
+        <div class="code-block-header"><span>Examples</span><button class="copy-btn">copy</button></div>
+<pre>&gt; createpcb myproc 1 5
+Process 'myproc' created.
+
+&gt; createpcb myproc 1 3
+Error: Process 'myproc' already exists.</pre>
+      </div>
+
+      <!-- deletepcb -->
+      <h3>deletepcb</h3>
+      <p><strong>Syntax:</strong> <code>deletepcb &lt;name&gt;</code></p>
+      <p><strong>Description:</strong> Deletes an existing process. The process is removed from its current queue and its memory is freed. System processes (class 0) cannot be deleted.</p>
+      <table class="ansi-table">
+        <tr><th>Parameter</th><th>Required</th><th>Description</th></tr>
+        <tr><td><code>name</code></td><td>Yes</td><td>Name of the process to delete</td></tr>
+      </table>
+      <div class="code-block">
+        <div class="code-block-header"><span>Examples</span><button class="copy-btn">copy</button></div>
+<pre>&gt; deletepcb myproc
+Process 'myproc' deleted.
+
+&gt; deletepcb sysprocess
+Error: Cannot delete system process 'sysprocess'.</pre>
+      </div>
+
+      <!-- showpcb -->
+      <h3>showpcb</h3>
+      <p><strong>Syntax:</strong> <code>showpcb &lt;name&gt;</code></p>
+      <p><strong>Description:</strong> Displays detailed information about a single process, including its name, class, execution state, suspended status, and priority.</p>
+      <table class="ansi-table">
+        <tr><th>Parameter</th><th>Required</th><th>Description</th></tr>
+        <tr><td><code>name</code></td><td>Yes</td><td>Name of the process to display</td></tr>
+      </table>
+      <div class="code-block">
+        <div class="code-block-header"><span>Example</span><button class="copy-btn">copy</button></div>
+<pre>&gt; showpcb myproc
+Process: myproc
+  Class: User
+  State: Ready
+  Suspended: No
+  Priority: 5</pre>
+      </div>
+
+      <!-- showready -->
+      <h3>showready</h3>
+      <p><strong>Syntax:</strong> <code>showready</code></p>
+      <p><strong>Description:</strong> Displays all processes in the Ready queue and the Suspended Ready queue.</p>
+      <div class="code-block">
+        <div class="code-block-header"><span>Example</span><button class="copy-btn">copy</button></div>
+<pre>&gt; showready
+--- Ready Queue ---
+  myproc  Class: User  State: Ready  Suspended: No  Priority: 5
+--- Suspended Ready Queue ---
+  (empty)</pre>
+      </div>
+
+      <!-- showblocked -->
+      <h3>showblocked</h3>
+      <p><strong>Syntax:</strong> <code>showblocked</code></p>
+      <p><strong>Description:</strong> Displays all processes in the Blocked queue and the Suspended Blocked queue.</p>
+      <div class="code-block">
+        <div class="code-block-header"><span>Example</span><button class="copy-btn">copy</button></div>
+<pre>&gt; showblocked
+--- Blocked Queue ---
+  (empty)
+--- Suspended Blocked Queue ---
+  (empty)</pre>
+      </div>
+
+      <!-- showall -->
+      <h3>showall</h3>
+      <p><strong>Syntax:</strong> <code>showall</code></p>
+      <p><strong>Description:</strong> Displays all processes across all four queues: Ready, Suspended Ready, Blocked, and Suspended Blocked.</p>
+      <div class="code-block">
+        <div class="code-block-header"><span>Example</span><button class="copy-btn">copy</button></div>
+<pre>&gt; showall
+--- Ready Queue ---
+  proc1  Class: User  State: Ready  Suspended: No  Priority: 3
+  proc2  Class: User  State: Ready  Suspended: No  Priority: 5
+--- Suspended Ready Queue ---
+  (empty)
+--- Blocked Queue ---
+  proc3  Class: User  State: Blocked  Suspended: No  Priority: 2
+--- Suspended Blocked Queue ---
+  (empty)</pre>
+      </div>
+
+      <!-- block -->
+      <h3>block</h3>
+      <p><strong>Syntax:</strong> <code>block &lt;name&gt;</code></p>
+      <p><strong>Description:</strong> Transitions a process from the Ready state to the Blocked state. If the process is already blocked, a message is displayed.</p>
+      <table class="ansi-table">
+        <tr><th>Parameter</th><th>Required</th><th>Description</th></tr>
+        <tr><td><code>name</code></td><td>Yes</td><td>Name of the process to block</td></tr>
+      </table>
+      <div class="code-block">
+        <div class="code-block-header"><span>Examples</span><button class="copy-btn">copy</button></div>
+<pre>&gt; block myproc
+Process 'myproc' blocked.
+
+&gt; block myproc
+Process 'myproc' is already blocked.</pre>
+      </div>
+
+      <!-- unblock -->
+      <h3>unblock</h3>
+      <p><strong>Syntax:</strong> <code>unblock &lt;name&gt;</code></p>
+      <p><strong>Description:</strong> Transitions a process from the Blocked state to the Ready state. If the process is already ready, a message is displayed.</p>
+      <table class="ansi-table">
+        <tr><th>Parameter</th><th>Required</th><th>Description</th></tr>
+        <tr><td><code>name</code></td><td>Yes</td><td>Name of the process to unblock</td></tr>
+      </table>
+      <div class="code-block">
+        <div class="code-block-header"><span>Examples</span><button class="copy-btn">copy</button></div>
+<pre>&gt; unblock myproc
+Process 'myproc' unblocked.
+
+&gt; unblock myproc
+Process 'myproc' is already ready.</pre>
+      </div>
+
+      <!-- suspend -->
+      <h3>suspend</h3>
+      <p><strong>Syntax:</strong> <code>suspend &lt;name&gt;</code></p>
+      <p><strong>Description:</strong> Suspends a process. System processes cannot be suspended. If the process is already suspended, no change is made.</p>
+      <table class="ansi-table">
+        <tr><th>Parameter</th><th>Required</th><th>Description</th></tr>
+        <tr><td><code>name</code></td><td>Yes</td><td>Name of the process to suspend</td></tr>
+      </table>
+      <div class="code-block">
+        <div class="code-block-header"><span>Examples</span><button class="copy-btn">copy</button></div>
+<pre>&gt; suspend myproc
+Process 'myproc' suspended.
+
+&gt; suspend sysprocess
+Error: Could not suspend 'sysprocess'. Check that the process exists and is a user application.</pre>
+      </div>
+
+      <!-- resume -->
+      <h3>resume</h3>
+      <p><strong>Syntax:</strong> <code>resume &lt;name&gt;</code></p>
+      <p><strong>Description:</strong> Resumes a suspended process. If the process is not suspended, no change is made.</p>
+      <table class="ansi-table">
+        <tr><th>Parameter</th><th>Required</th><th>Description</th></tr>
+        <tr><td><code>name</code></td><td>Yes</td><td>Name of the process to resume</td></tr>
+      </table>
+      <div class="code-block">
+        <div class="code-block-header"><span>Example</span><button class="copy-btn">copy</button></div>
+<pre>&gt; resume myproc
+Process 'myproc' resumed.</pre>
+      </div>
+
+      <!-- setpriority -->
+      <h3>setpriority</h3>
+      <p><strong>Syntax:</strong> <code>setpriority &lt;name&gt; &lt;priority&gt;</code></p>
+      <p><strong>Description:</strong> Changes the priority of an existing process. The priority must be between 0 (highest) and 9 (lowest). If the process is in the Ready queue, it is re-inserted to maintain priority ordering.</p>
+      <table class="ansi-table">
+        <tr><th>Parameter</th><th>Required</th><th>Description</th></tr>
+        <tr><td><code>name</code></td><td>Yes</td><td>Name of the process</td></tr>
+        <tr><td><code>priority</code></td><td>Yes</td><td>New priority value (0&ndash;9)</td></tr>
+      </table>
+      <div class="code-block">
+        <div class="code-block-header"><span>Example</span><button class="copy-btn">copy</button></div>
+<pre>&gt; setpriority myproc 2
+Process 'myproc' priority set.</pre>
+      </div>
+
+      <hr>
+
+      <h2>4. Quick Reference</h2>
+      <table class="ansi-table">
+        <tr><th>Command</th><th>Description</th><th>Syntax</th></tr>
+        <tr><td><code>help</code></td><td>Display help information</td><td><code>help [command]</code></td></tr>
+        <tr><td><code>version</code></td><td>Display version information</td><td><code>version</code></td></tr>
+        <tr><td><code>shutdown</code></td><td>Shutdown the system</td><td><code>shutdown</code></td></tr>
+        <tr><td><code>getdate</code></td><td>Display current date</td><td><code>getdate</code></td></tr>
+        <tr><td><code>setdate</code></td><td>Set the system date</td><td><code>setdate MM/DD/YYYY</code></td></tr>
+        <tr><td><code>gettime</code></td><td>Display current time</td><td><code>gettime</code></td></tr>
+        <tr><td><code>settime</code></td><td>Set the system time</td><td><code>settime HH:MM:SS</code></td></tr>
+        <tr><td><code>createpcb</code></td><td>Create a new process</td><td><code>createpcb &lt;name&gt; &lt;class&gt; &lt;priority&gt;</code></td></tr>
+        <tr><td><code>deletepcb</code></td><td>Delete a process</td><td><code>deletepcb &lt;name&gt;</code></td></tr>
+        <tr><td><code>showpcb</code></td><td>Show a single process</td><td><code>showpcb &lt;name&gt;</code></td></tr>
+        <tr><td><code>showready</code></td><td>Show all ready processes</td><td><code>showready</code></td></tr>
+        <tr><td><code>showblocked</code></td><td>Show all blocked processes</td><td><code>showblocked</code></td></tr>
+        <tr><td><code>showall</code></td><td>Show all processes</td><td><code>showall</code></td></tr>
+        <tr><td><code>block</code></td><td>Block a process</td><td><code>block &lt;name&gt;</code></td></tr>
+        <tr><td><code>unblock</code></td><td>Unblock a process</td><td><code>unblock &lt;name&gt;</code></td></tr>
+        <tr><td><code>suspend</code></td><td>Suspend a process</td><td><code>suspend &lt;name&gt;</code></td></tr>
+        <tr><td><code>resume</code></td><td>Resume a suspended process</td><td><code>resume &lt;name&gt;</code></td></tr>
+        <tr><td><code>setpriority</code></td><td>Set process priority</td><td><code>setpriority &lt;name&gt; &lt;priority&gt;</code></td></tr>
+      </table>
+    </div>
+
+    <!-- ====== PROGRAMMER'S MANUAL TAB ====== -->
+    <div id="docs-programmers" class="docs-panel">
+      <h2>Programmer's Manual</h2>
+      <p>T4BF MPX Operating System &mdash; Version R2 &mdash; February 2026</p>
+
+      <hr>
+
+      <h2>1. Overview</h2>
+      <p>This manual documents all functions, data types, and structures written or modified by the T4BF team for the MPX operating system. It covers the kernel-level PCB management subsystem, the RTC hardware driver, serial I/O, helper utilities, and the user-facing command implementations.</p>
+      <p><strong>Note:</strong> Provided library functions (<code>sys_req</code>, <code>sys_alloc_mem</code>, <code>sys_free_mem</code>, <code>strlen</code>, <code>strcmp</code>, <code>memcpy</code>, <code>memset</code>, <code>memmove</code>, <code>strtok</code>, <code>atoi</code>, <code>isspace</code>, <code>serial_init</code>, <code>serial_out</code>) are not documented here.</p>
+
+      <h3>Module Organization</h3>
+      <table class="ansi-table">
+        <tr><th>Module</th><th>File(s)</th><th>Description</th></tr>
+        <tr><td>PCB Management</td><td><code>kernel/pcb.c</code>, <code>include/pcb.h</code></td><td>Process Control Block allocation, queue management, state transitions</td></tr>
+        <tr><td>RTC Driver</td><td><code>kernel/rtc.c</code>, <code>include/mpx/rtc.h</code></td><td>Real-Time Clock hardware read/write</td></tr>
+        <tr><td>Serial I/O</td><td><code>kernel/serial.c</code></td><td>Polling-based serial input with line editing</td></tr>
+        <tr><td>Helpers</td><td><code>user/cmd_helpers.c</code>, <code>include/cmd_helpers.h</code></td><td>Output, conversion, and low-level RTC utilities</td></tr>
+        <tr><td>Shell</td><td><code>user/comhand.c</code></td><td>Command handler REPL loop</td></tr>
+        <tr><td>R1 Commands</td><td><code>user/cmd_*.c</code></td><td>help, version, shutdown, getdate, setdate, gettime, settime</td></tr>
+        <tr><td>R2 Commands</td><td><code>user/cmd_createpcb.c</code>, <code>cmd_deletepcb.c</code>, etc.</td><td>Process management commands</td></tr>
+      </table>
+
+      <hr>
+
+      <h2>2. Data Types and Structures</h2>
+
+      <!-- pcb_t -->
+      <h3>2.1 pcb_t</h3>
+      <p><strong>Header:</strong> <code>include/pcb.h</code></p>
+      <p><strong>Purpose:</strong> The Process Control Block. Stores all information about a single process.</p>
+      <div class="code-block">
+        <div class="code-block-header"><span>include/pcb.h</span><button class="copy-btn">copy</button></div>
+<pre><span class="kw">typedef struct</span> <span class="type">pcb</span> {
+    <span class="type">char</span> name[<span class="num">16</span>];              <span class="cmt">// Process name (up to 15 chars + null)</span>
+    <span class="type">process_class_t</span> class;      <span class="cmt">// CLASS_SYSTEM or CLASS_USER</span>
+    <span class="type">uint8_t</span> priority;           <span class="cmt">// 0 (highest) to 9 (lowest)</span>
+    <span class="type">execution_state_t</span> exec_state; <span class="cmt">// STATE_READY, STATE_RUNNING, or STATE_BLOCKED</span>
+    <span class="type">uint8_t</span> suspended;          <span class="cmt">// 0 = not suspended, 1 = suspended</span>
+    <span class="type">uint8_t</span> *stack;             <span class="cmt">// Pointer to stack memory</span>
+    <span class="kw">void</span> *stack_pointer;        <span class="cmt">// Current stack pointer position</span>
+    <span class="type">size_t</span> stack_size;          <span class="cmt">// Size of allocated stack (1024 bytes)</span>
+    <span class="kw">struct</span> <span class="type">pcb</span> *prev;           <span class="cmt">// Previous PCB in queue (doubly-linked)</span>
+    <span class="kw">struct</span> <span class="type">pcb</span> *next;           <span class="cmt">// Next PCB in queue (doubly-linked)</span>
+    <span class="kw">struct</span> <span class="type">pcb_queue</span> *queue;    <span class="cmt">// Pointer to the queue this PCB belongs to</span>
+} <span class="type">pcb_t</span>;</pre>
+      </div>
+      <p>The PCB and its stack are allocated as a single contiguous memory block. The <code>queue</code> pointer allows O(1) identification of which queue a PCB is currently in.</p>
+
+      <!-- pcb_queue_t -->
+      <h3>2.2 pcb_queue_t</h3>
+      <p><strong>Header:</strong> <code>include/pcb.h</code></p>
+      <p><strong>Purpose:</strong> A doubly-linked list queue for organizing PCBs. Four global queues are maintained.</p>
+      <div class="code-block">
+        <div class="code-block-header"><span>include/pcb.h</span><button class="copy-btn">copy</button></div>
+<pre><span class="kw">typedef struct</span> <span class="type">pcb_queue</span> {
+    <span class="type">pcb_t</span> *head;    <span class="cmt">// First PCB in queue</span>
+    <span class="type">pcb_t</span> *tail;    <span class="cmt">// Last PCB in queue</span>
+    <span class="type">size_t</span> count;   <span class="cmt">// Number of PCBs in queue</span>
+} <span class="type">pcb_queue_t</span>;</pre>
+      </div>
+      <p>The Ready queue is priority-sorted (0 = highest priority first, FIFO within same priority). All other queues use FIFO ordering.</p>
+
+      <!-- execution_state_t -->
+      <h3>2.3 execution_state_t</h3>
+      <p><strong>Header:</strong> <code>include/pcb.h</code></p>
+      <div class="code-block">
+        <div class="code-block-header"><span>include/pcb.h</span><button class="copy-btn">copy</button></div>
+<pre><span class="kw">typedef enum</span> {
+    STATE_READY,    <span class="cmt">// Process is ready to run</span>
+    STATE_RUNNING,  <span class="cmt">// Process is currently executing</span>
+    STATE_BLOCKED   <span class="cmt">// Process is blocked (waiting)</span>
+} <span class="type">execution_state_t</span>;</pre>
+      </div>
+
+      <!-- process_class_t -->
+      <h3>2.4 process_class_t</h3>
+      <p><strong>Header:</strong> <code>include/pcb.h</code></p>
+      <div class="code-block">
+        <div class="code-block-header"><span>include/pcb.h</span><button class="copy-btn">copy</button></div>
+<pre><span class="kw">typedef enum</span> {
+    CLASS_SYSTEM,   <span class="cmt">// System process (cannot be suspended or deleted)</span>
+    CLASS_USER      <span class="cmt">// User application process</span>
+} <span class="type">process_class_t</span>;</pre>
+      </div>
+
+      <!-- op_code -->
+      <h3>2.5 op_code</h3>
+      <p><strong>Header:</strong> <code>include/sys_req.h</code></p>
+      <div class="code-block">
+        <div class="code-block-header"><span>include/sys_req.h</span><button class="copy-btn">copy</button></div>
+<pre><span class="kw">typedef enum</span> {
+    EXIT,   <span class="cmt">// Terminate the calling process (R3+)</span>
+    IDLE,   <span class="cmt">// Suspend the calling process (R3+)</span>
+    READ,   <span class="cmt">// Read from a device</span>
+    WRITE   <span class="cmt">// Write to a device</span>
+} <span class="type">op_code</span>;</pre>
+      </div>
+
+      <!-- rtc_time -->
+      <h3>2.6 struct rtc_time</h3>
+      <p><strong>Header:</strong> <code>include/mpx/rtc.h</code></p>
+      <div class="code-block">
+        <div class="code-block-header"><span>include/mpx/rtc.h</span><button class="copy-btn">copy</button></div>
+<pre><span class="kw">struct</span> <span class="type">rtc_time</span> {
+    <span class="type">int</span> hours;    <span class="cmt">// 0-23</span>
+    <span class="type">int</span> minutes;  <span class="cmt">// 0-59</span>
+    <span class="type">int</span> seconds;  <span class="cmt">// 0-59</span>
+};</pre>
+      </div>
+
+      <!-- rtc_date -->
+      <h3>2.7 struct rtc_date</h3>
+      <p><strong>Header:</strong> <code>include/mpx/rtc.h</code></p>
+      <div class="code-block">
+        <div class="code-block-header"><span>include/mpx/rtc.h</span><button class="copy-btn">copy</button></div>
+<pre><span class="kw">struct</span> <span class="type">rtc_date</span> {
+    <span class="type">int</span> month;  <span class="cmt">// 1-12</span>
+    <span class="type">int</span> day;    <span class="cmt">// 1-31</span>
+    <span class="type">int</span> year;   <span class="cmt">// Full year (e.g., 2026)</span>
+};</pre>
+      </div>
+
+      <!-- command_history -->
+      <h3>2.8 command_history</h3>
+      <p><strong>Header:</strong> <code>include/mpx/serial.h</code></p>
+      <div class="code-block">
+        <div class="code-block-header"><span>include/mpx/serial.h</span><button class="copy-btn">copy</button></div>
+<pre><span class="kw">typedef struct</span> {
+    <span class="type">char</span> entries[HISTORY_SIZE][MAX_CMD_LENGTH];
+    <span class="type">int</span> count;      <span class="cmt">// How many entries saved so far</span>
+    <span class="type">int</span> current;    <span class="cmt">// Position while scrolling</span>
+    <span class="type">int</span> head;       <span class="cmt">// Points to newest entry</span>
+} <span class="type">command_history</span>;</pre>
+      </div>
+
+      <hr>
+
+      <!-- PCB Management Functions -->
+      <h2>3. PCB Management Functions</h2>
+      <p><strong>Source:</strong> <code>kernel/pcb.c</code> &nbsp; <strong>Header:</strong> <code>include/pcb.h</code></p>
+
+      <h3>3.1 pcb_allocate</h3>
+      <div class="code-block">
+        <div class="code-block-header"><span>Signature</span><button class="copy-btn">copy</button></div>
+<pre><span class="type">pcb_t</span> *<span class="fn">pcb_allocate</span>(<span class="kw">void</span>);</pre>
+      </div>
+      <p><strong>Description:</strong> Allocates memory for a new PCB and its associated stack as a single contiguous block. The PCB structure occupies the beginning of the block, and the 1024-byte stack immediately follows. Initializes all PCB fields to defaults, zeros out the stack, and sets the stack pointer to the top with a NULL return address.</p>
+      <p><strong>Returns:</strong> Pointer to the new <code>pcb_t</code>, or <code>NULL</code> if memory allocation fails.</p>
+
+      <h3>3.2 pcb_free</h3>
+      <div class="code-block">
+        <div class="code-block-header"><span>Signature</span><button class="copy-btn">copy</button></div>
+<pre><span class="type">int</span> <span class="fn">pcb_free</span>(<span class="type">pcb_t</span> *pcb);</pre>
+      </div>
+      <p><strong>Description:</strong> Frees all memory associated with a PCB. If the PCB is currently in a queue, it is first removed via <code>pcb_remove()</code> before freeing.</p>
+      <table class="ansi-table">
+        <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+        <tr><td><code>pcb</code></td><td><code>pcb_t *</code></td><td>Pointer to the PCB to free</td></tr>
+      </table>
+      <p><strong>Returns:</strong> 0 on success, -1 if <code>pcb</code> is <code>NULL</code>.</p>
+
+      <h3>3.3 pcb_setup</h3>
+      <div class="code-block">
+        <div class="code-block-header"><span>Signature</span><button class="copy-btn">copy</button></div>
+<pre><span class="type">pcb_t</span> *<span class="fn">pcb_setup</span>(<span class="kw">const</span> <span class="type">char</span> *name, <span class="type">int</span> class, <span class="type">int</span> priority);</pre>
+      </div>
+      <p><strong>Description:</strong> Creates and initializes a PCB with the specified name, class, and priority. Validates all parameters before allocation. The PCB is set to Ready state, not suspended. The caller is responsible for inserting into a queue via <code>pcb_insert()</code>.</p>
+      <table class="ansi-table">
+        <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+        <tr><td><code>name</code></td><td><code>const char *</code></td><td>Process name (truncated to 15 characters)</td></tr>
+        <tr><td><code>class</code></td><td><code>int</code></td><td>0 = CLASS_SYSTEM, 1 = CLASS_USER</td></tr>
+        <tr><td><code>priority</code></td><td><code>int</code></td><td>0 (highest) to 9 (lowest)</td></tr>
+      </table>
+      <p><strong>Returns:</strong> Pointer to initialized <code>pcb_t</code>, or <code>NULL</code> on error.</p>
+
+      <h3>3.4 pcb_find</h3>
+      <div class="code-block">
+        <div class="code-block-header"><span>Signature</span><button class="copy-btn">copy</button></div>
+<pre><span class="type">pcb_t</span> *<span class="fn">pcb_find</span>(<span class="kw">const</span> <span class="type">char</span> *name);</pre>
+      </div>
+      <p><strong>Description:</strong> Searches all four process queues for a PCB with the given name. Uses <code>strcmp()</code> for exact matching.</p>
+      <p><strong>Returns:</strong> Pointer to the matching <code>pcb_t</code>, or <code>NULL</code> if not found.</p>
+
+      <h3>3.5 pcb_insert</h3>
+      <div class="code-block">
+        <div class="code-block-header"><span>Signature</span><button class="copy-btn">copy</button></div>
+<pre><span class="kw">void</span> <span class="fn">pcb_insert</span>(<span class="type">pcb_t</span> *pcb);</pre>
+      </div>
+      <p><strong>Description:</strong> Inserts a PCB into the appropriate queue based on its <code>exec_state</code> and <code>suspended</code> fields. The Ready queue is priority-sorted; all others use FIFO.</p>
+
+      <h3>3.6 pcb_remove</h3>
+      <div class="code-block">
+        <div class="code-block-header"><span>Signature</span><button class="copy-btn">copy</button></div>
+<pre><span class="type">int</span> <span class="fn">pcb_remove</span>(<span class="type">pcb_t</span> *pcb);</pre>
+      </div>
+      <p><strong>Description:</strong> Removes a PCB from its current queue. Updates doubly-linked list pointers. After removal, <code>prev</code>, <code>next</code>, and <code>queue</code> are set to <code>NULL</code>.</p>
+      <p><strong>Returns:</strong> 0 on success, -1 if <code>pcb</code> is <code>NULL</code> or not in any queue.</p>
+
+      <h3>3.7 pcb_suspend</h3>
+      <div class="code-block">
+        <div class="code-block-header"><span>Signature</span><button class="copy-btn">copy</button></div>
+<pre><span class="type">int</span> <span class="fn">pcb_suspend</span>(<span class="kw">const</span> <span class="type">char</span> *name);</pre>
+      </div>
+      <p><strong>Description:</strong> Suspends a process by name. Verifies it is a user process, removes from current queue, sets suspended flag, and re-inserts into the appropriate suspended queue.</p>
+      <p><strong>Returns:</strong> 0 on success, -1 if not found or is a system process.</p>
+
+      <h3>3.8 pcb_resume</h3>
+      <div class="code-block">
+        <div class="code-block-header"><span>Signature</span><button class="copy-btn">copy</button></div>
+<pre><span class="type">int</span> <span class="fn">pcb_resume</span>(<span class="kw">const</span> <span class="type">char</span> *name);</pre>
+      </div>
+      <p><strong>Description:</strong> Resumes a suspended process by name. Removes from suspended queue, clears flag, and re-inserts into the non-suspended queue.</p>
+      <p><strong>Returns:</strong> 0 on success, -1 if not found.</p>
+
+      <hr>
+
+      <!-- RTC Hardware Functions -->
+      <h2>4. RTC Hardware Functions</h2>
+      <p><strong>Source:</strong> <code>kernel/rtc.c</code> &nbsp; <strong>Header:</strong> <code>include/mpx/rtc.h</code></p>
+
+      <h3>4.1 rtc_get_time</h3>
+      <div class="code-block">
+        <div class="code-block-header"><span>Signature</span><button class="copy-btn">copy</button></div>
+<pre><span class="kw">void</span> <span class="fn">rtc_get_time</span>(<span class="kw">struct</span> <span class="type">rtc_time</span> *time);</pre>
+      </div>
+      <p><strong>Description:</strong> Reads the current time from the CMOS RTC hardware. Converts BCD to binary. Fills <code>hours</code> (0&ndash;23), <code>minutes</code> (0&ndash;59), <code>seconds</code> (0&ndash;59).</p>
+
+      <h3>4.2 rtc_set_time</h3>
+      <div class="code-block">
+        <div class="code-block-header"><span>Signature</span><button class="copy-btn">copy</button></div>
+<pre><span class="kw">void</span> <span class="fn">rtc_set_time</span>(<span class="kw">const</span> <span class="kw">struct</span> <span class="type">rtc_time</span> *time);</pre>
+      </div>
+      <p><strong>Description:</strong> Writes time values to the CMOS RTC hardware. Converts binary to BCD format.</p>
+
+      <h3>4.3 rtc_get_date</h3>
+      <div class="code-block">
+        <div class="code-block-header"><span>Signature</span><button class="copy-btn">copy</button></div>
+<pre><span class="kw">void</span> <span class="fn">rtc_get_date</span>(<span class="kw">struct</span> <span class="type">rtc_date</span> *date);</pre>
+      </div>
+      <p><strong>Description:</strong> Reads the current date from the CMOS RTC hardware. Reads day, month, year, century registers. Computes full 4-digit year.</p>
+
+      <h3>4.4 rtc_set_date</h3>
+      <div class="code-block">
+        <div class="code-block-header"><span>Signature</span><button class="copy-btn">copy</button></div>
+<pre><span class="kw">void</span> <span class="fn">rtc_set_date</span>(<span class="kw">const</span> <span class="kw">struct</span> <span class="type">rtc_date</span> *date);</pre>
+      </div>
+      <p><strong>Description:</strong> Writes date values to the CMOS RTC hardware. Writes century/year registers first to avoid edge cases.</p>
+
+      <hr>
+
+      <!-- Helper Functions -->
+      <h2>5. Helper Functions</h2>
+      <p><strong>Source:</strong> <code>user/cmd_helpers.c</code> &nbsp; <strong>Header:</strong> <code>include/cmd_helpers.h</code></p>
+
+      <h3>5.1 print</h3>
+      <div class="code-block">
+        <div class="code-block-header"><span>Signature</span><button class="copy-btn">copy</button></div>
+<pre><span class="kw">void</span> <span class="fn">print</span>(<span class="kw">const</span> <span class="type">char</span> *str);</pre>
+      </div>
+      <p><strong>Description:</strong> Outputs a null-terminated string to the serial console (COM1). Convenience wrapper around <code>sys_req(WRITE, COM1, str, strlen(str))</code>.</p>
+
+      <h3>5.2 int_to_str</h3>
+      <div class="code-block">
+        <div class="code-block-header"><span>Signature</span><button class="copy-btn">copy</button></div>
+<pre><span class="kw">void</span> <span class="fn">int_to_str</span>(<span class="type">int</span> num, <span class="type">char</span> *buf);</pre>
+      </div>
+      <p><strong>Description:</strong> Converts an integer to its decimal string representation. Handles zero and negative numbers.</p>
+
+      <h3>5.3 bcd_to_bin</h3>
+      <div class="code-block">
+        <div class="code-block-header"><span>Signature</span><button class="copy-btn">copy</button></div>
+<pre><span class="type">int</span> <span class="fn">bcd_to_bin</span>(<span class="type">unsigned char</span> bcd);</pre>
+      </div>
+      <p><strong>Description:</strong> Converts a BCD byte to binary integer. Implementation: <code>((bcd &gt;&gt; 4) * 10) + (bcd &amp; 0x0F)</code></p>
+
+      <h3>5.4 bin_to_bcd</h3>
+      <div class="code-block">
+        <div class="code-block-header"><span>Signature</span><button class="copy-btn">copy</button></div>
+<pre><span class="type">unsigned char</span> <span class="fn">bin_to_bcd</span>(<span class="type">int</span> bin);</pre>
+      </div>
+      <p><strong>Description:</strong> Converts a binary integer (0&ndash;99) to BCD format. Implementation: <code>(unsigned char)(((bin / 10) &lt;&lt; 4) | (bin % 10))</code></p>
+
+      <h3>5.5 rtc_read</h3>
+      <div class="code-block">
+        <div class="code-block-header"><span>Signature</span><button class="copy-btn">copy</button></div>
+<pre><span class="type">unsigned char</span> <span class="fn">rtc_read</span>(<span class="type">unsigned char</span> reg);</pre>
+      </div>
+      <p><strong>Description:</strong> Reads a single byte from the specified CMOS RTC register. Disables interrupts during I/O. Port 0x70 (address), port 0x71 (data).</p>
+
+      <h3>5.6 rtc_write</h3>
+      <div class="code-block">
+        <div class="code-block-header"><span>Signature</span><button class="copy-btn">copy</button></div>
+<pre><span class="kw">void</span> <span class="fn">rtc_write</span>(<span class="type">unsigned char</span> reg, <span class="type">unsigned char</span> val);</pre>
+      </div>
+      <p><strong>Description:</strong> Writes a single byte to the specified CMOS RTC register. Disables interrupts during I/O.</p>
+
+      <hr>
+
+      <!-- Serial I/O Functions -->
+      <h2>6. Serial I/O Functions</h2>
+      <p><strong>Source:</strong> <code>kernel/serial.c</code> &nbsp; <strong>Header:</strong> <code>include/mpx/serial.h</code></p>
+
+      <h3>6.1 serial_poll</h3>
+      <div class="code-block">
+        <div class="code-block-header"><span>Signature</span><button class="copy-btn">copy</button></div>
+<pre><span class="type">int</span> <span class="fn">serial_poll</span>(<span class="type">device</span> dev, <span class="type">char</span> *buffer, <span class="type">size_t</span> len);</pre>
+      </div>
+      <p><strong>Description:</strong> Polls the serial port for user input with full line-editing support. Supports Backspace, Left/Right arrow, Home, End, Delete, and insert mode. Reads until Enter or buffer full.</p>
+      <table class="ansi-table">
+        <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+        <tr><td><code>dev</code></td><td><code>device</code></td><td>Serial port device (e.g. COM1)</td></tr>
+        <tr><td><code>buffer</code></td><td><code>char *</code></td><td>Buffer to store the input string</td></tr>
+        <tr><td><code>len</code></td><td><code>size_t</code></td><td>Maximum buffer size</td></tr>
+      </table>
+      <p><strong>Returns:</strong> Number of bytes read on success, -1 if buffer is <code>NULL</code> or length is 0.</p>
+
+      <hr>
+
+      <!-- Shell and Command Functions -->
+      <h2>7. Shell and Command Functions</h2>
+
+      <h3>7.1 comhand</h3>
+      <p><strong>Source:</strong> <code>user/comhand.c</code></p>
+      <div class="code-block">
+        <div class="code-block-header"><span>Signature</span><button class="copy-btn">copy</button></div>
+<pre><span class="kw">void</span> <span class="fn">comhand</span>(<span class="kw">void</span>);</pre>
+      </div>
+      <p><strong>Description:</strong> The main command handler (shell) implementing a REPL. Displays welcome message, loops reading input from COM1, tokenizes and dispatches to command handlers. Exits when <code>cmd_shutdown()</code> returns true.</p>
+
+      <h3>7.2 cmd_help</h3>
+      <p><strong>Source:</strong> <code>user/cmd_help.c</code></p>
+      <div class="code-block">
+        <div class="code-block-header"><span>Signature</span><button class="copy-btn">copy</button></div>
+<pre><span class="kw">void</span> <span class="fn">cmd_help</span>(<span class="type">char</span> *arg);</pre>
+      </div>
+      <p><strong>Description:</strong> Displays help information. Without argument, lists all commands. With a command name, displays detailed usage.</p>
+
+      <h3>7.3 cmd_version</h3>
+      <p><strong>Source:</strong> <code>user/cmd_version.c</code></p>
+      <div class="code-block">
+        <div class="code-block-header"><span>Signature</span><button class="copy-btn">copy</button></div>
+<pre><span class="kw">void</span> <span class="fn">cmd_version</span>(<span class="kw">void</span>);</pre>
+      </div>
+      <p><strong>Description:</strong> Prints the MPX version number and compilation date.</p>
+
+      <h3>7.4 cmd_shutdown</h3>
+      <p><strong>Source:</strong> <code>user/cmd_shutdown.c</code></p>
+      <div class="code-block">
+        <div class="code-block-header"><span>Signature</span><button class="copy-btn">copy</button></div>
+<pre><span class="type">int</span> <span class="fn">cmd_shutdown</span>(<span class="kw">void</span>);</pre>
+      </div>
+      <p><strong>Description:</strong> Prompts for shutdown confirmation. Returns 1 if confirmed, 0 otherwise.</p>
+
+      <h3>7.5 cmd_getdate</h3>
+      <p><strong>Source:</strong> <code>user/cmd_getdate.c</code></p>
+      <div class="code-block">
+        <div class="code-block-header"><span>Signature</span><button class="copy-btn">copy</button></div>
+<pre><span class="kw">void</span> <span class="fn">cmd_getdate</span>(<span class="kw">void</span>);</pre>
+      </div>
+      <p><strong>Description:</strong> Reads and displays the RTC date in MM/DD/YYYY format with zero-padding.</p>
+
+      <h3>7.6 cmd_setdate</h3>
+      <p><strong>Source:</strong> <code>user/cmd_setdate.c</code></p>
+      <div class="code-block">
+        <div class="code-block-header"><span>Signature</span><button class="copy-btn">copy</button></div>
+<pre><span class="kw">void</span> <span class="fn">cmd_setdate</span>(<span class="type">char</span> *arg);</pre>
+      </div>
+      <p><strong>Description:</strong> Parses and validates a MM/DD/YYYY date string, then writes to RTC. Handles leap year validation.</p>
+
+      <h3>7.7 cmd_gettime</h3>
+      <p><strong>Source:</strong> <code>user/cmd_gettime.c</code></p>
+      <div class="code-block">
+        <div class="code-block-header"><span>Signature</span><button class="copy-btn">copy</button></div>
+<pre><span class="kw">void</span> <span class="fn">cmd_gettime</span>(<span class="kw">void</span>);</pre>
+      </div>
+      <p><strong>Description:</strong> Reads and displays the RTC time in HH:MM:SS format (24-hour).</p>
+
+      <h3>7.8 cmd_settime</h3>
+      <p><strong>Source:</strong> <code>user/cmd_settime.c</code></p>
+      <div class="code-block">
+        <div class="code-block-header"><span>Signature</span><button class="copy-btn">copy</button></div>
+<pre><span class="kw">void</span> <span class="fn">cmd_settime</span>(<span class="type">char</span> *arg);</pre>
+      </div>
+      <p><strong>Description:</strong> Parses and validates a HH:MM:SS time string, then writes to RTC.</p>
+
+      <hr>
+
+      <!-- PCB Command Functions (R2) -->
+      <h2>8. PCB Command Functions (R2)</h2>
+
+      <h3>8.1 cmd_createpcb</h3>
+      <p><strong>Source:</strong> <code>user/cmd_createpcb.c</code></p>
+      <div class="code-block">
+        <div class="code-block-header"><span>Signature</span><button class="copy-btn">copy</button></div>
+<pre><span class="kw">void</span> <span class="fn">cmd_createpcb</span>(<span class="type">char</span> *arg);</pre>
+      </div>
+      <p><strong>Description:</strong> Creates a new process. Tokenizes arg for name, class, and priority. Validates uniqueness, name length, class (0/1), priority (0&ndash;9). Calls <code>pcb_setup()</code> then <code>pcb_insert()</code>.</p>
+
+      <h3>8.2 cmd_deletepcb</h3>
+      <p><strong>Source:</strong> <code>user/cmd_deletepcb.c</code></p>
+      <div class="code-block">
+        <div class="code-block-header"><span>Signature</span><button class="copy-btn">copy</button></div>
+<pre><span class="kw">void</span> <span class="fn">cmd_deletepcb</span>(<span class="type">char</span> *arg);</pre>
+      </div>
+      <p><strong>Description:</strong> Deletes a process by name. Verifies it is not a system process, then calls <code>pcb_free()</code>.</p>
+
+      <h3>8.3 cmd_showpcb</h3>
+      <p><strong>Source:</strong> <code>user/cmd_showpcb.c</code></p>
+      <div class="code-block">
+        <div class="code-block-header"><span>Signature</span><button class="copy-btn">copy</button></div>
+<pre><span class="kw">void</span> <span class="fn">cmd_showpcb</span>(<span class="type">char</span> *arg);</pre>
+      </div>
+      <p><strong>Description:</strong> Displays detailed info about a single process: name, class, state, suspended, priority.</p>
+
+      <h3>8.4 cmd_showready</h3>
+      <p><strong>Source:</strong> <code>user/cmd_showpcb.c</code></p>
+      <div class="code-block">
+        <div class="code-block-header"><span>Signature</span><button class="copy-btn">copy</button></div>
+<pre><span class="kw">void</span> <span class="fn">cmd_showready</span>(<span class="kw">void</span>);</pre>
+      </div>
+      <p><strong>Description:</strong> Displays all processes in the Ready and Suspended Ready queues.</p>
+
+      <h3>8.5 cmd_showblocked</h3>
+      <p><strong>Source:</strong> <code>user/cmd_showpcb.c</code></p>
+      <div class="code-block">
+        <div class="code-block-header"><span>Signature</span><button class="copy-btn">copy</button></div>
+<pre><span class="kw">void</span> <span class="fn">cmd_showblocked</span>(<span class="kw">void</span>);</pre>
+      </div>
+      <p><strong>Description:</strong> Displays all processes in the Blocked and Suspended Blocked queues.</p>
+
+      <h3>8.6 cmd_showall</h3>
+      <p><strong>Source:</strong> <code>user/cmd_showpcb.c</code></p>
+      <div class="code-block">
+        <div class="code-block-header"><span>Signature</span><button class="copy-btn">copy</button></div>
+<pre><span class="kw">void</span> <span class="fn">cmd_showall</span>(<span class="kw">void</span>);</pre>
+      </div>
+      <p><strong>Description:</strong> Displays all processes across all four queues.</p>
+
+      <h3>8.7 pcb_block</h3>
+      <p><strong>Source:</strong> <code>user/pcb_block.c</code></p>
+      <div class="code-block">
+        <div class="code-block-header"><span>Signature</span><button class="copy-btn">copy</button></div>
+<pre><span class="kw">void</span> <span class="fn">pcb_block</span>(<span class="type">char</span> *arg);</pre>
+      </div>
+      <p><strong>Description:</strong> Transitions a process from Ready to Blocked. Preserves the suspended flag.</p>
+
+      <h3>8.8 pcb_unblock</h3>
+      <p><strong>Source:</strong> <code>user/pcb_unblock.c</code></p>
+      <div class="code-block">
+        <div class="code-block-header"><span>Signature</span><button class="copy-btn">copy</button></div>
+<pre><span class="kw">void</span> <span class="fn">pcb_unblock</span>(<span class="type">char</span> *arg);</pre>
+      </div>
+      <p><strong>Description:</strong> Transitions a process from Blocked to Ready. Preserves the suspended flag.</p>
+
+      <h3>8.9 pcb_set_priority</h3>
+      <p><strong>Source:</strong> <code>user/pcb_set_priority.c</code></p>
+      <div class="code-block">
+        <div class="code-block-header"><span>Signature</span><button class="copy-btn">copy</button></div>
+<pre><span class="kw">void</span> <span class="fn">pcb_set_priority</span>(<span class="type">char</span> *arg);</pre>
+      </div>
+      <p><strong>Description:</strong> Changes process priority. Removes from queue, updates priority, re-inserts (necessary for priority-sorted Ready queue).</p>
+
+      <h3>8.10 cmd_pcb_suspend</h3>
+      <p><strong>Source:</strong> <code>user/cmd_pcb_suspend.c</code></p>
+      <div class="code-block">
+        <div class="code-block-header"><span>Signature</span><button class="copy-btn">copy</button></div>
+<pre><span class="kw">void</span> <span class="fn">cmd_pcb_suspend</span>(<span class="type">char</span> *arg);</pre>
+      </div>
+      <p><strong>Description:</strong> User-facing wrapper for <code>pcb_suspend()</code>. Validates argument and prints result message.</p>
+
+      <h3>8.11 cmd_pcb_resume</h3>
+      <p><strong>Source:</strong> <code>user/cmd_pcb_resume.c</code></p>
+      <div class="code-block">
+        <div class="code-block-header"><span>Signature</span><button class="copy-btn">copy</button></div>
+<pre><span class="kw">void</span> <span class="fn">cmd_pcb_resume</span>(<span class="type">char</span> *arg);</pre>
+      </div>
+      <p><strong>Description:</strong> User-facing wrapper for <code>pcb_resume()</code>. Validates argument and prints result message.</p>
+    </div>
+
+    <!-- ====== CONTRIBUTIONS TAB ====== -->
+    <div id="docs-contributions" class="docs-panel">
+      <h2>Team Contributions</h2>
+      <p><strong>Team:</strong> The Four Best Friends (T4BF) &mdash; CS 450 &mdash; West Virginia University</p>
+      <p><strong>Version:</strong> R2 &mdash; February 2026</p>
+
+      <hr>
+
+      <h3>Ethan Boyd</h3>
+      <table class="ansi-table">
+        <tr><th>Contribution</th><th>Module</th><th>Description</th></tr>
+        <tr><td>Documentation</td><td><code>doc/</code></td><td>User's Manual, Programmer's Manual, contributions page</td></tr>
+        <tr><td>help command</td><td><code>user/cmd_help.c</code></td><td>Display available commands and usage info</td></tr>
+        <tr><td>version command</td><td><code>user/cmd_version.c</code></td><td>Show MPX version info</td></tr>
+        <tr><td>shutdown command</td><td><code>user/cmd_shutdown.c</code></td><td>Graceful exit with confirmation prompt</td></tr>
+        <tr><td>RTC write order fix</td><td><code>user/cmd_setdate.c</code></td><td>Century/year first for edge cases</td></tr>
+        <tr><td>pcb_insert</td><td><code>kernel/pcb.c</code></td><td>Insert PCB into priority-ordered ready/blocked queue</td></tr>
+        <tr><td>pcb_allocate bug fix</td><td><code>kernel/pcb.c</code></td><td>Fixed initialization order to prevent NULL stack dereference</td></tr>
+        <tr><td>createpcb command</td><td><code>user/cmd_createpcb.c</code></td><td>Create new process with name, class, and priority validation</td></tr>
+        <tr><td>deletepcb command</td><td><code>user/cmd_deletepcb.c</code></td><td>Delete process with system process protection</td></tr>
+        <tr><td>show commands</td><td><code>user/cmd_showpcb.c</code></td><td>showpcb, showready, showblocked, showall display commands</td></tr>
+        <tr><td>Help text for R2</td><td><code>user/cmd_help.c</code></td><td>Added help entries for all PCB commands</td></tr>
+        <tr><td>Version string update</td><td><code>user/cmd_version.c</code></td><td>Updated version to R2</td></tr>
+        <tr><td>Comhand R2 dispatch</td><td><code>user/comhand.c</code></td><td>Added command dispatch for R2 PCB commands</td></tr>
+        <tr><td>Build system updates</td><td><code>make/kernel.mk</code>, <code>make/user.mk</code></td><td>Added new R2 source files to build</td></tr>
+        <tr><td>R2 documentation</td><td><code>doc/</code></td><td>Split manuals, title pages, table of contents</td></tr>
+      </table>
+
+      <h3>Matt Welch</h3>
+      <table class="ansi-table">
+        <tr><th>Contribution</th><th>Module</th><th>Description</th></tr>
+        <tr><td>Command handler</td><td><code>user/comhand.c</code></td><td>Main REPL loop with command dispatch</td></tr>
+        <tr><td>getdate command</td><td><code>user/cmd_getdate.c</code></td><td>Read and display RTC date</td></tr>
+        <tr><td>setdate command</td><td><code>user/cmd_setdate.c</code></td><td>Set RTC date with validation</td></tr>
+        <tr><td>gettime command</td><td><code>user/cmd_gettime.c</code></td><td>Read and display RTC time</td></tr>
+        <tr><td>settime command</td><td><code>user/cmd_settime.c</code></td><td>Set RTC time with validation</td></tr>
+        <tr><td>Leap year validation</td><td><code>user/cmd_setdate.c</code></td><td>Correct Feb 29 handling</td></tr>
+        <tr><td>pcb_remove</td><td><code>kernel/pcb.c</code></td><td>Remove PCB from its current queue</td></tr>
+      </table>
+
+      <h3>Shannon Seiler</h3>
+      <table class="ansi-table">
+        <tr><th>Contribution</th><th>Module</th><th>Description</th></tr>
+        <tr><td>serial_poll()</td><td><code>kernel/serial.c</code></td><td>Polling input with full line editing support</td></tr>
+        <tr><td>Arrow key navigation</td><td><code>kernel/serial.c</code></td><td>Left/right cursor movement in input</td></tr>
+        <tr><td>Home/End/Delete keys</td><td><code>kernel/serial.c</code></td><td>Extended keyboard support</td></tr>
+        <tr><td>Backspace handling</td><td><code>kernel/serial.c</code></td><td>Delete character with visual update</td></tr>
+        <tr><td>Serial port init</td><td><code>kernel/serial.c</code></td><td>Configure COM1 UART at 9600 baud</td></tr>
+        <tr><td>Kernel main setup</td><td><code>kernel/kmain.c</code></td><td>Initialize all subsystems in correct order</td></tr>
+        <tr><td>RTC kernel interface</td><td><code>kernel/rtc.c</code></td><td>Hardware access functions for time/date</td></tr>
+        <tr><td>pcb_setup, pcb_find</td><td><code>kernel/pcb.c</code></td><td>Initialize PCB queues and find PCB by name</td></tr>
+        <tr><td>PCB header</td><td><code>include/pcb.h</code></td><td>PCB struct and queue definitions</td></tr>
+        <tr><td>block command</td><td><code>user/pcb_block.c</code></td><td>Transition process from ready to blocked state</td></tr>
+        <tr><td>unblock command</td><td><code>user/pcb_unblock.c</code></td><td>Transition process from blocked to ready state</td></tr>
+        <tr><td>setpriority command</td><td><code>user/pcb_set_priority.c</code></td><td>Change process priority with queue re-insertion</td></tr>
+        <tr><td>Serial enhancements</td><td><code>kernel/serial.c</code></td><td>Arrow key and extended input improvements for R2</td></tr>
+        <tr><td>Kernel main R2</td><td><code>kernel/kmain.c</code></td><td>PCB subsystem initialization</td></tr>
+        <tr><td>Build system updates</td><td><code>make/kernel.mk</code>, <code>make/user.mk</code></td><td>Added new R2 source files to build</td></tr>
+      </table>
+
+      <h3>Benjamin Eft</h3>
+      <table class="ansi-table">
+        <tr><th>Contribution</th><th>Module</th><th>Description</th></tr>
+        <tr><td>pcb_allocate, pcb_free</td><td><code>kernel/pcb.c</code></td><td>Allocate and free PCB memory with stack allocation</td></tr>
+        <tr><td>pcb_suspend, pcb_resume</td><td><code>kernel/pcb.c</code></td><td>Suspend and resume PCB state transitions</td></tr>
+        <tr><td>PCB header</td><td><code>include/pcb.h</code></td><td>PCB struct and queue definitions</td></tr>
+        <tr><td>suspend command</td><td><code>user/cmd_pcb_suspend.c</code></td><td>Suspend a running process by name</td></tr>
+        <tr><td>resume command</td><td><code>user/cmd_pcb_resume.c</code></td><td>Resume a suspended process by name</td></tr>
+        <tr><td>Comhand R2 dispatch</td><td><code>user/comhand.c</code></td><td>Added command dispatch for R2 PCB commands</td></tr>
+      </table>
+    </div>
+
+  </div>
+</div>
 
 <script src="js/main.js"></script>
 </body>

@@ -107,4 +107,55 @@
       });
     });
   });
+
+  // --- Docs Overlay ---
+  const docsToggle = document.getElementById('docs-toggle');
+  const docsOverlay = document.getElementById('docs-overlay');
+  const docsClose = document.querySelector('.docs-close');
+
+  function openDocs() {
+    if (!docsOverlay) return;
+    docsOverlay.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+    // Close mobile nav if open
+    if (navLinks) {
+      navLinks.classList.remove('open');
+      if (hamburger) hamburger.textContent = '[=]';
+    }
+  }
+
+  function closeDocs() {
+    if (!docsOverlay) return;
+    docsOverlay.classList.add('hidden');
+    document.body.style.overflow = '';
+  }
+
+  if (docsToggle) {
+    docsToggle.addEventListener('click', e => {
+      e.preventDefault();
+      openDocs();
+    });
+  }
+
+  if (docsClose) {
+    docsClose.addEventListener('click', closeDocs);
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && docsOverlay && !docsOverlay.classList.contains('hidden')) {
+      closeDocs();
+    }
+  });
+
+  // Tab switching
+  document.querySelectorAll('.docs-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      const panel = tab.dataset.panel;
+      document.querySelectorAll('.docs-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.docs-panel').forEach(p => p.classList.remove('active'));
+      tab.classList.add('active');
+      const target = document.getElementById(panel);
+      if (target) target.classList.add('active');
+    });
+  });
 })();
