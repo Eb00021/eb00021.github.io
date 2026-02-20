@@ -930,7 +930,7 @@ USER_OBJECTS=\
       <h2>2. Getting Started</h2>
       <p>After booting MPX, you will be presented with a command prompt (<code>&gt;</code>). From here, you can enter any of the commands documented below.</p>
       <h3>Basic Usage</h3>
-      <p>Type a command and press Enter to execute it. Commands are case-sensitive and should be entered in lowercase. Line editing is supported: use arrow keys to move the cursor, Backspace to delete, and Home/End to jump to the start or end of the line.</p>
+      <p>Type a command and press Enter to execute it. Commands are case-sensitive and should be entered in lowercase. Line editing is supported: use arrow keys to move the cursor, Backspace to delete, and Home/End to jump to the start or end of the line. Use the up/down arrow keys to scroll through previously entered commands.</p>
       <div class="code-block">
         <div class="code-block-header"><span>Basic Commands</span><button class="copy-btn">copy</button></div>
 <pre>&gt; help
@@ -1204,6 +1204,15 @@ Process 'myproc' resumed.</pre>
 Process 'myproc' priority set.</pre>
       </div>
 
+      <!-- clear -->
+      <h3>clear</h3>
+      <p><strong>Syntax:</strong> <code>clear</code></p>
+      <p><strong>Description:</strong> Clears the terminal screen and moves the cursor to the top-left position. Uses ANSI escape sequences to reset the display.</p>
+      <div class="code-block">
+        <div class="code-block-header"><span>Example</span><button class="copy-btn">copy</button></div>
+<pre>&gt; clear</pre>
+      </div>
+
       <hr>
 
       <h2>4. Quick Reference</h2>
@@ -1227,6 +1236,7 @@ Process 'myproc' priority set.</pre>
         <tr><td><code>suspend</code></td><td>Suspend a process</td><td><code>suspend &lt;name&gt;</code></td></tr>
         <tr><td><code>resume</code></td><td>Resume a suspended process</td><td><code>resume &lt;name&gt;</code></td></tr>
         <tr><td><code>setpriority</code></td><td>Set process priority</td><td><code>setpriority &lt;name&gt; &lt;priority&gt;</code></td></tr>
+        <tr><td><code>clear</code></td><td>Clear the terminal screen</td><td><code>clear</code></td></tr>
       </table>
     </div>
 
@@ -1249,7 +1259,7 @@ Process 'myproc' priority set.</pre>
         <tr><td>Serial I/O</td><td><code>kernel/serial.c</code></td><td>Polling-based serial input with line editing</td></tr>
         <tr><td>Helpers</td><td><code>user/cmd_helpers.c</code>, <code>include/cmd_helpers.h</code></td><td>Output, conversion, and low-level RTC utilities</td></tr>
         <tr><td>Shell</td><td><code>user/comhand.c</code></td><td>Command handler REPL loop</td></tr>
-        <tr><td>R1 Commands</td><td><code>user/cmd_*.c</code></td><td>help, version, shutdown, getdate, setdate, gettime, settime</td></tr>
+        <tr><td>R1 Commands</td><td><code>user/cmd_*.c</code></td><td>help, version, shutdown, getdate, setdate, gettime, settime, clear</td></tr>
         <tr><td>R2 Commands</td><td><code>user/cmd_createpcb.c</code>, <code>cmd_deletepcb.c</code>, etc.</td><td>Process management commands</td></tr>
       </table>
 
@@ -1358,13 +1368,20 @@ Process 'myproc' priority set.</pre>
       <p><strong>Header:</strong> <code>include/mpx/serial.h</code></p>
       <div class="code-block">
         <div class="code-block-header"><span>include/mpx/serial.h</span><button class="copy-btn">copy</button></div>
-<pre><span class="kw">typedef struct</span> {
-    <span class="type">char</span> entries[HISTORY_SIZE][MAX_CMD_LENGTH];
-    <span class="type">int</span> count;      <span class="cmt">// How many entries saved so far</span>
-    <span class="type">int</span> current;    <span class="cmt">// Position while scrolling</span>
-    <span class="type">int</span> head;       <span class="cmt">// Points to newest entry</span>
-} <span class="type">command_history</span>;</pre>
+<pre><span class="kw">typedef struct</span> <span class="type">cmd_node</span> {
+    <span class="type">char</span> command[MAX_CMD_LENGTH];
+    <span class="kw">struct</span> <span class="type">cmd_node</span> *next;
+    <span class="kw">struct</span> <span class="type">cmd_node</span> *prev;
+} <span class="type">cmd_node_t</span>;
+
+<span class="kw">typedef struct</span> <span class="type">cmd_history</span> {
+    <span class="type">cmd_node_t</span> nodes[HISTORY_SIZE];
+    <span class="type">cmd_node_t</span> *head;
+    <span class="type">cmd_node_t</span> *tail;
+    <span class="type">size_t</span> count;
+} <span class="type">cmd_history_t</span>;</pre>
       </div>
+      <p>Implements a circular buffer of up to 16 (HISTORY_SIZE) previous commands stored as a doubly-linked list of <code>cmd_node_t</code> entries. The user navigates history with the up arrow (scroll backward toward oldest) and down arrow (scroll forward toward newest). When a new command is entered it is appended to the tail; once the buffer is full the oldest entry is overwritten. Navigation replaces the current input line in-place.</p>
 
       <hr>
 
@@ -1538,7 +1555,7 @@ Process 'myproc' priority set.</pre>
         <div class="code-block-header"><span>Signature</span><button class="copy-btn">copy</button></div>
 <pre><span class="type">int</span> <span class="fn">serial_poll</span>(<span class="type">device</span> dev, <span class="type">char</span> *buffer, <span class="type">size_t</span> len);</pre>
       </div>
-      <p><strong>Description:</strong> Polls the serial port for user input with full line-editing support. Supports Backspace, Left/Right arrow, Home, End, Delete, and insert mode. Reads until Enter or buffer full.</p>
+      <p><strong>Description:</strong> Polls the serial port for user input with full line-editing support. Supports Backspace, Left/Right arrow, Home, End, Delete, insert mode, and Up/Down arrow command history navigation. Reads until Enter or buffer full. History navigation is only active when line-editing mode is enabled via <code>serial_set_line_editing(1)</code>.</p>
       <table class="ansi-table">
         <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
         <tr><td><code>dev</code></td><td><code>device</code></td><td>Serial port device (e.g. COM1)</td></tr>
@@ -1546,6 +1563,17 @@ Process 'myproc' priority set.</pre>
         <tr><td><code>len</code></td><td><code>size_t</code></td><td>Maximum buffer size</td></tr>
       </table>
       <p><strong>Returns:</strong> Number of bytes read on success, -1 if buffer is <code>NULL</code> or length is 0.</p>
+
+      <h3>6.2 serial_set_line_editing</h3>
+      <div class="code-block">
+        <div class="code-block-header"><span>Signature</span><button class="copy-btn">copy</button></div>
+<pre><span class="kw">void</span> <span class="fn">serial_set_line_editing</span>(<span class="type">int</span> enable);</pre>
+      </div>
+      <p><strong>Description:</strong> Enables or disables line-editing mode (including command history navigation) within <code>serial_poll</code>. When enabled (<code>1</code>), <code>serial_poll</code> processes extended escape sequences for cursor movement and history navigation. When disabled (<code>0</code>), raw input is collected without history support. Called by <code>comhand()</code> with <code>1</code> before reading shell input and with <code>0</code> after, so that prompts inside commands (e.g. the shutdown confirmation) do not record history entries.</p>
+      <table class="ansi-table">
+        <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+        <tr><td><code>enable</code></td><td><code>int</code></td><td>1 to enable line-editing and history; 0 to disable</td></tr>
+      </table>
 
       <hr>
 
@@ -1558,7 +1586,7 @@ Process 'myproc' priority set.</pre>
         <div class="code-block-header"><span>Signature</span><button class="copy-btn">copy</button></div>
 <pre><span class="kw">void</span> <span class="fn">comhand</span>(<span class="kw">void</span>);</pre>
       </div>
-      <p><strong>Description:</strong> The main command handler (shell) implementing a REPL. Displays welcome message, loops reading input from COM1, tokenizes and dispatches to command handlers. Exits when <code>cmd_shutdown()</code> returns true.</p>
+      <p><strong>Description:</strong> The main command handler (shell) implementing a REPL. Displays welcome message, loops reading input from COM1, tokenizes and dispatches to command handlers. Exits when <code>cmd_shutdown()</code> returns true. Before each read of the main prompt, calls <code>serial_set_line_editing(1)</code> to enable history navigation; calls <code>serial_set_line_editing(0)</code> after, so secondary prompts (e.g. shutdown confirmation) do not interact with the history buffer. Supported commands: help, version, shutdown, getdate, setdate, gettime, settime, createpcb, deletepcb, showpcb, showready, showblocked, showall, block, unblock, suspend, resume, setpriority, clear.</p>
 
       <h3>7.2 cmd_help</h3>
       <p><strong>Source:</strong> <code>user/cmd_help.c</code></p>
@@ -1615,6 +1643,14 @@ Process 'myproc' priority set.</pre>
 <pre><span class="kw">void</span> <span class="fn">cmd_settime</span>(<span class="type">char</span> *arg);</pre>
       </div>
       <p><strong>Description:</strong> Parses and validates a HH:MM:SS time string, then writes to RTC.</p>
+
+      <h3>7.9 cmd_clear</h3>
+      <p><strong>Source:</strong> <code>user/cmd_clear.c</code></p>
+      <div class="code-block">
+        <div class="code-block-header"><span>Signature</span><button class="copy-btn">copy</button></div>
+<pre><span class="kw">void</span> <span class="fn">cmd_clear</span>(<span class="kw">void</span>);</pre>
+      </div>
+      <p><strong>Description:</strong> Clears the terminal screen by printing the ANSI escape sequence <code>\033[2J</code> (erase entire display) followed by <code>\033[H</code> (move cursor to home position, row 1 column 1). Both sequences are issued via <code>print()</code> and take effect immediately on any ANSI-compatible terminal emulator.</p>
 
       <hr>
 
@@ -1748,6 +1784,8 @@ Process 'myproc' priority set.</pre>
         <tr><td>settime command</td><td><code>user/cmd_settime.c</code></td><td>Set RTC time with validation</td></tr>
         <tr><td>Leap year validation</td><td><code>user/cmd_setdate.c</code></td><td>Correct Feb 29 handling</td></tr>
         <tr><td>pcb_remove</td><td><code>kernel/pcb.c</code></td><td>Remove PCB from its current queue</td></tr>
+        <tr><td>clear command</td><td><code>user/cmd_clear.c</code></td><td>Clear terminal screen using ANSI escape sequences</td></tr>
+        <tr><td>Startup banner</td><td><code>user/comhand.c</code></td><td>ASCII art T4BF welcome banner on shell startup</td></tr>
       </table>
 
       <h3>Shannon Seiler</h3>
@@ -1768,6 +1806,7 @@ Process 'myproc' priority set.</pre>
         <tr><td>Serial enhancements</td><td><code>kernel/serial.c</code></td><td>Arrow key and extended input improvements for R2</td></tr>
         <tr><td>Kernel main R2</td><td><code>kernel/kmain.c</code></td><td>PCB subsystem initialization</td></tr>
         <tr><td>Build system updates</td><td><code>make/kernel.mk</code>, <code>make/user.mk</code></td><td>Added new R2 source files to build</td></tr>
+        <tr><td>Command history</td><td><code>kernel/serial.c</code></td><td>Up/down arrow navigation through previous commands (linked list, 16-command capacity)</td></tr>
       </table>
 
       <h3>Benjamin Eft</h3>
@@ -1779,6 +1818,8 @@ Process 'myproc' priority set.</pre>
         <tr><td>suspend command</td><td><code>user/cmd_pcb_suspend.c</code></td><td>Suspend a running process by name</td></tr>
         <tr><td>resume command</td><td><code>user/cmd_pcb_resume.c</code></td><td>Resume a suspended process by name</td></tr>
         <tr><td>Comhand R2 dispatch</td><td><code>user/comhand.c</code></td><td>Added command dispatch for R2 PCB commands</td></tr>
+        <tr><td>Command history refinements</td><td><code>kernel/serial.c</code></td><td>Adjustments to history implementation; include fix for clear command</td></tr>
+        <tr><td>Shutdown bug fix</td><td><code>user/cmd_shutdown.c</code></td><td>Fixed shutdown confirmation input handling</td></tr>
       </table>
     </div>
 
